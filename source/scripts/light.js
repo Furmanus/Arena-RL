@@ -163,7 +163,7 @@ define(['screen', 'map'], function(screen, map){
 				tmpX = x + this.directions[i].x;
 				tmpY = y + this.directions[i].y;
 				
-				if(map.cells[level][tmpX][tmpY].isOnFire == true || map.cells[level][tmpX][tmpY].type.flammable == false){
+				if(map.cells[level][tmpX][tmpY].isOnFire === true || map.cells[level][tmpX][tmpY].type.flammable === false){
 					
 					continue;
 				}else{
@@ -173,7 +173,9 @@ define(['screen', 'map'], function(screen, map){
 				}
 			}
 		}
-		
+		/*
+		act() - po kolei sprawdza wszystkie elementy kolejki queue. Na początku obniża wartosc counter każdego elementu o 1. Gdy wynosi ona 8 wywołuje metodę spreadFire() dla współrzędnych danego elementu kolejki. Gdy wartosć counter wynosi 0 wywoływana jest metoda douse() dla współrzędnych danego elementu kolejki, zmienia typ terenu na burntGround, zmienia własnosć terentu isOnFire na false i usuwa dany element z kolejki
+		*/
 		act(){
 			
 			var level, x, y;
@@ -194,6 +196,7 @@ define(['screen', 'map'], function(screen, map){
 					map.setTerrain(level, x, y, 'burntGround');
 					map.cells[level][x][y].isOnFire = false;
 					this.queue.splice(i, 1);
+					//because we removed one element from queue, we need to substract one from i counter - otherwise one element would be ommited
 					i--;
 				}
 			}

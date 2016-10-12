@@ -25,7 +25,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	var actions = {
 		
 		73: displayInventory,
-		76: look
+		76: look,
+		67: closeDoors
 	};
 	
 	var shiftActions = {
@@ -44,20 +45,20 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		if(ev.which == 16){
 			
 			//nic się nie dzieje, shift naciśnięty sam nie powinien dawać żadnego efektu
-		}else if(ev.shiftKey == false && (ev.which == 103 || ev.which == 104 || ev.which == 105 || ev.which == 102 || ev.which == 99 || ev.which == 98 || ev.which == 97 || ev.which == 100 || ev.which == 101)){
+		}else if(ev.shiftKey === false && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100 || ev.which === 101)){
 			
 			this.move(moveActions[ev.which].x, moveActions[ev.which].y);
 			map.cells[this.position.level].time.engine.unlock();
-		}else if(ev.shiftKey == false && (ev.which == 73 || ev.which == 76)){
+		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67)){
 			
-			if(ev.which == 76){
+			if(ev.which === 76 || ev.which === 67){
 				
 				actions[ev.which](this.position.x, this.position.y, this);
 			}else{
 				
 				actions[ev.which](this);
 			}
-		}else if(ev.shiftKey == true && (ev.which == 191 || ev.which == 190 || ev.which == 188)){
+		}else if(ev.shiftKey === true && (ev.which === 191 || ev.which === 190 || ev.which === 188)){
 			
 			shiftActions[ev.which](this);
 		}else{
@@ -68,7 +69,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	
 	function ascendLevel(player){
 		
-		if(player.position.level == 0){
+		if(player.position.level === 0){
 			
 			screen.placeMessage('Stairs are blocked by pile of huge rocks. You can\'t pass that way.');
 		}else{
@@ -134,6 +135,86 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		
 	}
 	
+	function closeDoors(x, y, player){
+		
+		var openDoors = [];
+		//check cells surrounding player for open doors and push thir coordinates to openDoors array
+		for(var i=-1; i<=1; i++){
+			
+			for(var j=-1; j<=1; j++){
+				
+				if(i === 0 && j === 0){
+					
+					continue;
+				}
+				
+				if(map.cells[player.position.level][x+i][y+j].type.type == 'open doors'){
+					
+					openDoors.push({x: x+i, y: y+j});
+				}
+			}
+		}
+		
+		switch(openDoors.length){
+			
+			case 0:
+				screen.placeMessage('There is nothing here you can close.');
+				break;
+				
+			case 1:
+					
+				map.setTerrain(player.position.level, openDoors[0].x, openDoors[0].y, 'closedDoors');
+				screen.display.clear();
+				screen.drawVisibleCells(map.cells[player.position.level]);
+				map.cells[player.position.level].time.engine.unlock();
+				break;
+				
+			default:
+				
+				screen.placeMessage('Which door you want to close? (select direction 12346789)');
+				player.handleEvent = closeDoorsEventHandler;
+		}
+		
+		function closeDoorsEventHandler(ev){
+			
+			var direction = moveActions[ev.which];
+			// if direction isn't undefined
+			if(direction){
+				
+				if(checkForDoors(direction) === true && direction != {x: 0, y: 0}){
+					
+					map.setTerrain(player.position.level, x + direction.x, y + direction.y, 'closedDoors');
+					
+					screen.display.clear();
+					screen.drawVisibleCells(map.cells[player.position.level]);
+					screen.placeMessage('You close the doors.');
+					
+					player.handleEvent = defaultEventHandler;
+					map.cells[player.position.level].time.engine.unlock();
+				}else {
+					
+					screen.placeMessage('You can\'t close that.');
+					player.handleEvent = defaultEventHandler;
+				}
+			}else {
+				
+				screen.placeMessage('You abort your attempt.');
+				player.handleEvent = defaultEventHandler;
+			}
+			
+			function checkForDoors(direction){
+				
+				for(var i=0; i<openDoors.length; i++){
+					
+					if(x + direction.x === openDoors[i].x && y + direction.y === openDoors[i].y){
+						
+						return true;
+					}
+				}
+			}
+		}
+	}
+	
 	function displayInventory(player){
 		
 		screen.display.clear();
@@ -187,6 +268,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				screen.display.drawText(1, 5, '[l] - look');
 				screen.display.drawText(1, 6, '[<] - go down');
 				screen.display.drawText(1, 7, '[>] - go up');
+				screen.display.drawText(1, 8, '[c] - close');
 				this.handleEvent = escapeEventHandler.bind(player);
 				
 				break
@@ -219,7 +301,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			
 		player.handleEvent = lookEventHandler.bind(player);
 			
-		if(map.cells[level][x][y].isVisible == true){
+		if(map.cells[level][x][y].isVisible === true){
 				
 			screen.display.draw(x, y, ['_', getDisplayChar(x,y)] , getDisplayColor(x, y), 'cornflowerblue');
 		}else{
@@ -228,7 +310,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				
 		}
 			
-		if(screen.lookCount == 0){
+		if(screen.lookCount === 0){
 			
 			screen.placeMessage(returnLookText(x,y));
 			screen.lookCount ++;
@@ -318,6 +400,24 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				return displayText;
 			}
 		}
+	}
+	
+	function verifyNeighbour(level, x, y, cellType){
+		
+		var count = 0;
+		
+		for(var i=-1; i<=1; i++){
+			
+			for(var j=-1; j<=1; j++){
+				
+				if(map.cells[level][x+i][y+j].type.type == cellType){
+					
+					count++;
+				}
+			}
+		}
+		
+		return count;
 	}
 	
 	return {

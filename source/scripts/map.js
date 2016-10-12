@@ -26,7 +26,7 @@ define(['screen'], function(screen){
 			
 			if(entity.type.type == 'player' && cells[entity.position.level][entity.position.x][entity.position.y].type.type != 'deep water'){
 				
-				if(entity.abilities.breatherUnderWater == true){
+				if(entity.abilities.breatherUnderWater === true){
 					
 					screen.placeMessage('You walk into deep water.');
 				}else{
