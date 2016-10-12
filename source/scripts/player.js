@@ -109,7 +109,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 				
 				if(walkAttempt == 'continue'){
 				
-					if(map.cells[this.position.level][tmpX][tmpY].type.blockMovement == true){
+					if(map.cells[this.position.level][tmpX][tmpY].type.blockMovement === true){
 				
 						screen.placeMessage(screen.capitalizeString(map.cells[this.position.level][tmpX][tmpY].type.name) + ' is blocking your movement.');
 					}else{
@@ -127,6 +127,11 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 						map.cells[this.position.level][this.position.x][this.position.y].type.walkEffect(this, this.position.x, this.position.y);
 					
 						screen.placeMessage(map.cells[this.position.level][this.position.x][this.position.y].type.walkMessage);
+						
+						if(map.cells[this.position.level][this.position.x][this.position.y].isOnFire === true){
+							//KOD ODPOWIEDZIALNY ZA OBRAŻENIA OD OGNIA, po zaimplementowaniu hp
+							screen.placeMessage('There are roaring flames here! You are on fire!');
+						}
 				
 						this.doFov(this);
 						screen.drawVisibleCells(map.cells[this.position.level]);
@@ -169,10 +174,10 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 				
 				if(map.cells[player.position.level][player.position.x][player.position.y].type.type != 'deep water'){
 					
-					if(map.cells[player.position.level][x][y].type.blockFov == true && x == player.position.x && y == player.position.y){
+					if(map.cells[player.position.level][x][y].type.blockFov === true && x == player.position.x && y == player.position.y){
 					
 						return true;
-					}else if(map.cells[player.position.level][x][y].type.blockFov == false){
+					}else if(map.cells[player.position.level][x][y].type.blockFov === false){
 					
 						return true;
 					}else {
@@ -202,7 +207,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 				if(x < 0 || y < 0 || x > screen.options.width - 1 || y >  screen.options.height - 1){
 					
 					return;
-				}else if(map.cells[player.position.level][x][y].isLit == true){
+				}else if(map.cells[player.position.level][x][y].isLit === true){
 					
 					map.cells[player.position.level][x][y].isVisible = true;
 					map.cells[player.position.level][x][y].hasBeenDiscovered = true;

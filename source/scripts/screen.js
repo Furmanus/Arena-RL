@@ -46,7 +46,7 @@ define([], function(){
 			
 			for(var j=0; j<options.height; j++){
 				
-				if(cells[i][j].isVisible == true && cells[i][j].isLit == false){
+				if(cells[i][j].isVisible === true && cells[i][j].isLit === false){
 					
 					if(cells[i][j].entity != null){
 					
@@ -55,16 +55,16 @@ define([], function(){
 					
 						display.draw(i, j, cells[i][j].type.display, cells[i][j].type.fgColor, cells[i][j].type.bgColor);
 					}
-				}else if(cells[i][j].isVisible == true && cells[i][j].isLit == true){
+				}else if(cells[i][j].isVisible === true && cells[i][j].isLit === true){
 					
 					if(cells[i][j].entity != null){
 					
 						display.draw(i, j, cells[i][j].entity.display, cells[i][j].entity.fgColor, cells[i][j].entity.bgColor);
-					}else if(cells[i][j].entity == null){
+					}else if(cells[i][j].entity === null){
 					
 						display.draw(i, j, cells[i][j].type.display, cells[i][j].type.fgColor, cells[i][j].type.lightColor);
 					}
-				}else if(cells[i][j].isVisible == false && cells[i][j].hasBeenDiscovered == true){
+				}else if(cells[i][j].isVisible === false && cells[i][j].hasBeenDiscovered === true){
 					
 					currentColor = ROT.Color.fromString(cells[i][j].type.fgColor);
 					
