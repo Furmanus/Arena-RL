@@ -1,6 +1,6 @@
 # Arena-RL
 
-Simple roguelike currently being under construction in early development phase.
+Simple roguelike currently being under construction in early development phase. Written in Javascript with require.js and rot.js.
 
 Things implemented so far:
 
