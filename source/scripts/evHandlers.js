@@ -467,6 +467,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	function pickUp(x, y, player){
 		
 		var level = player.position.level;
+        //list of items with identifiers returned from drawObjectInventory() function, inside displayGroundItems() function
+        var list;
 		
 		if(map.cells[level][x][y].inventory.length === 0){
 			
@@ -496,7 +498,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			player.handleEvent = pickUpEventHandler;
 			screen.display.drawText(8, 0, 'Select item to pick up:');
 			
-			drawObjectInventory(map.cells[level][x][y]);
+			list = drawObjectInventory(map.cells[level][x][y]);
 		}
 		
 		function pickUpEventHandler(ev){
@@ -505,9 +507,14 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				
 				esc(player);
 			}else if(map.cells[level][x][y].inventory[ev.which - 65] != undefined){
-					
-				screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[ev.which - 65].description + '.');
-				this.inventory.push(map.cells[level][x][y].inventory.splice(ev.which - 65, 1)[0]);
+                /*
+                 we look for item identifier in list array. Because list is sorted alphabetically, item position in screen display is not the same as position in player inventory
+                 */
+                var identifier = list[ev.which - 65].identifier;
+
+				screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[identifier].description + '.');
+                //remove item from cell inventory list and push it into player inventory
+				this.inventory.push(map.cells[level][x][y].inventory.splice(identifier, 1)[0]);
 				
 				esc(player);
 				
@@ -519,6 +526,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	function drop(x, y, player){
 		
 		var level = player.position.level;
+        //list of items with identifiers returned from drawObjectInventory() function
+        var list;
 		
 		if(player.inventory.length === 0){
 			
@@ -528,7 +537,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			screen.display.clear();
 			player.handleEvent = dropEventHandler;
 			screen.display.drawText(10, 0, 'Select item to drop:');
-			drawObjectInventory(player);
+            //we draw inventory objects sorted alphabetically
+			list = drawObjectInventory(player);
 		}
 		
 		function dropEventHandler(ev){
@@ -537,9 +547,13 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				
 				esc(player);
 			}else if(player.inventory[ev.which - 65] != undefined){
-				
-				screen.placeMessage('You drop ' + player.inventory[ev.which - 65].description + '.');
-				map.cells[player.position.level][player.position.x][player.position.y].inventory.push(player.inventory.splice(ev.which - 65, 1)[0]);
+			    /*
+			    we for look item identifier in list array. Because list is sorted alphabetically, item position in screen display is not the same as position in player inventory
+			     */
+				var identifier = list[ev.which - 65].identifier;
+
+				screen.placeMessage('You drop ' + player.inventory[identifier].description + '.');
+				map.cells[player.position.level][player.position.x][player.position.y].inventory.push(player.inventory.splice(identifier, 1)[0]);
 				
 				esc(player);
 				
@@ -549,14 +563,25 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	}
 	
 	function drawObjectInventory(object){
-		
-		for(var i=0; i<object.inventory.length; i++){
-				
-			drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(97+i) + ']%c{}' + screen.removeFirst(object.inventory[i].description);
-			screen.display.drawText(1, 2+i, drawnText);		
-		}
+
+	    var list = [];
+
+        for(var i=0; i<object.inventory.length; i++){
+
+            list.push({item: object.inventory[i], type: object.inventory[i].type, identifier: i});
+        }
+
+        screen.bubbleSort(list, 'type');
+
+        for(var i=0; i<list.length; i++){
+
+            drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(97+i) + ']%c{}' + screen.removeFirst(list[i].item.description);
+            screen.display.drawText(1, 2+i, drawnText);
+        }
+
+        return list;
 	}
-	
+	//wyjście z danego ekranu z powrotem do głównego ekranu gry
 	function esc(player){
 		
 		screen.display.clear();
