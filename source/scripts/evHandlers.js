@@ -26,7 +26,9 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		
 		73: displayInventory,
 		76: look,
-		67: closeDoors
+		67: closeDoors,
+		68: drop,
+		188: pickUp
 	};
 	
 	var shiftActions = {
@@ -49,9 +51,9 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			
 			this.move(moveActions[ev.which].x, moveActions[ev.which].y);
 			map.cells[this.position.level].time.engine.unlock();
-		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67)){
+		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68)){
 			
-			if(ev.which === 76 || ev.which === 67){
+			if(ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68){
 				
 				actions[ev.which](this.position.x, this.position.y, this);
 			}else{
@@ -163,9 +165,17 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				
 			case 1:
 					
-				map.setTerrain(player.position.level, openDoors[0].x, openDoors[0].y, 'closedDoors');
+				map.clearVisibility(map.cells[player.position.level]);
 				screen.display.clear();
+				
+				map.setTerrain(player.position.level, openDoors[0].x, openDoors[0].y, 'closedDoors');
+				
+				player.currentFov = [];
+				player.doFov(player);
+				
 				screen.drawVisibleCells(map.cells[player.position.level]);
+				screen.placeMessage('You close the doors.');
+				
 				map.cells[player.position.level].time.engine.unlock();
 				break;
 				
@@ -186,6 +196,10 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 					map.setTerrain(player.position.level, x + direction.x, y + direction.y, 'closedDoors');
 					
 					screen.display.clear();
+					map.clearVisibility(map.cells[player.position.level]);
+					player.currentFov = [];
+					player.doFov(player);
+					
 					screen.drawVisibleCells(map.cells[player.position.level]);
 					screen.placeMessage('You close the doors.');
 					
@@ -218,17 +232,26 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	function displayInventory(player){
 		
 		screen.display.clear();
-		screen.display.drawText(8, 2, 'Your current inventory:');
+		
 		player.handleEvent = inventoryEventHandler.bind(player);
+		
+		drawInventory(player);
 		
 		function inventoryEventHandler(ev){
 			
 			if(ev.which == 27){
 				
-				screen.display.clear();
-				screen.drawVisibleCells(map.cells[this.position.level]);
-				this.handleEvent = defaultEventHandler;
+				esc(player);
 			}
+		}
+		
+		function drawInventory(player){
+			
+			var drawnText;
+			
+			screen.display.drawText(8, 0, 'Your current inventory:');
+			
+			drawObjectInventory(player);
 		}
 	}
 	
@@ -269,6 +292,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				screen.display.drawText(1, 6, '[<] - go down');
 				screen.display.drawText(1, 7, '[>] - go up');
 				screen.display.drawText(1, 8, '[c] - close');
+				screen.display.drawText(1, 9, '[,] - pick up');
 				this.handleEvent = escapeEventHandler.bind(player);
 				
 				break
@@ -382,9 +406,29 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 					}
 			
 					return displayText;
-				}else if(map.cells[level][x][y].entity == null){
+				}else if(map.cells[level][x][y].entity === null && map.cells[level][x][y].inventory.length === 0){
 				
 					displayText = 'You see ' + map.cells[level][x][y].type.name + '.';
+					
+					if(map.cells[level][x][y].isOnFire === true){
+						
+						displayText += ' Wild flames of fire are roaring here.';
+					}
+				
+					return displayText;
+				}else if(map.cells[level][x][y].entity === null && map.cells[level][x][y].inventory.length === 1){
+					
+					displayText = 'You see ' + map.cells[level][x][y].inventory[0].description + '.';
+					
+					if(map.cells[level][x][y].isOnFire === true){
+						
+						displayText += ' Wild flames of fire are roaring here.';
+					}
+				
+					return displayText;
+				}else if(map.cells[level][x][y].entity === null && map.cells[level][x][y].inventory.length > 1){
+					
+					displayText = 'Several items are lying here.';
 					
 					if(map.cells[level][x][y].isOnFire === true){
 						
@@ -418,6 +462,106 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		}
 		
 		return count;
+	}
+	
+	function pickUp(x, y, player){
+		
+		var level = player.position.level;
+		
+		if(map.cells[level][x][y].inventory.length === 0){
+			
+			screen.placeMessage('There isn\'t anything to pick up here.');
+		}else if(map.cells[level][x][y].inventory.length === 1){
+			
+			screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[0].description + '.');
+			player.inventory.push(map.cells[level][x][y].inventory.splice(0,1)[0]);
+			
+			screen.display.clear();
+			map.clearVisibility(map.cells[level]);
+			player.currentFov = [];
+			player.doFov(player);
+			screen.drawVisibleCells(map.cells[level]);
+			
+			map.cells[level].time.engine.unlock();
+		}else if(map.cells[level][x][y].inventory.length > 1){
+			
+			displayGroundItems(level, x, y);
+		}
+		
+		function displayGroundItems(level, x, y){
+			
+			var drawnText;
+			
+			screen.display.clear();
+			player.handleEvent = pickUpEventHandler;
+			screen.display.drawText(8, 0, 'Select item to pick up:');
+			
+			drawObjectInventory(map.cells[level][x][y]);
+		}
+		
+		function pickUpEventHandler(ev){
+			
+			if(ev.which === 27){
+				
+				esc(player);
+			}else if(map.cells[level][x][y].inventory[ev.which - 65] != undefined){
+					
+				screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[ev.which - 65].description + '.');
+				this.inventory.push(map.cells[level][x][y].inventory.splice(ev.which - 65, 1)[0]);
+				
+				esc(player);
+				
+				map.cells[level].time.engine.unlock();		
+			}
+		}
+	}
+	
+	function drop(x, y, player){
+		
+		var level = player.position.level;
+		
+		if(player.inventory.length === 0){
+			
+			screen.placeMessage('Your inventory is empty.');
+		}else{
+			
+			screen.display.clear();
+			player.handleEvent = dropEventHandler;
+			screen.display.drawText(10, 0, 'Select item to drop:');
+			drawObjectInventory(player);
+		}
+		
+		function dropEventHandler(ev){
+			
+			if(ev.which === 27){
+				
+				esc(player);
+			}else if(player.inventory[ev.which - 65] != undefined){
+				
+				screen.placeMessage('You drop ' + player.inventory[ev.which - 65].description + '.');
+				map.cells[player.position.level][player.position.x][player.position.y].inventory.push(player.inventory.splice(ev.which - 65, 1)[0]);
+				
+				esc(player);
+				
+				map.cells[player.position.level].time.engine.unlock();
+			}
+		}
+	}
+	
+	function drawObjectInventory(object){
+		
+		for(var i=0; i<object.inventory.length; i++){
+				
+			drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(97+i) + ']%c{}' + screen.removeFirst(object.inventory[i].description);
+			screen.display.drawText(1, 2+i, drawnText);		
+		}
+	}
+	
+	function esc(player){
+		
+		screen.display.clear();
+		screen.drawVisibleCells(map.cells[player.position.level]);
+		player.handleEvent = defaultEventHandler;
 	}
 	
 	return {

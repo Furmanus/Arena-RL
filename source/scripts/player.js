@@ -31,6 +31,8 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 			this.lookDescription = 'anonymous brave adventurer';
 			this.type = {messageDisplay: 'you', type: 'player'};
 			
+			this.inventory = [];
+			
 			this.init();
 			this.handleEvent = evHandlers.defaultEventHandler;
 		}
@@ -131,6 +133,12 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 						if(map.cells[this.position.level][this.position.x][this.position.y].isOnFire === true){
 							//KOD ODPOWIEDZIALNY ZA OBRAŻENIA OD OGNIA, po zaimplementowaniu hp
 							screen.placeMessage('There are roaring flames here! You are on fire!');
+						}else if(map.cells[this.position.level][this.position.x][this.position.y].inventory.length === 1){
+							
+							screen.placeMessage('There is ' + map.cells[this.position.level][this.position.x][this.position.y].inventory[0].description + ' lying here.');
+						}else if(map.cells[this.position.level][this.position.x][this.position.y].inventory.length > 1){
+							
+							screen.placeMessage('Several items are lying here.');
 						}
 				
 						this.doFov(this);

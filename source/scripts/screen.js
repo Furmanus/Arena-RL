@@ -45,24 +45,30 @@ define([], function(){
 		for(var i=0; i<options.width; i++){
 			
 			for(var j=0; j<options.height; j++){
-				
+				//first we have to check whether examined cell is lit, if yes, cell background color is equal to lightcolor
 				if(cells[i][j].isVisible === true && cells[i][j].isLit === false){
 					
 					if(cells[i][j].entity != null){
 					
 						display.draw(i, j, cells[i][j].entity.display, cells[i][j].entity.fgColor, cells[i][j].entity.bgColor);
-					}else if(cells[i][j].entity == null){
+					}else if(cells[i][j].entity === null && cells[i][j].inventory.length === 0){
 					
 						display.draw(i, j, cells[i][j].type.display, cells[i][j].type.fgColor, cells[i][j].type.bgColor);
+					}else if(cells[i][j].entity === null && cells[i][j].inventory.length > 0){
+						
+						display.draw(i, j, cells[i][j].inventory[0].display, cells[i][j].inventory[0].fgColor, cells[i][j].inventory[0].bgColor);
 					}
 				}else if(cells[i][j].isVisible === true && cells[i][j].isLit === true){
 					
 					if(cells[i][j].entity != null){
 					
 						display.draw(i, j, cells[i][j].entity.display, cells[i][j].entity.fgColor, cells[i][j].entity.bgColor);
-					}else if(cells[i][j].entity === null){
+					}else if(cells[i][j].entity === null && cells[i][j].inventory.length === 0){
 					
 						display.draw(i, j, cells[i][j].type.display, cells[i][j].type.fgColor, cells[i][j].type.lightColor);
+					}else if(cells[i][j].entity === null && cells[i][j].inventory.length > 0){
+						
+						display.draw(i, j, cells[i][j].inventory[0].display, cells[i][j].inventory[0].fgColor, cells[i][j].inventory[0].bgColor);
 					}
 				}else if(cells[i][j].isVisible === false && cells[i][j].hasBeenDiscovered === true){
 					
@@ -155,6 +161,20 @@ define([], function(){
 			document.getElementById('messageBox').removeChild(document.getElementById('messageBox').getElementsByTagName('li')[0]);
 		}
 	}
+	//removes "a" or "an" from beginning of string
+	function removeFirst(string){
+		var result = string;
+		
+		if(string.charAt(0) == 'a' && string.charAt(1) == ' '){
+			result = string.slice(2);
+			return result;
+		}else if(string.charAt(0) == 'a' && string.charAt(1) == 'n'){
+			result = string.slice(3);
+			return result;
+		}else {
+			return result;
+		}
+	}
 	
 	return{
 		display: display,
@@ -167,6 +187,7 @@ define([], function(){
 		capitalizeString: capitalizeString,
 		lookCount: lookCount,
 		drawVisibleCells: drawVisibleCells,
-		getDistanceSquare: getDistanceSquare
+		getDistanceSquare: getDistanceSquare,
+		removeFirst: removeFirst
 	}
 });

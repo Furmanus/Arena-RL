@@ -49,7 +49,7 @@ define(['screen'], function(screen){
 		
 		deepWaterEffect: function(entity, x, y){
 				
-			if(entity.abilities.breatheUnderWater == false){
+			if(entity.abilities.breatheUnderWater === false){
 					
 				if(entity.type.type == 'player'){
 						
@@ -136,6 +136,7 @@ define(['screen'], function(screen){
 				cells[level][i][j].type = {};
 				cells[level][i][j].entity = null;
 				cells[level][i][j].lightSource = {source: null, coords: []};
+				cells[level][i][j].inventory = [];
 				
 				setTerrain(level, i, j, 'wall');
 			}

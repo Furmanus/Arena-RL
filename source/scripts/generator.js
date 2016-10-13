@@ -29,7 +29,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 			if(value == 1){
 				
 				map.setTerrain(level, x, y, 'wall');
-			}else if(value == 0){
+			}else if(value === 0){
 				
 				var key = x + ',' + y;
 				
