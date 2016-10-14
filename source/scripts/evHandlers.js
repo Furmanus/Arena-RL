@@ -292,7 +292,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				screen.display.drawText(1, 6, '[<] - go down');
 				screen.display.drawText(1, 7, '[>] - go up');
 				screen.display.drawText(1, 8, '[c] - close');
-				screen.display.drawText(1, 9, '[,] - pick up');
+				screen.display.drawText(1, 9, '[d] - drop');
+				screen.display.drawText(1, 10, '[,] - pick up');
 				this.handleEvent = escapeEventHandler.bind(player);
 				
 				break
@@ -473,7 +474,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		if(map.cells[level][x][y].inventory.length === 0){
 			
 			screen.placeMessage('There isn\'t anything to pick up here.');
-		}else if(map.cells[level][x][y].inventory.length === 1){
+		}else if(map.cells[level][x][y].inventory.length === 1 && player.inventory.length <= 12){
 			
 			screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[0].description + '.');
 			player.inventory.push(map.cells[level][x][y].inventory.splice(0,1)[0]);
@@ -485,9 +486,12 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			screen.drawVisibleCells(map.cells[level]);
 			
 			map.cells[level].time.engine.unlock();
-		}else if(map.cells[level][x][y].inventory.length > 1){
+		}else if(map.cells[level][x][y].inventory.length > 1 && player.inventory.length <= 12){
 			
 			displayGroundItems(level, x, y);
+		}else if(player.inventory.length > 12){
+			
+			screen.placeMessage('Your inventory is full. You can\'t carry anything more.');
 		}
 		
 		function displayGroundItems(level, x, y){
@@ -548,12 +552,32 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				esc(player);
 			}else if(player.inventory[ev.which - 65] != undefined){
 			    /*
-			    we for look item identifier in list array. Because list is sorted alphabetically, item position in screen display is not the same as position in player inventory
+			    we look for item identifier in list array. Because list is sorted alphabetically, item position in screen display is not the same as position in player inventory
 			     */
 				var identifier = list[ev.which - 65].identifier;
 
 				screen.placeMessage('You drop ' + player.inventory[identifier].description + '.');
-				map.cells[player.position.level][player.position.x][player.position.y].inventory.push(player.inventory.splice(identifier, 1)[0]);
+				
+				if(map.cells[player.position.level][player.position.x][player.position.y].inventory.length <= 12){
+									
+					map.cells[player.position.level][player.position.x][player.position.y].inventory.push(player.inventory.splice(identifier, 1)[0]);
+				}else{
+					/*
+					if map cell inventory is full(has 12 items), we iterate through all neighbour cells. If examined cell doesn't block movement and doesn't have full inventory, item is dropped there
+					*/
+					var examinedCell;
+					
+					for(var n in moveActions){
+						
+						examinedCell = map.cells[player.position.level][player.position.x + moveActions[n].x][player.position.y + moveActions[n].y];
+						
+						if(examinedCell.type.blockMovement == false && examinedCell.inventory.length <= 12){
+						
+							examinedCell.inventory.push(player.inventory.splice(identifier, 1)[0]);
+							break;
+						}
+					}
+				}
 				
 				esc(player);
 				
@@ -561,10 +585,15 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			}
 		}
 	}
-	
+	/*
+	drawObjectInventory(object) - function responsible for drawing object(player, monster, map cell) inventory on screen. Object drawn are sorted alphabetically. First we iterate through object inventory and push all items into list array, with their type and identifier which tells item index in object's inventory. Next list is sorted and result is drawn on screen. Function returns list, so identifiers can be used in functions responsible for picking up, droping, etc.
+	*/
 	function drawObjectInventory(object){
 
-	    var list = [];
+	    var list = [],
+			itemClass = null,
+			drawnText,
+			currentRow = 2;
 
         for(var i=0; i<object.inventory.length; i++){
 
@@ -574,9 +603,22 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
         screen.bubbleSort(list, 'type');
 
         for(var i=0; i<list.length; i++){
+			
+			/*
+			we draw item type name between different item types. In each step we compare currently examined item type. If it isn't equal to previously drawn item type, we draw it, and change value of itemClass to new type
+			*/
+			if(list[i].type != itemClass){
+				
+				itemClass = list[i].type;
+				drawnText = '----- ' + list[i].type + 's -----';
+				screen.display.drawText(Math.floor((screen.options.width - drawnText.length) / 2), currentRow, drawnText);
+				currentRow++;
+			}
 
             drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(97+i) + ']%c{}' + screen.removeFirst(list[i].item.description);
-            screen.display.drawText(1, 2+i, drawnText);
+            screen.display.drawText(1, currentRow, drawnText);
+			
+			currentRow++;
         }
 
         return list;

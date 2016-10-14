@@ -92,9 +92,9 @@ define(['screen'], function(screen){
 		
 		'deadBush': {display: ['"'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'bush', key: 'bush', name: 'a dead bush', walkMessage: 'A withered bush is here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'tree': {display: ['T'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: true, flammable: true, type: 'tree', key: 'tree', name: 'a tree', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
+		'tree': {display: ['\u2648'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: true, flammable: true, type: 'tree', key: 'tree', name: 'a tree', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'deadTree': {display: ['T'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: true, flammable: false, type: 'dead tree', key: 'deadTree', name: 'a dead tree', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
+		'deadTree': {display: ['\u2648'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: true, flammable: false, type: 'dead tree', key: 'deadTree', name: 'a dead tree', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
 		'grass': {display: [','], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: true, type: 'grass', key: 'grass', name: 'a grass', walkMessage: 'A knee deep patch of grass is growing here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
@@ -102,13 +102,13 @@ define(['screen'], function(screen){
 		
 		'sand': {display: ['.'], fgColor: 'darkgoldenrod', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'sand', key: 'sand', name: 'a sand', walkMessage: 'You walk through sand. Your movements are a little slowed.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: {speed: -15}},
 		
-		'chasm': {display: ['::'], fgColor: 'rgb(50,50,50)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'chasm', key: 'chasm', name: 'a chasm', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
+		'chasm': {display: ['\u2637'], fgColor: 'rgb(50,50,50)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'chasm', key: 'chasm', name: 'a chasm', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
 		'woodenBridge': {display: ['#'], fgColor: 'darkgoldenrod', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: true, type: 'wooden bridge', key: 'woodenBridge', name: 'a wooden bridge', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'shallowWater': {display: ['='], fgColor: 'aqua', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'shallow water', key: 'shallowWater', name: 'a shallow water', walkMessage: 'You walk through shallow water. Your movements are little slowed here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: {speed: -15}},
+		'shallowWater': {display: ['\u2652'], fgColor: 'aqua', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'shallow water', key: 'shallowWater', name: 'a shallow water', walkMessage: 'You walk through shallow water. Your movements are little slowed here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: {speed: -15}},
 		
-		'deepWater': {display: ['='], fgColor: 'darkblue', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'deep water', key: 'deepWater', name: 'a deep water', walkMessage: '', walkAttempt: walkAttemptFunctions.deepWater, walkEffect: walkEffectFunctions.deepWaterEffect, modifiers: {speed: -35}},
+		'deepWater': {display: ['\u2652'], fgColor: 'darkblue', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'deep water', key: 'deepWater', name: 'a deep water', walkMessage: '', walkAttempt: walkAttemptFunctions.deepWater, walkEffect: walkEffectFunctions.deepWaterEffect, modifiers: {speed: -35}},
 		
 		'burntGround': {display: [',', '.'], fgColor: 'rgb(70,70,70)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'burnt ground', key: 'burntGround', name: 'a burnt ground', walkMessage: 'A burnt ground.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null}
 	}

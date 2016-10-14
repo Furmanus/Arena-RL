@@ -1,6 +1,6 @@
 define(['screen', 'map'], function(screen, map){
   
-  //hash object with defined weapons and its properties, used in class constructor
+  //hash objects with defined properties, used in class constructor
   var weapons = {
   
     'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapon'},
@@ -21,6 +21,16 @@ define(['screen', 'map'], function(screen, map){
 	'ring mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'ring mail', description: 'a ring mail', type: 'armour'},
 	
 	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armour'}
+  };
+  
+  var scrolls = {
+	  
+	'teleportation': {display: '?', fgColor: 'white', bgColor: 'transparent', name: 'teleportation scroll', description: 'a teleportation scroll', type: 'scroll'}
+  };
+  
+  var potions = {
+	  
+	  'speed': {display: '!', fgColor: 'red', bgColor: 'transparent', name: 'speed potion', description: 'a speed potion', type: 'potion'}
   };
   
   class Weapon{
@@ -53,9 +63,41 @@ define(['screen', 'map'], function(screen, map){
     }
   }
   
+  class Scroll{
+	  
+	  constructor(type, object){
+      
+      this.display = scrolls[type].display;
+      this.fgColor = scrolls[type].fgColor;
+      this.bgColor = scrolls[type].bgColor;
+      this.name = scrolls[type].name;
+      this.description = scrolls[type].description;
+	  this.type = scrolls[type].type;
+      
+      object.inventory.push(this);
+    }
+  }
+  
+  class Potion{
+	  
+	  constructor(type, object){
+      
+      this.display = potions[type].display;
+      this.fgColor = potions[type].fgColor;
+      this.bgColor = potions[type].bgColor;
+      this.name = potions[type].name;
+      this.description = potions[type].description;
+	  this.type = potions[type].type;
+      
+      object.inventory.push(this);
+    }
+  }
+  
   return {
     
     Weapon: Weapon,
-	Armour: Armour
+	Armour: Armour,
+	Scroll: Scroll,
+	Potion: Potion
   }
 });
