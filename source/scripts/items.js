@@ -3,34 +3,39 @@ define(['screen', 'map'], function(screen, map){
   //hash objects with defined properties, used in class constructor
   var weapons = {
   
-    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapon'},
+    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapons'},
 	
-    'long sword': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'long sword', description: 'a long sword', type: 'weapon'},
+    'long sword': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'long sword', description: 'a long sword', type: 'weapons'},
 	
-    'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapon'},
+    'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapons'},
 	
-	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapon'}
+	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons'}
   };
   
   var armours = {
 	  
-	'leather armour': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather armour', description: 'a leather armour', type: 'armour'},  
+	'leather armour': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather armour', description: 'a leather armour', type: 'armours'},
 	
-	'chain mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain mail', description: 'a chain mail', type: 'armour'},
+	'chain mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain mail', description: 'a chain mail', type: 'armours'},
 	
-	'ring mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'ring mail', description: 'a ring mail', type: 'armour'},
+	'ring mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'ring mail', description: 'a ring mail', type: 'armours'},
 	
-	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armour'}
+	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armours'}
   };
   
   var scrolls = {
 	  
-	'teleportation': {display: '?', fgColor: 'white', bgColor: 'transparent', name: 'teleportation scroll', description: 'a teleportation scroll', type: 'scroll'}
+	'teleportation': {display: '⏦', fgColor: 'white', bgColor: 'transparent', name: 'teleportation scroll', description: 'a teleportation scroll', type: 'scrolls'}
   };
   
   var potions = {
 	  
-	  'speed': {display: '!', fgColor: 'red', bgColor: 'transparent', name: 'speed potion', description: 'a speed potion', type: 'potion'}
+	  'speed': {display: '!', fgColor: 'red', bgColor: 'transparent', name: 'speed potion', description: 'a speed potion', type: 'potions'}
+  };
+
+  var misc = {
+
+      'torch': {display: '!', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'torch', description: 'a torch', type: 'miscellaneous'}
   };
   
   class Weapon{
@@ -92,6 +97,21 @@ define(['screen', 'map'], function(screen, map){
       object.inventory.push(this);
     }
   }
+
+  class Misc{
+
+      constructor(type, object){
+
+          this.display = misc[type].display;
+          this.fgColor = misc[type].fgColor;
+          this.bgColor = misc[type].bgColor;
+          this.name = misc[type].name;
+          this.description = misc[type].description;
+          this.type = misc[type].type;
+
+          object.inventory.push(this);
+      }
+  }
   
   return {
     
@@ -101,3 +121,41 @@ define(['screen', 'map'], function(screen, map){
 	Potion: Potion
   }
 });
+
+/*
+Useful UNICODE symbols:
+
+\u26A1 - lighting
+\u2695 - staff
+\u2625 - ankh
+\u266F - grate
+\u2670 - cross
+\u2690 - flag
+\u26C6 - raindrops
+\u26CF - pick axe
+\u26EA - church
+\u26EB - building
+\u26F5 - boat
+\u4E1B - overland forest
+
+ ᇫ - helmet
+ ᘃ - street lamp
+ ᘃ - trident
+ ᘃ - table
+ ᚘ - seat/chair
+ ᚘ - key
+ ᚘ - hammer
+ ᚘ - amulet
+ ᚘ - wave
+ ⏦ - scroll
+ ▦ - grate
+ ⌗ - grate 2
+ ᛍ - candle
+ ◫ - chest of drawers
+ ⌹ - cabinet
+ ⍾ - mushrooms
+ ⎈ - web
+ ᛤ - campfire
+ ᖼ - flail
+ ϯ - sword
+*/

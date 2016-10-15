@@ -32,6 +32,16 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 			this.type = {messageDisplay: 'you', type: 'player'};
 			
 			this.inventory = [];
+
+            this.equipment = {
+
+                'head': {description: 'empty'},
+                'torso': {description: 'empty'},
+                'right hand': {description: 'empty'},
+                'left hand': {description: 'empty'},
+                'legs': {description: 'empty'},
+                'feet': {description: 'empty'}
+            };
 			
 			this.init();
 			this.handleEvent = evHandlers.defaultEventHandler;

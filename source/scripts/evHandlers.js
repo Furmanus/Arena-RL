@@ -2,7 +2,7 @@
 moduł funkcji odpowiedzialnych za zmiany na ekranie(wyświetlanie ekwipunku, komenda "look", itp.)
 */
 
-define(['screen', 'map', 'generator'], function(screen, map, generator){
+define(['screen', 'map', 'generator', 'equipFunctions'], function(screen, map, generator, equipFunctions){
 	
 	/*
 	obiekt odpowiedzialny za kierunki poruszania się postaci. Klucze to keycodesy przycisków na klawiaturze numerycznej
@@ -28,6 +28,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		76: look,
 		67: closeDoors,
 		68: drop,
+        69: equip,
 		188: pickUp
 	};
 	
@@ -51,7 +52,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			
 			this.move(moveActions[ev.which].x, moveActions[ev.which].y);
 			map.cells[this.position.level].time.engine.unlock();
-		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68)){
+		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69)){
 			
 			if(ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68){
 				
@@ -294,6 +295,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				screen.display.drawText(1, 8, '[c] - close');
 				screen.display.drawText(1, 9, '[d] - drop');
 				screen.display.drawText(1, 10, '[,] - pick up');
+                    screen.display.drawText(1, 11, '[,] - equip/unequip items');
 				this.handleEvent = escapeEventHandler.bind(player);
 				
 				break
@@ -526,6 +528,35 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			}
 		}
 	}
+
+	function equip(player){
+
+        var drawnText = 'Select body part to equip/unequip:',
+            currentRow = 2;
+
+        screen.display.clear();
+        player.handleEvent = equipEventHandler;
+        screen.display.drawText(Math.floor((screen.options.width - drawnText.length) / 2), 0, drawnText);
+
+        for(var n in player.equipment){
+
+            drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(96 + (currentRow / 2)) + ']' + n + '%c{}: ' + player.equipment[n].description;
+            screen.display.drawText(0, currentRow, drawnText);
+
+            currentRow += 2;
+        }
+
+        function equipEventHandler(ev){
+
+            if(ev.which === 27){
+
+                esc(player);
+            }else if(ev.which === 65 || ev.which === 66 || ev.which === 67 || ev.which === 68 || ev.which === 69 || ev.which === 70){
+
+                equipFunctions.equip[ev.which].bind(player)();
+            }
+        }
+	}
 	
 	function drop(x, y, player){
 		
@@ -610,7 +641,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			if(list[i].type != itemClass){
 				
 				itemClass = list[i].type;
-				drawnText = '----- ' + list[i].type + 's -----';
+				drawnText = '----- ' + list[i].type + ' -----';
 				screen.display.drawText(Math.floor((screen.options.width - drawnText.length) / 2), currentRow, drawnText);
 				currentRow++;
 			}
@@ -625,11 +656,11 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	}
 	//wyjście z danego ekranu z powrotem do głównego ekranu gry
 	function esc(player){
-		
-		screen.display.clear();
-		screen.drawVisibleCells(map.cells[player.position.level]);
-		player.handleEvent = defaultEventHandler;
-	}
+
+        screen.display.clear();
+        screen.drawVisibleCells(map.cells[player.position.level]);
+        player.handleEvent = defaultEventHandler;
+    }
 	
 	return {
 		

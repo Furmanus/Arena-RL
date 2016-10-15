@@ -88,7 +88,7 @@ define(['screen'], function(screen){
 		
 		'stairsDown': {display: ['>'], fgColor: 'silver', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'stairs down', key: 'stairsDown', name: 'a stairs leading downwards', walkMessage: 'Stairs leading downwards are here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'bush': {display: ['"'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: true, blockMovement: false, flammable: true, type: 'dead bush', key: 'deadBush', name: 'a bush', walkMessage: 'A thick bush is growing here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
+		'bush': {display: ['\u268F'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: true, blockMovement: false, flammable: true, type: 'dead bush', key: 'deadBush', name: 'a bush', walkMessage: 'A thick bush is growing here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
 		'deadBush': {display: ['"'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'bush', key: 'bush', name: 'a dead bush', walkMessage: 'A withered bush is here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
@@ -96,11 +96,11 @@ define(['screen'], function(screen){
 		
 		'deadTree': {display: ['\u2648'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: true, flammable: false, type: 'dead tree', key: 'deadTree', name: 'a dead tree', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'grass': {display: [','], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: true, type: 'grass', key: 'grass', name: 'a grass', walkMessage: 'A knee deep patch of grass is growing here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
+		'grass': {display: ['\u26C6'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: true, type: 'grass', key: 'grass', name: 'a grass', walkMessage: 'A knee deep patch of grass is growing here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'deadGrass': {display: [','], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'dead grass', key: 'deadGrass', name: 'a dead grass', walkMessage: 'A patch of dead grass is here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
+		'deadGrass': {display: ['\u26C6'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'dead grass', key: 'deadGrass', name: 'a dead grass', walkMessage: 'A patch of dead grass is here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'sand': {display: ['.'], fgColor: 'darkgoldenrod', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'sand', key: 'sand', name: 'a sand', walkMessage: 'You walk through sand. Your movements are a little slowed.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: {speed: -15}},
+		'sand': {display: ['\u26C6'], fgColor: 'darkgoldenrod', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'sand', key: 'sand', name: 'a sand', walkMessage: 'You walk through sand. Your movements are a little slowed.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: {speed: -15}},
 		
 		'chasm': {display: ['\u2637'], fgColor: 'rgb(50,50,50)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'chasm', key: 'chasm', name: 'a chasm', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
