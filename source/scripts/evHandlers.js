@@ -2,12 +2,12 @@
 moduł funkcji odpowiedzialnych za zmiany na ekranie(wyświetlanie ekwipunku, komenda "look", itp.)
 */
 
-define(['screen', 'map', 'generator', 'equipFunctions'], function(screen, map, generator, equipFunctions){
-	
+define(['screen', 'map', 'generator'], function(screen, map, generator){
+
 	/*
 	obiekt odpowiedzialny za kierunki poruszania się postaci. Klucze to keycodesy przycisków na klawiaturze numerycznej
 	*/
-	
+
 	var moveActions = {
 		103: {x: -1, y: -1},
 		104: {x: 0,y: -1},
@@ -19,11 +19,11 @@ define(['screen', 'map', 'generator', 'equipFunctions'], function(screen, map, g
 		100: {x: -1, y: 0},
 		101: {x: 0, y: 0}
 	};
-	
+
 	//odwołania do funkcji odpowiedzialnych za różne rzeczy
-	
+
 	var actions = {
-		
+
 		73: displayInventory,
 		76: look,
 		67: closeDoors,
@@ -31,41 +31,116 @@ define(['screen', 'map', 'generator', 'equipFunctions'], function(screen, map, g
         69: equip,
 		188: pickUp
 	};
-	
+
 	var shiftActions = {
-		
+
 		191: displayInfo,
 		188: ascendLevel,
 		190: descendLevel
 	};
-	
+
+	/*
+	hash object containing function responsible for handling equip() function for different body parts
+	 */
+
+	var equip = {
+		//HEAD
+		65: function(ev){
+
+
+		},
+
+		//TORSO
+		66: function(){
+
+			var list;
+
+			screen.display.clear();
+
+			if(this.equipment.torso.description === 'empty') {
+
+				screen.display.drawText(5, 0, 'Select item you want to wear:');
+
+				list = drawObjectTypeInventory(this, 'armours');
+
+				this.handleEvent = wearTorsoEventHandler;
+			}else {
+
+			    screen.placeMessage('You remove ' + this.equipment.torso.description + '.');
+			    this.inventory.push(this.equipment.torso);
+                this.equipment.torso = {description: 'empty'};
+
+                esc(this);
+                map.cells[this.position.level].time.engine.unlock();
+            }
+
+			function wearTorsoEventHandler(ev) {
+
+                if (ev.which === 27) {
+
+                    esc(this);
+                }else if(ev.which - 65 < list.length) {
+
+                    var identifier = list[ev.which - 65].identifier;
+
+                    screen.placeMessage('You wear ' + this.inventory[identifier].description + '.');
+                    this.equipment.torso = this.inventory.splice(identifier, 1)[0];
+
+                    esc(this);
+                    map.cells[this.position.level].time.engine.unlock();
+                }
+            }
+		},
+
+		//RIGHT HAND
+		67: function(ev){
+
+
+		},
+		//LEFT HAND
+		68: function(ev){
+
+
+		},
+		//LEGS
+		69: function(ev){
+
+
+		},
+		//FEET
+		70: function(ev){
+
+
+		}
+	};
+
 	/*
 	defaultEventHandler() - podstawowa funkcja odpowiedzialna za odczytywanie naciśniętych klawiszy. Aktywna na ekranie gry. W innych przypadkach (np. wyświetlanie ekwipunku), zastępowana przez inne funkcje
 	*/
-	
+
 	function defaultEventHandler(ev){
-		
+
 		if(ev.which == 16){
-			
+
 			//nic się nie dzieje, shift naciśnięty sam nie powinien dawać żadnego efektu
 		}else if(ev.shiftKey === false && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100 || ev.which === 101)){
-			
+
 			this.move(moveActions[ev.which].x, moveActions[ev.which].y);
 			map.cells[this.position.level].time.engine.unlock();
 		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69)){
-			
+
 			if(ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68){
-				
+
 				actions[ev.which](this.position.x, this.position.y, this);
 			}else{
-				
+
 				actions[ev.which](this);
 			}
 		}else if(ev.shiftKey === true && (ev.which === 191 || ev.which === 190 || ev.which === 188)){
-			
+
 			shiftActions[ev.which](this);
 		}else{
-			
+
 			screen.placeMessage('Unknown command.');
 		}
 	}
@@ -540,7 +615,7 @@ define(['screen', 'map', 'generator', 'equipFunctions'], function(screen, map, g
 
         for(var n in player.equipment){
 
-            drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(96 + (currentRow / 2)) + ']' + n + '%c{}: ' + player.equipment[n].description;
+            drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(96 + (currentRow / 2)) + ']' + n + '%c{}: ' + screen.removeFirst(player.equipment[n].description);
             screen.display.drawText(0, currentRow, drawnText);
 
             currentRow += 2;
@@ -553,7 +628,7 @@ define(['screen', 'map', 'generator', 'equipFunctions'], function(screen, map, g
                 esc(player);
             }else if(ev.which === 65 || ev.which === 66 || ev.which === 67 || ev.which === 68 || ev.which === 69 || ev.which === 70){
 
-                equipFunctions.equip[ev.which].bind(player)();
+                equip[ev.which].bind(player)();
             }
         }
 	}
@@ -654,6 +729,36 @@ define(['screen', 'map', 'generator', 'equipFunctions'], function(screen, map, g
 
         return list;
 	}
+
+    //similiar to function drawObjectInventory(), but we draw only certain type of items
+    function drawObjectTypeInventory(object, type){
+
+        var list = [],
+            itemClass = null,
+            drawnText,
+            currentRow = 2;
+
+        for(var i=0; i<object.inventory.length; i++){
+
+            list.push({item: object.inventory[i], type: object.inventory[i].type, identifier: i});
+        }
+
+        screen.bubbleSort(list, 'type');
+
+        for(var i=0; i<list.length; i++){
+
+            if(list[i].item.type === type) {
+
+                drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(97 + i) + ']%c{}' + screen.removeFirst(list[i].item.description);
+                screen.display.drawText(1, currentRow, drawnText);
+
+                currentRow++;
+            }
+        }
+
+        return list;
+    }
+
 	//wyjście z danego ekranu z powrotem do głównego ekranu gry
 	function esc(player){
 
