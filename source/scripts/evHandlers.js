@@ -40,78 +40,12 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	};
 
 	/*
-	hash object containing function responsible for handling equip() function for different body parts
+	hash object containing parameters responsible for handling equip() function for different body parts
 	 */
 
 	var equip = {
 		//HEAD
-		65: function(ev){
-
-
-		},
-
-		//TORSO
-		66: function(){
-
-			var list;
-
-			screen.display.clear();
-
-			if(this.equipment.torso.description === 'empty') {
-
-				screen.display.drawText(5, 0, 'Select item you want to wear:');
-
-				list = drawObjectTypeInventory(this, 'armours');
-
-				this.handleEvent = wearTorsoEventHandler;
-			}else {
-
-			    screen.placeMessage('You remove ' + this.equipment.torso.description + '.');
-			    this.inventory.push(this.equipment.torso);
-                this.equipment.torso = {description: 'empty'};
-
-                esc(this);
-                map.cells[this.position.level].time.engine.unlock();
-            }
-
-			function wearTorsoEventHandler(ev) {
-
-                if (ev.which === 27) {
-
-                    esc(this);
-                }else if(ev.which - 65 < list.length) {
-
-                    var identifier = list[ev.which - 65].identifier;
-
-                    screen.placeMessage('You wear ' + this.inventory[identifier].description + '.');
-                    this.equipment.torso = this.inventory.splice(identifier, 1)[0];
-
-                    esc(this);
-                    map.cells[this.position.level].time.engine.unlock();
-                }
-            }
-		},
-
-		//RIGHT HAND
-		67: function(ev){
-
-
-		},
-		//LEFT HAND
-		68: function(ev){
-
-
-		},
-		//LEGS
-		69: function(ev){
-
-
-		},
-		//FEET
-		70: function(ev){
-
-
-		}
+		65: ['head', 'helmets'], 66: ['torso', 'armours'], 67: ['right hand', 'weapons'], 68: ['left hand', 'miscellaneous'], 69: ['legs', 'legs'], 70: ['feet', 'boots']
 	};
 
 	/*
@@ -370,7 +304,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				screen.display.drawText(1, 8, '[c] - close');
 				screen.display.drawText(1, 9, '[d] - drop');
 				screen.display.drawText(1, 10, '[,] - pick up');
-                    screen.display.drawText(1, 11, '[,] - equip/unequip items');
+                screen.display.drawText(1, 11, '[e] - equip/unequip items');
 				this.handleEvent = escapeEventHandler.bind(player);
 				
 				break
@@ -605,7 +539,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	}
 
 	function equip(player){
-
+        //first we draw body slots and their equipment on screen
         var drawnText = 'Select body part to equip/unequip:',
             currentRow = 2;
 
@@ -627,10 +561,53 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
                 esc(player);
             }else if(ev.which === 65 || ev.which === 66 || ev.which === 67 || ev.which === 68 || ev.which === 69 || ev.which === 70){
-
-                equip[ev.which].bind(player)();
+                /*
+                we call equipItem function bound to player. First argument is choosen body slot, second is item type suitable for that body slot
+                 */
+                equipItem.bind(player)(equip[ev.which][0], equip[ev.which][1]);
             }
         }
+
+        function equipItem(equipmentType, itemType){
+
+            var list;
+
+            screen.display.clear();
+
+            if(this.equipment[equipmentType].description === 'empty') {
+
+                screen.display.drawText(5, 0, 'Select item you want to equip:');
+                //we draw on screen only item of type suitable to choosen body part
+                list = drawObjectTypeInventory(this, itemType);
+
+                this.handleEvent = wearEventHandler;
+            }else {
+
+                screen.placeMessage('You remove ' + this.equipment[equipmentType].description + '.');
+                this.inventory.push(this.equipment[equipmentType]);
+                this.equipment[equipmentType] = {description: 'empty'};
+
+                esc(this);
+                map.cells[this.position.level].time.engine.unlock();
+            }
+
+            function wearEventHandler(ev) {
+
+                if (ev.which === 27) {
+
+                    esc(this);
+                }else if(ev.which - 65 < list.length) {
+
+                    var identifier = list[ev.which - 65].identifier;
+
+                    screen.placeMessage('You equip ' + this.inventory[identifier].description + '.');
+                    this.equipment[equipmentType] = this.inventory.splice(identifier, 1)[0];
+
+                    esc(this);
+                    map.cells[this.position.level].time.engine.unlock();
+                }
+            }
+		}
 	}
 	
 	function drop(x, y, player){
@@ -740,7 +717,10 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
         for(var i=0; i<object.inventory.length; i++){
 
-            list.push({item: object.inventory[i], type: object.inventory[i].type, identifier: i});
+			if(object.inventory[i].type === type) {
+
+				list.push({item: object.inventory[i], type: object.inventory[i].type, identifier: i});
+			}
         }
 
         screen.bubbleSort(list, 'type');

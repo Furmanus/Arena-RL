@@ -22,10 +22,37 @@ define(['screen', 'map'], function(screen, map){
 	
 	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armours'}
   };
+
+  var headwear = {
+
+      'leather helm': {display: '\u2313', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather helm', description: 'a leather helm', type: 'helmets'},
+
+      'chain choif': {display: '\u2313', fgColor: 'silver', bgColor: 'transparent', name: 'chain choif', description: 'a chain choif', type: 'helmets'},
+
+      'plate helmet': {display: '\u2313', fgColor: 'silver', bgColor: 'transparent', name: 'plate helmet', description: 'a plate helmet', type: 'helmets'},
+  };
+
+  var legs = {
+
+      'leather leggings': {display: '\u23F8', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather leggings', description: 'a leather leggings', type: 'legs'},
+
+      'chain leggings': {display: '\u23F8', fgColor: 'silver', bgColor: 'transparent', name: 'chain leggings', description: 'a chain leggings', type: 'legs'},
+
+      'plate leggings': {display: '\u23F8', fgColor: 'silver', bgColor: 'transparent', name: 'plate leggings', description: 'a plate leggings', type: 'legs'},
+  };
+
+  var boots = {
+
+      'leather boots': {display: '{', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather boots', description: 'a leather boots', type: 'boots'},
+
+      'chain boots': {display: '{', fgColor: 'silver', bgColor: 'transparent', name: 'chain boots', description: 'a chain boots', type: 'boots'},
+
+      'plate boots': {display: '{', fgColor: 'silver', bgColor: 'transparent', name: 'plate boots', description: 'a plate boots', type: 'boots'},
+  };
   
   var scrolls = {
 	  
-	'teleportation': {display: '⏦', fgColor: 'white', bgColor: 'transparent', name: 'teleportation scroll', description: 'a teleportation scroll', type: 'scrolls'}
+	'teleportation': {display: '\u238E', fgColor: 'white', bgColor: 'transparent', name: 'teleportation scroll', description: 'a teleportation scroll', type: 'scrolls'}
   };
   
   var potions = {
@@ -35,7 +62,7 @@ define(['screen', 'map'], function(screen, map){
 
   var misc = {
 
-      'torch': {display: '!', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'torch', description: 'a torch', type: 'miscellaneous'}
+      'torch': {display: '\u26B5', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'torch', description: 'a torch', type: 'miscellaneous'}
   };
   
   class Weapon{
@@ -112,13 +139,62 @@ define(['screen', 'map'], function(screen, map){
           object.inventory.push(this);
       }
   }
+
+    class Helmet{
+
+        constructor(type, object){
+
+            this.display = headwear[type].display;
+            this.fgColor = headwear[type].fgColor;
+            this.bgColor = headwear[type].bgColor;
+            this.name = headwear[type].name;
+            this.description = headwear[type].description;
+            this.type = headwear[type].type;
+
+            object.inventory.push(this);
+        }
+    }
+
+    class Legs{
+
+        constructor(type, object){
+
+            this.display = legs[type].display;
+            this.fgColor = legs[type].fgColor;
+            this.bgColor = legs[type].bgColor;
+            this.name = legs[type].name;
+            this.description = legs[type].description;
+            this.type = legs[type].type;
+
+            object.inventory.push(this);
+        }
+    }
+
+    class Boots{
+
+        constructor(type, object){
+
+            this.display = boots[type].display;
+            this.fgColor = boots[type].fgColor;
+            this.bgColor = boots[type].bgColor;
+            this.name = boots[type].name;
+            this.description = boots[type].description;
+            this.type = boots[type].type;
+
+            object.inventory.push(this);
+        }
+    }
   
   return {
     
     Weapon: Weapon,
 	Armour: Armour,
 	Scroll: Scroll,
-	Potion: Potion
+	Potion: Potion,
+    Helmet: Helmet,
+    Legs: Legs,
+    Boots: Boots,
+    Misc: Misc
   }
 });
 
@@ -126,6 +202,9 @@ define(['screen', 'map'], function(screen, map){
 Useful UNICODE symbols:
 
 \u26A1 - lighting
+\u2301 - vertical lighting
+\u2313 - cap
+\u2314 - gem
 \u2695 - staff
 \u2625 - ankh
 \u266F - grate
@@ -136,6 +215,7 @@ Useful UNICODE symbols:
 \u26EA - church
 \u26EB - building
 \u26F5 - boat
+\u238E - scroll alternative
 \u4E1B - overland forest
 
  ᇫ - helmet
