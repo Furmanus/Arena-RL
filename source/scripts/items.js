@@ -1,4 +1,4 @@
-define(['screen', 'map'], function(screen, map){
+define(['screen', 'map', 'use'], function(screen, map, use){
   
   //hash objects with defined properties, used in class constructor
   var weapons = {
@@ -34,11 +34,11 @@ define(['screen', 'map'], function(screen, map){
 
   var legs = {
 
-      'leather leggings': {display: '\u23F8', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather leggings', description: 'a leather leggings', type: 'legs'},
+      'leather leggings': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather leggings', description: 'a leather leggings', type: 'legs'},
 
-      'chain leggings': {display: '\u23F8', fgColor: 'silver', bgColor: 'transparent', name: 'chain leggings', description: 'a chain leggings', type: 'legs'},
+      'chain leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain leggings', description: 'a chain leggings', type: 'legs'},
 
-      'plate leggings': {display: '\u23F8', fgColor: 'silver', bgColor: 'transparent', name: 'plate leggings', description: 'a plate leggings', type: 'legs'},
+      'plate leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate leggings', description: 'a plate leggings', type: 'legs'},
   };
 
   var boots = {
@@ -52,17 +52,17 @@ define(['screen', 'map'], function(screen, map){
   
   var scrolls = {
 	  
-	'teleportation': {display: '\u238E', fgColor: 'white', bgColor: 'transparent', name: 'teleportation scroll', description: 'a teleportation scroll', type: 'scrolls'}
+	'teleportation': {display: '?', fgColor: 'white', bgColor: 'transparent', name: 'teleportation scroll', description: 'a teleportation scroll', type: 'scrolls', key: 'teleportation'}
   };
   
   var potions = {
 	  
-	  'speed': {display: '!', fgColor: 'red', bgColor: 'transparent', name: 'speed potion', description: 'a speed potion', type: 'potions'}
+	  'speed': {display: '!', fgColor: 'red', bgColor: 'transparent', name: 'speed potion', description: 'a speed potion', type: 'potions', key: 'speed'}
   };
 
   var misc = {
 
-      'torch': {display: '\u26B5', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'torch', description: 'a torch', type: 'miscellaneous'}
+      'torch': {display: '\u00A1', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'torch', description: 'a torch', type: 'miscellaneous'}
   };
   
   class Weapon{
@@ -105,6 +105,7 @@ define(['screen', 'map'], function(screen, map){
       this.name = scrolls[type].name;
       this.description = scrolls[type].description;
 	  this.type = scrolls[type].type;
+	  this.useEffect = use.use.scrolls[scrolls[type].key];
       
       object.inventory.push(this);
     }
@@ -120,6 +121,7 @@ define(['screen', 'map'], function(screen, map){
       this.name = potions[type].name;
       this.description = potions[type].description;
 	  this.type = potions[type].type;
+	  this.useEffect = use.use.potions[potions[type].key];
       
       object.inventory.push(this);
     }
@@ -215,6 +217,7 @@ Useful UNICODE symbols:
 \u26EA - church
 \u26EB - building
 \u26F5 - boat
+\u23F8 - leggings
 \u238E - scroll alternative
 \u4E1B - overland forest
 

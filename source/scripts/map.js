@@ -92,7 +92,7 @@ define(['screen'], function(screen){
 		
 		'deadBush': {display: ['"'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'bush', key: 'bush', name: 'a dead bush', walkMessage: 'A withered bush is here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'tree': {display: ['\u2648'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: true, flammable: true, type: 'tree', key: 'tree', name: 'a tree', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
+		'tree': {display: ['\u2648', '\u0166'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: true, flammable: true, type: 'tree', key: 'tree', name: 'a tree', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
 		'deadTree': {display: ['\u2648'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: true, flammable: false, type: 'dead tree', key: 'deadTree', name: 'a dead tree', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		

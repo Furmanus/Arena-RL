@@ -31,6 +31,7 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
     new items.Misc('torch', map.cells[0][14][15]);
 	player1 = new player.Player();
     new items.Misc('torch', player1);
+	new items.Scroll('teleportation', player1);
 	map.cells[0].time.engine.start();
 	screen.setWindows();
 	

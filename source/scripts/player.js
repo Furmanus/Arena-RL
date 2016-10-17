@@ -18,10 +18,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 				suffocateCounter: 0
 			};
 			
-			this.modifiers = {
-				
-				
-			};
+			this.modifiers = [];
 			
 			this.stats = {
 				
@@ -74,6 +71,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 		
 		act(){
 			
+			this.doModifiers();
 			window.addEventListener('keydown', this, true);
 			map.cells[this.position.level].time.engine.lock();
 		}
@@ -261,6 +259,36 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 				}else if(type == 'remove'){
 					
 					this.stats[n] -= modifiers[n];
+				}
+			}
+		}
+		
+		/*
+		function which iterates through player's modifiers array. If modifier wasn't activated, modifier is added to player corresponding stat. If modifier was activated, on each iteration function substracts one from counter value. If counter value equals zero, modifier is substracted from player corresponding stat and modifier itself is removed from array
+		*/
+		
+		doModifiers(){
+			
+			for(var i=0; i<this.modifiers.length; i++){
+				
+				if(this.modifiers[i].applied === false){
+					
+					this.modifiers[i].applied = true;
+					this.stats[this.modifiers[i].type] += this.modifiers[i].value;
+					screen.placeMessage(this.modifiers[i].useText);
+					this.updateScreenStats();
+				}
+				
+				if(this.modifiers[i].counter === 0){
+					
+					this.stats[this.modifiers[i].type] -= this.modifiers[i].value;
+					screen.placeMessage(this.modifiers[i].wearOffText);
+					this.modifiers.splice(i, 1);
+					this.updateScreenStats();
+					i--;
+				}else{
+					
+					this.modifiers[i].counter--;
 				}
 			}
 		}

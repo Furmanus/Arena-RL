@@ -29,6 +29,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		67: closeDoors,
 		68: drop,
         69: equip,
+		81: quaff,
+		82: read,
 		188: pickUp
 	};
 
@@ -44,7 +46,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	 */
 
 	var equip = {
-		//HEAD
+		
 		65: ['head', 'helmets'], 66: ['torso', 'armours'], 67: ['right hand', 'weapons'], 68: ['left hand', 'miscellaneous'], 69: ['legs', 'legs'], 70: ['feet', 'boots']
 	};
 
@@ -61,7 +63,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 			this.move(moveActions[ev.which].x, moveActions[ev.which].y);
 			map.cells[this.position.level].time.engine.unlock();
-		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69)){
+		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69 || ev.which === 81 || ev.which === 82)){
 
 			if(ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68){
 
@@ -305,6 +307,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				screen.display.drawText(1, 9, '[d] - drop');
 				screen.display.drawText(1, 10, '[,] - pick up');
                 screen.display.drawText(1, 11, '[e] - equip/unequip items');
+				screen.display.drawText(1, 12, '[q] - drink');
+				screen.display.drawText(1, 13, '[r] - read');
 				this.handleEvent = escapeEventHandler.bind(player);
 				
 				break
@@ -738,6 +742,70 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
         return list;
     }
+	
+	/*
+	quaff - function responsible for displaying potions from player inventory replacing event listener with it's own responsible for drinking potions
+	*/
+	
+	function quaff(player){
+		
+		var drawnText = 'Select potion you want to drink:',
+            currentRow = 2,
+			list;
+
+        screen.display.clear();
+        player.handleEvent = quaffEventHandler;
+        screen.display.drawText(Math.floor((screen.options.width - drawnText.length) / 2), 0, drawnText);
+		
+		list = drawObjectTypeInventory(player, 'potions');
+		
+		function quaffEventHandler(ev){
+			
+			if(ev.which === 27){
+				
+				esc(this);
+			}else if(ev.which - 65 < list.length){
+				
+				var identifier = list[ev.which - 65].identifier;
+
+				player.inventory[identifier].useEffect(player.inventory[identifier], player)
+                player.inventory.splice(identifier, 1)[0];
+
+                esc(this);
+                map.cells[this.position.level].time.engine.unlock();
+			}
+		}
+	}
+	
+	function read(player){
+		
+		var drawnText = 'Select item you want to read:',
+            currentRow = 2,
+			list;
+
+        screen.display.clear();
+        player.handleEvent = readEventHandler;
+        screen.display.drawText(Math.floor((screen.options.width - drawnText.length) / 2), 0, drawnText);
+		
+		list = drawObjectTypeInventory(player, 'scrolls');
+		
+		function readEventHandler(ev){
+			
+			if(ev.which === 27){
+				
+				esc(this);
+			}else if(ev.which - 65 < list.length){
+				
+				var identifier = list[ev.which - 65].identifier;
+
+				player.inventory[identifier].useEffect(player.inventory[identifier], player)
+                player.inventory.splice(identifier, 1)[0];
+
+                esc(this);
+                map.cells[this.position.level].time.engine.unlock();
+			}
+		}
+	}
 
 	//wyjście z danego ekranu z powrotem do głównego ekranu gry
 	function esc(player){
