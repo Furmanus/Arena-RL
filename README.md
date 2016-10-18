@@ -10,3 +10,4 @@ Things implemented so far:
 - noise generation
 - light system(partially done, see issues)
 - fire spreading system
+- inventory management and items (just plain items, no stats yet)
