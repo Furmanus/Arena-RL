@@ -1,10 +1,10 @@
-requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'items'], function(map, generator, screen, noise, light, player, monster, items){
+requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'items', 'pathfinding'], function(map, generator, screen, noise, light, player, monster, items, pathfinding){
 	
-	var player1;
+	var player1, enemy;
 	
 	map.initCells(0);
 	generator.createArenaLevel(0);
-	map.setTerrain(0, 5, 5, 'tree');
+	/*map.setTerrain(0, 5, 5, 'tree');
 	map.setTerrain(0, 6, 7, 'shallowWater');
 	map.setTerrain(0, 7, 8, 'chasm');
 	map.setTerrain(0, 7, 8, 'bush');
@@ -29,7 +29,10 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	new items.Scroll('teleportation', map.cells[0][16][15]);
 	new items.Potion('speed', map.cells[0][4][15]);
     new items.Misc('torch', map.cells[0][14][15]);
+	*/
+	enemy = new monster.Monster(0, 'rat');
 	player1 = new player.Player();
+	
     new items.Misc('torch', player1);
 	new items.Scroll('teleportation', player1);
 	map.cells[0].time.engine.start();

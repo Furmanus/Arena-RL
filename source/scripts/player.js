@@ -14,6 +14,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 			this.abilities = {
 				
 				breatheUnderWater: false,
+				canFly: false,
 				isSuffocating: false,
 				suffocateCounter: 0
 			};
