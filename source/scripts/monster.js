@@ -21,7 +21,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light'], function(map, screen,
 			this.abilities = {breatheUnderWater: monsterType[type].abilities.breatheUnderWater, canFly: monsterType[type].abilities.canFly, canOpenDoors: monsterType[type].abilities.canOpenDoors, isSuffocating: false, suffocateCounter: 0};
 			
 			this.init();
-			map.cells[this.position.level].time.scheduler.add(this);
+			map.cells[this.position.level].time.scheduler.add(this, true);
 		}
 		
 		init(){
@@ -64,9 +64,37 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light'], function(map, screen,
 			return this.stats.speed;
 		}
 		
+		/*
+		moves entity towards selected coordinates (x and y vary from -1 to 1))
+		*/
+		
+		move(x,y){
+			
+			var tmpX = this.position.x + x,
+				tmpY = this.position.y + y;
+			
+			if(map.cells[this.position.level][tmpX][tmpY].type.blockMovement === true){
+				
+				return 'wall';
+			}else if(map.cells[this.position.level][tmpX][tmpY].entity !== null){
+				
+				return 'entity';
+			}else{
+				
+				map.cells[this.position.level][this.position.x][this.position.y].entity = null;
+				
+				this.position.x = tmpX;
+				this.position.y = tmpY;
+				
+				map.cells[this.position.level][this.position.x][this.position.y].entity = this;
+				
+				return 'moved';
+			}
+		}
+		
 		act(){
 			
-			//TODO
+			
 		}
 	}
 	

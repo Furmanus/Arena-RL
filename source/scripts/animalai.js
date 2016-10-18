@@ -7,7 +7,9 @@ module containing AI methods for unintelligent animals
 
 define(['map', 'screen', 'pathfinding'], function(map, screen, pathfinding){
 	
-	
+	var ai = {
+		
+	};
 	
 	return {
 		

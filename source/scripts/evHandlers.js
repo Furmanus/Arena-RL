@@ -62,7 +62,6 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		}else if(ev.shiftKey === false && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100 || ev.which === 101)){
 
 			this.move(moveActions[ev.which].x, moveActions[ev.which].y);
-			map.cells[this.position.level].time.engine.unlock();
 		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69 || ev.which === 81 || ev.which === 82)){
 
 			if(ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68){
