@@ -88,7 +88,7 @@ define(['screen'], function(screen){
 		
 		'stairsDown': {display: ['>'], fgColor: 'silver', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'stairs down', key: 'stairsDown', name: 'a stairs leading downwards', walkMessage: 'Stairs leading downwards are here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'bush': {display: ['\u268F'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: true, blockMovement: false, flammable: true, type: 'dead bush', key: 'deadBush', name: 'a bush', walkMessage: 'A thick bush is growing here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
+		'bush': {display: ['"'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: true, blockMovement: false, flammable: true, type: 'dead bush', key: 'deadBush', name: 'a bush', walkMessage: 'A thick bush is growing here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
 		'deadBush': {display: ['"'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'bush', key: 'bush', name: 'a dead bush', walkMessage: 'A withered bush is here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
