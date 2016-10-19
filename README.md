@@ -11,3 +11,5 @@ Things implemented so far:
 - light system(partially done, see issues)
 - fire spreading system
 - inventory management and items (just plain items, no stats yet)
+
+You can use http://rawgit.com/ site to preview result without downloading whole repository.
