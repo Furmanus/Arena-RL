@@ -27,7 +27,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 				perception: 60
 			};
 			this.lookDescription = 'anonymous brave adventurer';
-			this.type = {messageDisplay: 'you', type: 'player'};
+			this.type = {messageDisplay: 'you', type: 'player', name: 'you'};
 			
 			this.inventory = [];
 

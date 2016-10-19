@@ -1,15 +1,16 @@
-define(['map', 'screen', 'noise', 'pathfinding', 'light'], function(map, screen, noise, pathfinding, light){
+define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai'], function(map, screen, noise, pathfinding, light, animalai){
 	
 	var monsterType = {
 		
-		'rat': {display: 'r', fgColor: 'darkgoldenrod', bgColor: 'transparent', lookDescription: 'a rat', type: {messageDisplay: 'rat', type: 'monster', family: 'animal', species: 'rat', name: 'a rat'}, stats: {speed: 110, perception: 8}, ai: null,
-		abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0}}
+		'rat': {display: 'r', fgColor: 'darkgoldenrod', bgColor: 'transparent', lookDescription: 'a rat', type: {messageDisplay: 'rat', type: 'monster', family: 'animal', species: 'rat', name: 'a rat'}, stats: {speed: 110, perception: 8}, ai: animalai.ai, abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0}}
 	};
 	
 	class Monster{
 		
 		constructor(onLevel, type){
-			
+
+			this.currentFov = [];
+            this.currentGoal = null;
 			this.position = {level: onLevel};
 			this.display = monsterType[type].display;
 			this.fgColor = monsterType[type].fgColor;
@@ -19,8 +20,12 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light'], function(map, screen,
 			
 			this.stats = {speed: monsterType[type].stats.speed, perception: monsterType[type].stats.perception};
 			this.abilities = {breatheUnderWater: monsterType[type].abilities.breatheUnderWater, canFly: monsterType[type].abilities.canFly, canOpenDoors: monsterType[type].abilities.canOpenDoors, isSuffocating: false, suffocateCounter: 0};
+
+			this.ai = monsterType[type].ai;
 			
 			this.init();
+            this.doFov(this);
+
 			map.cells[this.position.level].time.scheduler.add(this, true);
 		}
 		
@@ -77,24 +82,68 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light'], function(map, screen,
 				
 				return 'wall';
 			}else if(map.cells[this.position.level][tmpX][tmpY].entity !== null){
-				
+
+                screen.placeMessage(screen.capitalizeString(screen.removeFirst(this.type.name)) + ' bumps into ' + map.cells[this.position.level][tmpX][tmpY].entity.type.name + '.');
 				return 'entity';
 			}else{
-				
+
+				this.currentFov = [];
 				map.cells[this.position.level][this.position.x][this.position.y].entity = null;
 				
 				this.position.x = tmpX;
 				this.position.y = tmpY;
 				
 				map.cells[this.position.level][this.position.x][this.position.y].entity = this;
+				this.doFov(this);
 				
 				return 'moved';
 			}
 		}
+
+		doFov(monster){
+
+            function lightPasses(x, y){
+
+                if(x < 0 || y < 0 || x > screen.options.width - 1 || y > screen.options.height - 1){
+
+                    return false;
+                }
+
+                if(map.cells[monster.position.level][x][y].type.blockFov === true && x == monster.position.x && y == monster.position.y){
+
+                    return true;
+                }else if(map.cells[monster.position.level][x][y].type.blockFov === false){
+
+                    return true;
+                }else {
+
+                    return false;
+                }
+            }
+
+            var fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
+
+            fov.compute(monster.position.x, monster.position.y, 60, function(x, y, r, visibility){
+
+                if(x < 0 || y < 0 || x > screen.options.width - 1 || y >  screen.options.height - 1){
+
+                    return;
+                }else if(map.cells[monster.position.level][x][y].isLit === true){
+
+                    monster.currentFov.push({x: x, y: y});
+                }else if(screen.getDistanceSquare(x, y, monster.position.x, monster.position.y) <= monster.stats.perception){
+
+                    monster.currentFov.push({x: x, y: y});
+                }else {
+
+                    return;
+                }
+            });
+        }
 		
 		act(){
 			
-			
+			this.ai.nextStep(this);
 		}
 	}
 	

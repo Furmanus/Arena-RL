@@ -101,8 +101,8 @@ define(['screen', 'map'], function(screen, map){
 			
 		});
 		
-		//we remove last element of path, because it's equal to starting coordinates
-		path.pop();
+		//we remove first element of path, because it's equal to starting coordinates
+		path.shift();
 		return path;
 	}
 	
