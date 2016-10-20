@@ -412,7 +412,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			if(map.cells[level][x][y].isVisible === true){
 				
 				if(map.cells[level][x][y].entity != null){
-				
+					console.log(map.cells[level][x][y].entity.stats);
 					displayText = 'You see ' + map.cells[level][x][y].entity.lookDescription + '.';
 					
 					if(map.cells[level][x][y].isOnFire === true){

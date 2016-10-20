@@ -2,12 +2,21 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai'], function(
 	
 	var monsterType = {
 		
-		'rat': {display: 'r', fgColor: 'darkgoldenrod', bgColor: 'transparent', lookDescription: 'a rat', type: {messageDisplay: 'rat', type: 'monster', family: 'animal', species: 'rat', name: 'a rat'}, stats: {speed: 110, perception: 8}, ai: animalai.ai, abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0}}
+		'rat': {display: 'r', fgColor: 'darkgoldenrod', bgColor: 'transparent', lookDescription: 'a rat', type: {messageDisplay: 'rat', type: 'monster', family: 'animal', species: 'rat', name: 'a rat'}, stats: {speed: 100, perception: 8}, ai: animalai.ai, abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
+		hostileList: {species: ['human'], family: [], entity: []}}
 	};
 	
 	class Monster{
 		
 		constructor(onLevel, type){
+			
+			//object with array determining whether certain creature (or whole species/family) is hostile
+			this.hostileList = {
+				
+				species: monsterType[type].hostileList.species,
+				family: monsterType[type].hostileList.family,
+				entity: monsterType[type].hostileList.entity
+			};
 
 			this.currentFov = [];
             this.currentGoal = null;
@@ -60,6 +69,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai'], function(
 				
 				this.position.x = x;
 				this.position.y = y;
+				this.position.lastVisitedCell = null;
 				map.cells[level][x][y].entity = this;
 			}
 		}
@@ -82,18 +92,25 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai'], function(
 				
 				return 'wall';
 			}else if(map.cells[this.position.level][tmpX][tmpY].entity !== null){
-
+				
                 screen.placeMessage(screen.capitalizeString(screen.removeFirst(this.type.name)) + ' bumps into ' + map.cells[this.position.level][tmpX][tmpY].entity.type.name + '.');
 				return 'entity';
-			}else{
-
+			}else if(map.cells[this.position.level][tmpX][tmpY].entity === null){
+				
 				this.currentFov = [];
 				map.cells[this.position.level][this.position.x][this.position.y].entity = null;
 				
+				this.position.lastVisitedCell = map.cells[this.position.level][this.position.x][this.position.y];
 				this.position.x = tmpX;
 				this.position.y = tmpY;
 				
 				map.cells[this.position.level][this.position.x][this.position.y].entity = this;
+				
+				map.cells[this.position.level][this.position.x][this.position.y].type.walkEffect(this, this.position.x, this.position.y);
+				
+				screen.display.clear();
+				screen.drawVisibleCells(map.cells[this.position.level]);
+				
 				this.doFov(this);
 				
 				return 'moved';
@@ -141,9 +158,89 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai'], function(
             });
         }
 		
+		/*
+		terrainModifiers() - function applying terrain modifiers to player. Used at beginning of act() method.
+		*/
+		
+		terrainModifiers(){
+			
+			var level = this.position.level,
+				x = this.position.x,
+				y = this.position.y,
+				modifiers = map.cells[level][x][y].type.modifiers;
+			
+			/*
+			if current cell has modifiers, and previously visited cell did not (or player was just "created") - we apply modifiers to monster
+			*/
+			
+			if(this.position.lastVisitedCell === null || this.position.lastVisitedCell.type.modifiers === null){
+				
+				if(map.cells[level][x][y].type.modifiers !== null){
+				
+					for(var n in modifiers){
+				
+						this.stats[n] += modifiers[n];
+						
+					}
+				}
+			}else if(this.position.lastVisitedCell.type.modifiers !== null){
+			
+			/*
+			if lastVisitedCell had any modifiers, we have two options: either current cell can have other modifiers (like coming from sand to shallow water), or current cell can have no modifiers (like coming from sand to floor). In former option we remove modifiers from lastVisitedCell and add modifiers from current cell, in latter option we just remove modifiers from lastVisitedCell
+			*/
+			
+				if(map.cells[level][x][y].type.modifiers !== null && map.cells[level][x][y].type.type !== this.position.lastVisitedCell.type.type){
+					
+					for(var n in modifiers){
+						
+						this.stats[n] += modifiers[n];
+					}
+					
+					for(var n in this.position.lastVisitedCell.modifiers){
+						
+						this.stats[n] -= this.position.lastVisitedCell.modifiers[n];
+					}
+				}else if(map.cells[level][x][y].type.modifiers === null){
+					
+					for(var n in this.position.lastVisitedCell.type.modifiers){
+						
+						this.stats[n] -= this.position.lastVisitedCell.type.modifiers[n];
+					}
+				}
+			}
+		}
+		
+		checkIfHostile(entity){
+			
+			for(var i=0; i<this.hostileList.species.length; i++){
+				
+				if(entity.type.species === this.hostileList.species[i]){
+					
+					return true;
+				}
+			}
+			
+			for(var i=0; i<this.hostileList.family.length; i++){
+				
+				if(entity.type.family === this.hostileList.family[i]){
+					
+					return true;
+				}
+			}
+			
+			for(var i=0; i<this.hostileList.entity.length; i++){
+				
+				if(entity === this.hostileList.entity[i]){
+					
+					return true;
+				}
+			}
+		}
+		
 		act(){
 			
 			this.ai.nextStep(this);
+			this.terrainModifiers();
 		}
 	}
 	

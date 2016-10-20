@@ -27,7 +27,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 				perception: 60
 			};
 			this.lookDescription = 'anonymous brave adventurer';
-			this.type = {messageDisplay: 'you', type: 'player', name: 'you'};
+			this.type = {messageDisplay: 'you', type: 'player', species: 'human', family: 'player', name: 'you'};
 			
 			this.inventory = [];
 
@@ -52,6 +52,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 			this.position.level = 0;
 			this.position.x = stairsUp.x;
 			this.position.y = stairsUp.y;
+			this.position.lastVisitedCell = null;
 			
 			map.cells[0][stairsUp.x][stairsUp.y].entity = this;
 			map.cells[0].time.scheduler.add(this, true);
@@ -72,6 +73,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 		
 		act(){
 			
+			this.terrainModifiers();
 			this.doModifiers();
 			window.addEventListener('keydown', this, true);
 			map.cells[this.position.level].time.engine.lock();
@@ -98,8 +100,6 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 			
 			var tmpX = this.position.x + x,
 				tmpY = this.position.y + y;
-			
-			this.terrainModifiers('remove');
 			
 			if(map.cells[this.position.level][tmpX][tmpY].entity != null && map.cells[this.position.level][tmpX][tmpY].entity != this){
 				//TU BĘDZIE KOD ODPOWIEDZIALNY ZA ATAK
@@ -130,6 +130,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 						this.currentFov = [];
 				
 						map.cells[this.position.level][this.position.x][this.position.y].entity = null;
+						this.position.lastVisitedCell = map.cells[this.position.level][this.position.x][this.position.y];
 				
 						this.position.x += x;
 						this.position.y += y;
@@ -170,7 +171,6 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 				}	
 			}
 			
-			this.terrainModifiers('apply');
 			this.updateScreenStats();
 		}
 		
@@ -242,24 +242,52 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 		}
 		
 		/*
-		terrainModifiers() - aplikuje lub usuwa (w zależności od parametru type, który może mieć dwie wartości: 'apply' lub 'remove') modyfikatory z pola na którym aktualnie przebywa gracz. Używana w metodzie move()
+		terrainModifiers() - function applying terrain modifiers to player. Used at beginning of act() method.
 		*/
 		
-		terrainModifiers(type){
+		terrainModifiers(){
 			
 			var level = this.position.level,
 				x = this.position.x,
 				y = this.position.y,
 				modifiers = map.cells[level][x][y].type.modifiers;
+			
+			/*
+			if current cell has modifiers, and previously visited cell did not (or player was just "created") - we apply modifiers to player
+			*/
+			
+			if(this.position.lastVisitedCell === null || this.position.lastVisitedCell.type.modifiers === null){
 				
-			for(var n in modifiers){
+				if(map.cells[level][x][y].type.modifiers !== null){
 				
-				if(type == 'apply'){
+					for(var n in modifiers){
+				
+						this.stats[n] += modifiers[n];
+						
+					}
+				}
+			}else if(this.position.lastVisitedCell.type.modifiers !== null){
+			
+			/*
+			if lastVisitedCell had any modifiers, we have two options: either current cell can have other modifiers (like coming from sand to shallow water), or current cell can have no modifiers (like coming from sand to floor). In former option we remove modifiers from lastVisitedCell and add modifiers from current cell, in latter option we just remove modifiers from lastVisitedCell
+			*/
+				if(map.cells[level][x][y].type.modifiers !== null && map.cells[level][x][y].type.type !== this.position.lastVisitedCell.type.type){
 					
-					this.stats[n] += modifiers[n];
-				}else if(type == 'remove'){
+					for(var n in modifiers){
+						
+						this.stats[n] += modifiers[n];
+					}
 					
-					this.stats[n] -= modifiers[n];
+					for(var n in this.position.lastVisitedCell.modifiers){
+						
+						this.stats[n] -= this.position.lastVisitedCell.modifiers[n];
+					}
+				}else if(map.cells[level][x][y].type.modifiers === null){
+					
+					for(var n in this.position.lastVisitedCell.type.modifiers){
+						
+						this.stats[n] -= this.position.lastVisitedCell.type.modifiers[n];
+					}
 				}
 			}
 		}

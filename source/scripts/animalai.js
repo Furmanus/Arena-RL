@@ -72,9 +72,9 @@ define(['map', 'screen', 'pathfinding'], function(map, screen, pathfinding){
 
                 examinedCell = map.cells[monster.position.level][monster.currentFov[i].x][monster.currentFov[i].y];
 
-                if(examinedCell.entity !== null && examinedCell.entity !== monster){
+                if(examinedCell.entity !== null && examinedCell.entity !== monster && monster.checkIfHostile(examinedCell.entity) === true){
 
-                    cellsOfInterest.push({x: monster.currentFov[i].x, y: monster.currentFov[i].y, distance: screen.getDistance(examinedCell.x, examinedCell.y, monster.position.x, monster.position.y)});
+                    cellsOfInterest.push({x: monster.currentFov[i].x, y: monster.currentFov[i].y, distance: screen.getDistance(examinedCell.x, examinedCell.y, monster.position.x, monster.position.y), priority: undefined});
                 }
             }
 
