@@ -1,11 +1,5 @@
-define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat'], function(map, screen, noise, pathfinding, light, animalai, combat){
-	
-	var monsterType = {
+define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 'monsterList'], function(map, screen, noise, pathfinding, light, animalai, combat, monsterList){
 		
-		'rat': {display: 'r', fgColor: 'darkgoldenrod', bgColor: 'transparent', lookDescription: 'a rat', type: {messageDisplay: 'rat', type: 'monster', family: 'animal', species: 'rat', name: 'a rat'}, HD: '0.25,8', size: 'tiny', stats: {strength: 2, dexterity: 15, constitution: 10, intelligence: 2, wisdom: 12, charisma: 2, speed: 15, perception: 8, baseAttackBonus: 0, defense: 14}, ai: animalai.ai, abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
-		hostileList: {species: ['human'], family: [], entity: []}}
-	};
-	
 	class Monster{
 		
 		constructor(onLevel, type){
@@ -13,30 +7,50 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat'],
 			//object with array determining whether certain creature (or whole species/family) is hostile
 			this.hostileList = {
 				
-				species: monsterType[type].hostileList.species,
-				family: monsterType[type].hostileList.family,
-				entity: monsterType[type].hostileList.entity
+				species: monsterList.monsterType[type].hostileList.species,
+				family: monsterList.monsterType[type].hostileList.family,
+				entity: monsterList.monsterType[type].hostileList.entity
 			};
 
 			this.currentFov = [];
             this.currentGoal = null;
 			this.position = {level: onLevel};
-			this.display = monsterType[type].display;
-			this.fgColor = monsterType[type].fgColor;
-			this.bgColor = monsterType[type].bgColor;
-			this.lookDescription = monsterType[type].lookDescription;
+			this.display = monsterList.monsterType[type].display;
+			this.fgColor = monsterList.monsterType[type].fgColor;
+			this.bgColor = monsterList.monsterType[type].bgColor;
+			this.lookDescription = monsterList.monsterType[type].lookDescription;
 			
-			this.size = monsterType[type].size;
-			this.type = {messageDisplay: monsterType[type].type.messageDisplay, type: monsterType[type].type.type, family: monsterType[type].type.family, species: monsterType[type].type.species, name: monsterType[type].type.name};
+			this.size = monsterList.monsterType[type].size;
+			this.type = {
+				messageDisplay: monsterList.monsterType[type].type.messageDisplay, 
+				type: monsterList.monsterType[type].type.type, 
+				family: monsterList.monsterType[type].type.family, 
+				species: monsterList.monsterType[type].type.species, 
+				name: monsterList.monsterType[type].type.name};
 			
-			this.stats = {strength: monsterType[type].stats.strength, dexterity: monsterType[type].stats.dexterity, constitution: monsterType[type].stats.constitution, intelligence: monsterType[type].stats.intelligence, wisdom: monsterType[type].stats.wisdom, charisma: monsterType[type].stats.charisma, speed: monsterType[type].stats.speed, perception: monsterType[type].stats.perception, baseAttackBonus: monsterType[type].stats.baseAttackBonus, defense: monsterType[type].stats.defense};
+			this.stats = {
+				strength: monsterList.monsterType[type].stats.strength, 
+				dexterity: monsterList.monsterType[type].stats.dexterity, 
+				constitution: monsterList.monsterType[type].stats.constitution, 
+				intelligence: monsterList.monsterType[type].stats.intelligence, 
+				wisdom: monsterList.monsterType[type].stats.wisdom, 
+				charisma: monsterList.monsterType[type].stats.charisma, 
+				speed: monsterList.monsterType[type].stats.speed, 
+				perception: monsterList.monsterType[type].stats.perception, 
+				baseAttackBonus: monsterList.monsterType[type].stats.baseAttackBonus, 
+				defense: monsterList.monsterType[type].stats.defense};
 			
 			this.hp = 4 + Math.floor(this.stats.constitution / 2 - 5);
-			this.HD = monsterType[type].HD;
+			this.HD = monsterList.monsterType[type].HD;
 			
-			this.abilities = {breatheUnderWater: monsterType[type].abilities.breatheUnderWater, canFly: monsterType[type].abilities.canFly, canOpenDoors: monsterType[type].abilities.canOpenDoors, isSuffocating: false, suffocateCounter: 0};
+			this.abilities = {
+				breatheUnderWater: monsterList.monsterType[type].abilities.breatheUnderWater, 
+				canFly: monsterList.monsterType[type].abilities.canFly, 
+				canOpenDoors: monsterList.monsterType[type].abilities.canOpenDoors, 
+				isSuffocating: false, 
+				suffocateCounter: 0};
 
-			this.ai = monsterType[type].ai;
+			this.ai = monsterList.monsterType[type].ai;
 			
 			this.init();
             this.doFov(this);
