@@ -1,8 +1,8 @@
-define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai'], function(map, screen, noise, pathfinding, light, animalai){
+define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat'], function(map, screen, noise, pathfinding, light, animalai, combat){
 	
 	var monsterType = {
 		
-		'rat': {display: 'r', fgColor: 'darkgoldenrod', bgColor: 'transparent', lookDescription: 'a rat', type: {messageDisplay: 'rat', type: 'monster', family: 'animal', species: 'rat', name: 'a rat'}, stats: {speed: 100, perception: 8}, ai: animalai.ai, abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
+		'rat': {display: 'r', fgColor: 'darkgoldenrod', bgColor: 'transparent', lookDescription: 'a rat', type: {messageDisplay: 'rat', type: 'monster', family: 'animal', species: 'rat', name: 'a rat'}, HD: '0.25,8', size: 'tiny', stats: {strength: 2, dexterity: 15, constitution: 10, intelligence: 2, wisdom: 12, charisma: 2, speed: 15, perception: 8, baseAttackBonus: 0, defense: 14}, ai: animalai.ai, abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
 		hostileList: {species: ['human'], family: [], entity: []}}
 	};
 	
@@ -25,9 +25,15 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai'], function(
 			this.fgColor = monsterType[type].fgColor;
 			this.bgColor = monsterType[type].bgColor;
 			this.lookDescription = monsterType[type].lookDescription;
+			
+			this.size = monsterType[type].size;
 			this.type = {messageDisplay: monsterType[type].type.messageDisplay, type: monsterType[type].type.type, family: monsterType[type].type.family, species: monsterType[type].type.species, name: monsterType[type].type.name};
 			
-			this.stats = {speed: monsterType[type].stats.speed, perception: monsterType[type].stats.perception};
+			this.stats = {strength: monsterType[type].stats.strength, dexterity: monsterType[type].stats.dexterity, constitution: monsterType[type].stats.constitution, intelligence: monsterType[type].stats.intelligence, wisdom: monsterType[type].stats.wisdom, charisma: monsterType[type].stats.charisma, speed: monsterType[type].stats.speed, perception: monsterType[type].stats.perception, baseAttackBonus: monsterType[type].stats.baseAttackBonus, defense: monsterType[type].stats.defense};
+			
+			this.hp = 4 + Math.floor(this.stats.constitution / 2 - 5);
+			this.HD = monsterType[type].HD;
+			
 			this.abilities = {breatheUnderWater: monsterType[type].abilities.breatheUnderWater, canFly: monsterType[type].abilities.canFly, canOpenDoors: monsterType[type].abilities.canOpenDoors, isSuffocating: false, suffocateCounter: 0};
 
 			this.ai = monsterType[type].ai;
@@ -94,6 +100,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai'], function(
 			}else if(map.cells[this.position.level][tmpX][tmpY].entity !== null){
 				
                 screen.placeMessage(screen.capitalizeString(screen.removeFirst(this.type.name)) + ' bumps into ' + map.cells[this.position.level][tmpX][tmpY].entity.type.name + '.');
+				combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity);
 				return 'entity';
 			}else if(map.cells[this.position.level][tmpX][tmpY].entity === null){
 				

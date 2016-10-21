@@ -1,4 +1,4 @@
-define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, noise, light, evHandlers){	
+define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(screen, map, noise, light, evHandlers, combat){	
 	
 	class Player{
 		
@@ -8,6 +8,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 			this.display = '@';
 			this.fgColor = 'silver';
 			this.bgColor = 'transparent';
+			this.size = 'medium';
 			this.position = {};
 			this.currentFov = [];
 			
@@ -23,9 +24,22 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 			
 			this.stats = {
 				
-				speed: 100,
-				perception: 60
+				strength: 15,
+				dexterity: 15,
+				constitution: 15, 
+				intelligence: 15, 
+				wisdom: 15, 
+				charisma: 15,
+				
+				speed: 30,
+				perception: 60,
+				
+				baseAttackBonus: 1,
+				defense: 10
 			};
+			
+			this.HD = '1d8';
+			this.hp = 8 + Math.floor(this.stats.constitution / 2 - 5);
 			this.lookDescription = 'anonymous brave adventurer';
 			this.type = {messageDisplay: 'you', type: 'player', species: 'human', family: 'player', name: 'you'};
 			
@@ -102,8 +116,8 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers'], function(screen, map, 
 				tmpY = this.position.y + y;
 			
 			if(map.cells[this.position.level][tmpX][tmpY].entity != null && map.cells[this.position.level][tmpX][tmpY].entity != this){
-				//TU BĘDZIE KOD ODPOWIEDZIALNY ZA ATAK
-				screen.placeMessage('You bump into ' + map.cells[this.position.level][tmpX][tmpY].entity.type.name + '.');
+				
+				combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity);
 				
 				map.clearVisibility(map.cells[this.position.level]);
 				screen.display.clear();
