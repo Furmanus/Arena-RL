@@ -51,6 +51,8 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				suffocateCounter: 0};
 
 			this.ai = monsterList.monsterType[type].ai;
+			this.defaultWeapon = monsterList.monsterType[type].defaultWeapon;
+			this.weapon = this.defaultWeapon;
 			
 			this.init();
             this.doFov(this);
@@ -112,8 +114,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				
 				return 'wall';
 			}else if(map.cells[this.position.level][tmpX][tmpY].entity !== null){
-				
-                screen.placeMessage(screen.capitalizeString(screen.removeFirst(this.type.name)) + ' bumps into ' + map.cells[this.position.level][tmpX][tmpY].entity.type.name + '.');
+
 				combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity);
 				return 'entity';
 			}else if(map.cells[this.position.level][tmpX][tmpY].entity === null){

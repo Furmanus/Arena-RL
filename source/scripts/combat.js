@@ -1,4 +1,4 @@
-define(['screen', 'map'], function(screen, map){
+define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages){
 	
 	var sizeModifiers = {
 		
@@ -15,11 +15,14 @@ define(['screen', 'map'], function(screen, map){
 			defenderScore;
 		
 		if(attackerScore === 1){
-			//kod odpowiedzialny za automatyczne chybienie...
-			console.log('critical miss');
+
+            screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical miss', 0));
 		}else if(attackerScore === 20){
-			//kod odpowiedzialny za automatyczne trafienie i trafienie krytyczne...
-			console.log('critical hit');
+
+			var damageDealt = calc(attacker.weapon.damage) + calc(attacker.weapon.damage);
+
+			defender.hp -= damageDealt;
+			screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt));
 		}else{
 			
 			attackerScore += attacker.stats.baseAttackBonus + Math.floor(attacker.stats.strength / 2 - 5) + sizeModifiers[attacker.size];
@@ -27,11 +30,14 @@ define(['screen', 'map'], function(screen, map){
 			defenderScore = defender.stats.defense + Math.floor(defender.stats.dexterity / 2 - 5) + sizeModifiers[defender.size];
 			
 			if(attackerScore >= defenderScore){
-				
-				console.log('hit!');
+
+				var damageDealt = calc(attacker.weapon.damage);
+
+				defender.hp -= damageDealt;
+				screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'hit', damageDealt));
 			}else{
-				
-				console.log('miss');
+
+				screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'miss', 0));
 			}
 		}		
 	}
@@ -47,7 +53,18 @@ define(['screen', 'map'], function(screen, map){
 		
 		return Math.ceil(result);
 	}
-	
+
+	//function to calculate dmg number from description like '1d8'
+
+	function calc(dice){
+
+		var index = dice.search('d'),
+			x = parseInt(dice.substring(0, index)),
+			y = parseInt(dice.substring(index + 1));
+
+		return roll(x, y);
+	}
+
 	return{
 		
 		roll: roll,

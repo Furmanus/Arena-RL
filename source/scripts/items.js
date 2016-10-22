@@ -3,13 +3,13 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   //hash objects with defined properties, used in class constructor
   var weapons = {
   
-    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapons'},
+    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapons', natural: false, damage: '1d4', critical: [19,20], dmgType: 'piercing', criticalMultiplier: 3},
 	
-    'long sword': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'long sword', description: 'a long sword', type: 'weapons'},
+    'long sword': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'long sword', description: 'a long sword', type: 'weapons', natural: false,  damage: '1d8', critical: [19,20], dmgType: 'slashing', criticalMultiplier: 2},
 	
-    'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapons'},
+    'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapons', natural: false,  damage: '1d6', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 2},
 	
-	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons'}
+	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons', natural: false,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 3}
   };
   
   var armours = {
@@ -75,6 +75,11 @@ define(['screen', 'map', 'use'], function(screen, map, use){
       this.name = weapons[type].name;
       this.description = weapons[type].description;
 	  this.type = weapons[type].type;
+      this.natural = weapons[type].natural;
+      this.damage = weapons[type].damage;
+      this.critical = weapons[type].critical;
+      this.dmgType = weapons[type].dmgType;
+      this.criticalMultiplier = weapons[type].criticalMultiplier;
       
       object.inventory.push(this);
     }

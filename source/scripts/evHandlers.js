@@ -369,11 +369,12 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 						
 				}
 			}else if(ev.which == 27 || ev.which == 32){
-					
+
 				screen.display.clear();
 				screen.drawVisibleCells(map.cells[this.position.level]);
 				this.handleEvent = defaultEventHandler;
 				screen.lookCount = 0;
+				document.getElementById('messageBox').removeChild(document.getElementById('messageBox').childNodes[document.getElementById('messageBox').childNodes.length - 1]);
 					
 			}
 		}
@@ -586,6 +587,11 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 this.handleEvent = wearEventHandler;
             }else {
 
+				if(this.equipment[equipmentType].type === 'weapons'){
+
+                    this.weapon = this.defaultWeapon;
+                }
+
                 screen.placeMessage('You remove ' + this.equipment[equipmentType].description + '.');
                 this.inventory.push(this.equipment[equipmentType]);
                 this.equipment[equipmentType] = {description: 'empty'};
@@ -602,6 +608,11 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 }else if(ev.which - 65 < list.length) {
 
                     var identifier = list[ev.which - 65].identifier;
+
+                    if(this.inventory[identifier].type === 'weapons'){
+
+                        this.weapon = this.inventory[identifier];
+                    }
 
                     screen.placeMessage('You equip ' + this.inventory[identifier].description + '.');
                     this.equipment[equipmentType] = this.inventory.splice(identifier, 1)[0];
