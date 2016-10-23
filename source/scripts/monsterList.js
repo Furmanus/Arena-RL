@@ -14,7 +14,7 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			ai: animalai.ai, 
 			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
 			hostileList: {species: ['human'], family: [], entity: []},
-			defaultWeapon: {name: 'teeths', description: 'a bite', natural: true, damage: '1d1', critical: [20], dmgType: 'bite', criticalMultiplier: 2}
+			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d1', critical: [20], dmgType: 'bite', criticalMultiplier: 2}
 			}
 	};
 	

@@ -161,6 +161,32 @@ define([], function(){
 			document.getElementById('messageBox').removeChild(document.getElementById('messageBox').getElementsByTagName('li')[0]);
 		}
 	}
+
+	function placeVisibleMessage(string, cell){
+
+		if(cell.isVisible === true) {
+
+			if (string != currentMessage && string.length > 0) {
+				var message = document.createElement('li');
+				message.innerHTML = string;
+				currentMessage = string;
+				currentMessageCount = 1;
+
+				document.getElementById('messageBox').appendChild(message);
+				document.getElementById('messages').scrollTop = message.offsetTop;
+			} else if (string == currentMessage && string.length > 0) {
+
+				currentMessageCount++;
+				document.getElementById("messageBox").lastChild.innerHTML = currentMessage + ' x' + currentMessageCount;
+			}
+
+			if (document.getElementById('messageBox').childNodes.length > 120) {
+
+				document.getElementById('messageBox').removeChild(document.getElementById('messageBox').getElementsByTagName('li')[0]);
+			}
+		}
+	}
+
 	//removes "a" or "an" from beginning of string
 	function removeFirst(string){
 		var result = string;
@@ -188,6 +214,7 @@ define([], function(){
 		lookCount: lookCount,
 		drawVisibleCells: drawVisibleCells,
 		getDistanceSquare: getDistanceSquare,
-		removeFirst: removeFirst
+		removeFirst: removeFirst,
+		placeVisibleMessage: placeVisibleMessage
 	}
 });

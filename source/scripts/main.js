@@ -6,9 +6,9 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	generator.createArenaLevel(0);
 	//map.setTerrain(0, 5, 5, 'tree');
 	//map.setTerrain(0, 6, 7, 'shallowWater');
-	//map.setTerrain(0, 7, 7, 'shallowWater');
-	//map.setTerrain(0, 8, 7, 'shallowWater');
-	//map.setTerrain(0, 9, 7, 'shallowWater');
+	map.setTerrain(0, 7, 7, 'shallowWater');
+	map.setTerrain(0, 8, 7, 'deepWater');
+	map.setTerrain(0, 9, 7, 'sand');
 	
 	/*
 	map.setTerrain(0, 7, 8, 'chasm');

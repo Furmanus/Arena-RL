@@ -8,25 +8,25 @@ define(['screen'], function(screen){
 
     var msgHitWeapon = {
 
-        'piercing': {'player': [' pierce ', ' stab ', ' thrust at'], 'monster': [' pierces ', ' stabs ', ' thrusts at']},
+        'piercing': {'player': [' pierce ', ' stab ', ' thrust at '], 'monster': [' pierces ', ' stabs ', ' thrusts at ']},
         'slashing': {'player': [' swing at ', ' slash ', ' cut '], 'monster': [' swings at ', ' slashes ', ' cuts ']},
-        'bludgeoning': {'player': [' swing at ', ' maul '], 'monster': [' swings at ', ' mauls ']},
+        'bludgeoning': {'player': [' swing at ', ' maul ', ' hit '], 'monster': [' swings at ', ' mauls ', ' hits ']},
         'unarmed': {'player': [' punch ', ' jab ', ' hit '], 'monster': [' punches ', ' jabs ', ' hits ']},
         'bite': {'player': [' bite '], 'monster': [' bites ']}
     };
 
     var msgMissWeapon = {
 
-        'piercing': {'player': [' try to pierce ', ' try to stab ', ' attempt to thrust at'], 'monster': [' tries to pierce ', ' tries to stab ', ' attempt to thrust at']},
+        'piercing': {'player': [' try to pierce ', ' try to stab ', ' attempt to thrust at '], 'monster': [' tries to pierce ', ' tries to stab ', ' attempt to thrust at ']},
         'slashing': {'player': [' try to slash ', ' try to cut '], 'monster': [' attempt to swing at ', ' tries to slash ', ' tries to cut ']},
-        'bludgeoning': {'player': [' try to swing at ', ' attempt to maul '], 'monster': [' tries to swing at ', ' attempts to maul ']},
+        'bludgeoning': {'player': [' try to swing at ', ' attempt to maul ', ' try to hit '], 'monster': [' tries to swing at ', ' attempts to maul ', ' tries to hit ']},
         'unarmed': {'player': [' try to swing at ', ' try to jab ', ' try to hit '], 'monster': [' tries to swing at ', ' tries to jab ', ' tries to hit ']},
         'bite': {'player': [' try to bite '], 'monster': [' tries to bite ']}
     };
 
     var msgCriticalHitWeapon = {
 
-        'piercing': {'player': [' puncture ', ' skewer '], 'monster': [' punctures ', ' skewer '], 'result': ['. It was excellent thrust!', '. It was grievous strike! ']},
+        'piercing': {'player': [' puncture ', ' skewer ', ' impale '], 'monster': [' punctures ', ' skewer ', ' impales '], 'result': ['. It was excellent hit!', '. It was a grievous strike! ']},
         'slashing': {'player': [' deeply slash ', ' grievously cut '], 'monster': [' deeply slashes ', ' grievously cuts '], 'result': ['. It was deadly strike!', '. It was excellent hit! ']},
         'bludgeoning': {'player': [' crush ', ' grievously maul '], 'monster': [' crushes ', ' grievously mauls '], 'result': ['. It was excellent strike!', '. It was deadly attack! ']},
         'unarmed': {'player': [' punch ', ' jab ', ' hit '], 'monster': [' punches ', ' jabs ', ' hits '], 'result': ['. It was excellent strike!', '. It was grievous hit! ']},
@@ -35,12 +35,18 @@ define(['screen'], function(screen){
 
     var msgCriticalMissWeapon = {
 
-        'player': [' miss your attack by a mile.', ' widely miss your attack.'],
-        'monster': [' misses his attack by a mile.', ' widely misses his attack.']
+        'player': [' miss your attack by a mile.', ' widely miss your attack.', ' fumble and miss your attack.'],
+        'monster': [' misses his attack by a mile.', ' widely misses his attack.', ' fumbles and misses his attack.']
+    }
+
+    var msgDeath = {
+
+        'player': ['You die...', 'World turns black as your lifeless body falls on ground...'],
+        'monster': [' dies.', ' drops dead.', '\'s dead body falls on ground.']
     }
 
     /*
-    calculate combat message, third parameter can be 'hit', 'miss', 'critical hit' or 'critical miss'. Fourth parameter is number of damage done (if any)
+    calculate combat message, third parameter can be 'hit', 'miss', 'critical hit' or 'critical miss'. Fourth parameter is number of damage done (if any - currently parameter is not used)
      */
 
     function calculateCombatMessage(attacker, defender, result, damage){
@@ -65,6 +71,10 @@ define(['screen'], function(screen){
 
                 message = screen.capitalizeString(attacker.type.messageDisplay) + msgMissWeapon[attacker.weapon.dmgType][attacker.type.type].random() + defender.type.messageDisplay + ' with ' + (attacker.type.type === 'player' ? ' your ' : ' his ') + attacker.weapon.name + '. ' + screen.capitalizeString(attacker.type.messageDisplay) + msgCriticalMissWeapon[attacker.type.type].random();
                 break;
+            case 'dead':
+
+                message = (defender.type.type === 'player' ? msgDeath.player.random() : screen.capitalizeString(defender.type.messageDisplay) + msgDeath.monster.random());
+                break
         }
 
         return message;

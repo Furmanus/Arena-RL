@@ -40,6 +40,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
 			
 			this.HD = '1d8';
 			this.hp = 8 + Math.floor(this.stats.constitution / 2 - 5);
+            this.maxHp = this.hp;
 			this.lookDescription = 'anonymous brave adventurer';
 			this.type = {messageDisplay: 'you', type: 'player', species: 'human', family: 'player', name: 'you'};
 			
@@ -107,6 +108,8 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
 		updateScreenStats(){
 			
 			document.getElementById('domSpeed').innerHTML = this.stats.speed;
+            document.getElementById('domHp').innerHTML = this.hp;
+            document.getElementById('domMaxHp').innerHTML = this.maxHp;
 		}
 		
 		/*
@@ -289,15 +292,15 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
 			if lastVisitedCell had any modifiers, we have two options: either current cell can have other modifiers (like coming from sand to shallow water), or current cell can have no modifiers (like coming from sand to floor). In former option we remove modifiers from lastVisitedCell and add modifiers from current cell, in latter option we just remove modifiers from lastVisitedCell
 			*/
 				if(map.cells[level][x][y].type.modifiers !== null && map.cells[level][x][y].type.type !== this.position.lastVisitedCell.type.type){
-					
+
 					for(var n in modifiers){
 						
 						this.stats[n] += modifiers[n];
 					}
 					
-					for(var n in this.position.lastVisitedCell.modifiers){
+					for(var n in this.position.lastVisitedCell.type.modifiers){
 						
-						this.stats[n] -= this.position.lastVisitedCell.modifiers[n];
+						this.stats[n] -= this.position.lastVisitedCell.type.modifiers[n];
 					}
 				}else if(map.cells[level][x][y].type.modifiers === null){
 					
@@ -338,6 +341,11 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
 				}
 			}
 		}
+
+		dropCorpse(){
+
+
+        }
 	}
 	
 	return{

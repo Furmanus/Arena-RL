@@ -1,4 +1,4 @@
-define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 'monsterList'], function(map, screen, noise, pathfinding, light, animalai, combat, monsterList){
+define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 'monsterList', 'items'], function(map, screen, noise, pathfinding, light, animalai, combat, monsterList, items){
 		
 	class Monster{
 		
@@ -41,6 +41,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				defense: monsterList.monsterType[type].stats.defense};
 			
 			this.hp = 4 + Math.floor(this.stats.constitution / 2 - 5);
+            this.maxHp = this.hp;
 			this.HD = monsterList.monsterType[type].HD;
 			
 			this.abilities = {
@@ -53,6 +54,8 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 			this.ai = monsterList.monsterType[type].ai;
 			this.defaultWeapon = monsterList.monsterType[type].defaultWeapon;
 			this.weapon = this.defaultWeapon;
+
+            this.inventory = [];
 			
 			this.init();
             this.doFov(this);
@@ -257,6 +260,11 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 					return true;
 				}
 			}
+		}
+
+		dropCorpse(){
+
+			new items.Corpse(this.type.species, map.cells[this.position.level][this.position.x][this.position.y]);
 		}
 		
 		act(){

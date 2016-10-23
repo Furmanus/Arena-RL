@@ -100,15 +100,15 @@ define(['screen'], function(screen){
 		
 		'deadGrass': {display: ['\u26C6'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'dead grass', key: 'deadGrass', name: 'a dead grass', walkMessage: 'A patch of dead grass is here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'sand': {display: ['\u26C6'], fgColor: 'darkgoldenrod', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'sand', key: 'sand', name: 'a sand', walkMessage: 'You walk through sand. Your movements are a little slowed.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: {speed: -15}},
+		'sand': {display: ['\u26C6'], fgColor: 'darkgoldenrod', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'sand', key: 'sand', name: 'a sand', walkMessage: 'You walk through sand. Your movements are a little slowed.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: {speed: -5}},
 		
 		'chasm': {display: ['\u2637'], fgColor: 'rgb(50,50,50)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'chasm', key: 'chasm', name: 'a chasm', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
 		'woodenBridge': {display: ['#'], fgColor: 'darkgoldenrod', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: true, type: 'wooden bridge', key: 'woodenBridge', name: 'a wooden bridge', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'shallowWater': {display: ['\u2652'], fgColor: 'aqua', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'shallow water', key: 'shallowWater', name: 'a shallow water', walkMessage: 'You walk through shallow water. Your movements are little slowed here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: {speed: -15}},
+		'shallowWater': {display: ['\u2652'], fgColor: 'aqua', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'shallow water', key: 'shallowWater', name: 'a shallow water', walkMessage: 'You walk through shallow water. Your movements are little slowed here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: {speed: -5}},
 		
-		'deepWater': {display: ['\u2652'], fgColor: 'darkblue', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'deep water', key: 'deepWater', name: 'a deep water', walkMessage: '', walkAttempt: walkAttemptFunctions.deepWater, walkEffect: walkEffectFunctions.deepWaterEffect, modifiers: {speed: -35}},
+		'deepWater': {display: ['\u2652'], fgColor: 'darkblue', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'deep water', key: 'deepWater', name: 'a deep water', walkMessage: '', walkAttempt: walkAttemptFunctions.deepWater, walkEffect: walkEffectFunctions.deepWaterEffect, modifiers: {speed: -10}},
 		
 		'burntGround': {display: [',', '.'], fgColor: 'rgb(70,70,70)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'burnt ground', key: 'burntGround', name: 'a burnt ground', walkMessage: 'A burnt ground.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null}
 	}
@@ -129,6 +129,7 @@ define(['screen'], function(screen){
 				cells[level][i][j].level = level;
 				cells[level][i][j].x = i;
 				cells[level][i][j].y = j;
+				cells[level][i][j].position = {level: level, x: i, y: j};
 				cells[level][i][j].isVisible = false;
 				cells[level][i][j].hasBeenDiscovered = false;
 				cells[level][i][j].isLit = false,

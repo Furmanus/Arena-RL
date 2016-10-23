@@ -64,11 +64,17 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
       'torch': {display: '\u00A1', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'torch', description: 'a torch', type: 'miscellaneous'}
   };
+
+  var bodies = {
+
+      'rat': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'rat corpse', description: 'a rat corpse', type: 'corpse'}
+  }
   
   class Weapon{
     
     constructor(type, object){
-      
+
+      this.owner = object;
       this.display = weapons[type].display;
       this.fgColor = weapons[type].fgColor;
       this.bgColor = weapons[type].bgColor;
@@ -88,7 +94,8 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   class Armour{
     
     constructor(type, object){
-      
+
+      this.owner = object;
       this.display = armours[type].display;
       this.fgColor = armours[type].fgColor;
       this.bgColor = armours[type].bgColor;
@@ -103,7 +110,8 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   class Scroll{
 	  
 	  constructor(type, object){
-      
+
+      this.owner = object;
       this.display = scrolls[type].display;
       this.fgColor = scrolls[type].fgColor;
       this.bgColor = scrolls[type].bgColor;
@@ -119,7 +127,8 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   class Potion{
 	  
 	  constructor(type, object){
-      
+
+      this.owner = object;
       this.display = potions[type].display;
       this.fgColor = potions[type].fgColor;
       this.bgColor = potions[type].bgColor;
@@ -136,6 +145,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
       constructor(type, object){
 
+          this.owner = object;
           this.display = misc[type].display;
           this.fgColor = misc[type].fgColor;
           this.bgColor = misc[type].bgColor;
@@ -151,6 +161,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
         constructor(type, object){
 
+            this.owner = object;
             this.display = headwear[type].display;
             this.fgColor = headwear[type].fgColor;
             this.bgColor = headwear[type].bgColor;
@@ -166,6 +177,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
         constructor(type, object){
 
+            this.owner = object;
             this.display = legs[type].display;
             this.fgColor = legs[type].fgColor;
             this.bgColor = legs[type].bgColor;
@@ -181,6 +193,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
         constructor(type, object){
 
+            this.owner = object;
             this.display = boots[type].display;
             this.fgColor = boots[type].fgColor;
             this.bgColor = boots[type].bgColor;
@@ -189,6 +202,52 @@ define(['screen', 'map', 'use'], function(screen, map, use){
             this.type = boots[type].type;
 
             object.inventory.push(this);
+        }
+    }
+
+    class Corpse{
+
+        constructor(type, object){
+
+            this.owner = object; //object (entity, map cell) where currently object is
+            this.level = object.position.level;
+            this.display = bodies[type].display;
+            this.fgColor = bodies[type].fgColor;
+            this.bgColor = bodies[type].bgColor;
+            this.name = bodies[type].name;
+            this.description = bodies[type].description;
+            this.type = bodies[type].type;
+            //for corpse decay
+            this.speed = 30;
+            this.counter = 0;
+            this.counterLimit = ROT.RNG.getUniformInt(40, 60);
+
+            object.inventory.push(this);
+            map.cells[this.level].time.scheduler.add(this, true);
+        }
+
+        getSpeed(){
+
+            return this.speed;
+        }
+
+        act(){
+            //DO POPRAWIENIA - kod na decay nie działa po zmianie poziomów
+            if(this.level !== this.owner.position.level){
+
+                map.cells[this.level].time.scheduler.remove(this);
+                this.level = this.owner.position.level;
+                map.cells[this.level].time.scheduler.add(this, true);
+            }
+
+            this.counter++;
+
+            if(this.counter > this.counterLimit){
+
+                //placeVisibleMessage o remove
+                map.cells[this.level].time.scheduler.remove(this);
+                this.owner.inventory.splice(this.owner.inventory.indexOf(this), 1);
+            }
         }
     }
   
@@ -201,7 +260,8 @@ define(['screen', 'map', 'use'], function(screen, map, use){
     Helmet: Helmet,
     Legs: Legs,
     Boots: Boots,
-    Misc: Misc
+    Misc: Misc,
+    Corpse: Corpse
   }
 });
 

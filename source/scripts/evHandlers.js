@@ -492,6 +492,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		}else if(map.cells[level][x][y].inventory.length === 1 && player.inventory.length <= 12){
 			
 			screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[0].description + '.');
+            map.cells[level][x][y].inventory[0].owner = player;
 			player.inventory.push(map.cells[level][x][y].inventory.splice(0,1)[0]);
 			
 			screen.display.clear();
@@ -532,6 +533,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 var identifier = list[ev.which - 65].identifier;
 
 				screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[identifier].description + '.');
+                map.cells[level][x][y].inventory[identifier].owner = player;
                 //remove item from cell inventory list and push it into player inventory
 				this.inventory.push(map.cells[level][x][y].inventory.splice(identifier, 1)[0]);
 				
@@ -656,7 +658,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				screen.placeMessage('You drop ' + player.inventory[identifier].description + '.');
 				
 				if(map.cells[player.position.level][player.position.x][player.position.y].inventory.length <= 12){
-									
+
+                    player.inventory[identifier].owner = map.cells[player.position.level][player.position.x][player.position.y];
 					map.cells[player.position.level][player.position.x][player.position.y].inventory.push(player.inventory.splice(identifier, 1)[0]);
 				}else{
 					/*
@@ -669,7 +672,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 						examinedCell = map.cells[player.position.level][player.position.x + moveActions[n].x][player.position.y + moveActions[n].y];
 						
 						if(examinedCell.type.blockMovement == false && examinedCell.inventory.length <= 12){
-						
+
+                            player.inventory[identifier].owner = examinedCell;
 							examinedCell.inventory.push(player.inventory.splice(identifier, 1)[0]);
 							break;
 						}
