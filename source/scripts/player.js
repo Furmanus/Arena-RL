@@ -20,8 +20,9 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
 				canOpenDoors: true,
 				suffocateCounter: 0
 			};
-			
+
 			this.modifiers = [];
+			this.terrainModifier = {source: undefined, stats: null};
 			
 			this.stats = {
 				
@@ -273,44 +274,48 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
 				y = this.position.y,
 				modifiers = map.cells[level][x][y].type.modifiers;
 			
-			/*
-			if current cell has modifiers, and previously visited cell did not (or player was just "created") - we apply modifiers to player
-			*/
-			
-			if(this.position.lastVisitedCell === null || this.position.lastVisitedCell.type.modifiers === null){
-				
-				if(map.cells[level][x][y].type.modifiers !== null){
-				
-					for(var n in modifiers){
-				
-						this.stats[n] += modifiers[n];
-						
-					}
-				}
-			}else if(this.position.lastVisitedCell.type.modifiers !== null){
-			
-			/*
-			if lastVisitedCell had any modifiers, we have two options: either current cell can have other modifiers (like coming from sand to shallow water), or current cell can have no modifiers (like coming from sand to floor). In former option we remove modifiers from lastVisitedCell and add modifiers from current cell, in latter option we just remove modifiers from lastVisitedCell
-			*/
-				if(map.cells[level][x][y].type.modifiers !== null && map.cells[level][x][y].type.type !== this.position.lastVisitedCell.type.type){
+			if(modifiers !== null){
 
-					for(var n in modifiers){
-						
-						this.stats[n] += modifiers[n];
-					}
-					
-					for(var n in this.position.lastVisitedCell.type.modifiers){
-						
-						this.stats[n] -= this.position.lastVisitedCell.type.modifiers[n];
-					}
-				}else if(map.cells[level][x][y].type.modifiers === null){
-					
-					for(var n in this.position.lastVisitedCell.type.modifiers){
-						
-						this.stats[n] -= this.position.lastVisitedCell.type.modifiers[n];
-					}
-				}
-			}
+                if(map.cells[level][x][y].type.type !== this.terrainModifier.source.type.type){
+
+                    for(var n in this.terrainModifier.stats){
+
+                        this.stats[n] -= this.terrainModifier.stats[n];
+                    }
+
+                    this.terrainModifier = {source: map.cells[level][x][y], stats: {}};
+
+                    for(var n in modifiers){
+
+                        if(this.stats[n] + modifiers[n] > 0) {
+
+                            this.terrainModifier.stats[n] = modifiers[n];
+                        }else{
+
+                            this.terrainModifier.stats[n] = -this.stats[n] + 1;
+                        }
+                    }
+
+                    for(var n in this.terrainModifier.stats){
+
+                        this.stats[n] += this.terrainModifier.stats[n];
+                    }
+                }else if(map.cells[level][x][y].type.type !== this.terrainModifier.source.type.type){
+
+                    this.terrainModifier.source = map.cells[level][x][y];
+                }
+            }else if(modifiers === null){
+
+                if(this.terrainModifier.stats !== null){
+
+                    for(var n in this.terrainModifier.stats){
+
+                        this.stats[n] -= this.terrainModifier.stats[n];
+                    }
+                }
+
+                this.terrainModifier = {source: map.cells[level][x][y], stats: null};
+            }
 		}
 		
 		/*

@@ -4,11 +4,11 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	
 	map.initCells(0);
 	generator.createArenaLevel(0);
-	//map.setTerrain(0, 5, 5, 'tree');
-	//map.setTerrain(0, 6, 7, 'shallowWater');
-	//map.setTerrain(0, 7, 7, 'shallowWater');
-	//map.setTerrain(0, 8, 7, 'deepWater');
-	//map.setTerrain(0, 9, 7, 'sand');
+	map.setTerrain(0, 5, 5, 'tree');
+	map.setTerrain(0, 6, 7, 'shallowWater');
+	map.setTerrain(0, 7, 7, 'shallowWater');
+	map.setTerrain(0, 8, 7, 'deepWater');
+	map.setTerrain(0, 9, 7, 'sand');
 	
 	/*
 	map.setTerrain(0, 7, 8, 'chasm');
@@ -37,14 +37,17 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	new items.Potion('speed', map.cells[0][4][15]);
     new items.Misc('torch', map.cells[0][14][15]);
 	*/
-	enemy = new monster.Monster(0, 'rat');
+	//enemy = new monster.Monster(0, 'rat');
 	new monster.Monster(0, 'rat');
 	player1 = new player.Player();
 	
     new items.Misc('torch', player1);
 	new items.Scroll('teleportation', player1);
-	new items.Boots('chain boots', player1);
+	new items.Boots('plate boots', player1);
 	new items.Armour('chain mail', player1);
+	new items.Armour('field plate', player1);
+	new items.Legs('plate leggings', player1);
+	new items.Helmet('plate helmet', player1);
 	map.cells[0].time.engine.start();
 	screen.setWindows();
 	

@@ -57,6 +57,8 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
             this.inventory = [];
 			this.equipment = monsterList.monsterType[type].equipment;
+
+			this.terrainModifier = {source: undefined, stats: null};
 			
 			this.init();
             this.doFov(this);
@@ -187,52 +189,55 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 		/*
 		terrainModifiers() - function applying terrain modifiers to player. Used at beginning of act() method.
 		*/
-		
+
 		terrainModifiers(){
-			
+
 			var level = this.position.level,
 				x = this.position.x,
 				y = this.position.y,
 				modifiers = map.cells[level][x][y].type.modifiers;
-			
-			/*
-			if current cell has modifiers, and previously visited cell did not (or player was just "created") - we apply modifiers to monster
-			*/
-			
-			if(this.position.lastVisitedCell === null || this.position.lastVisitedCell.type.modifiers === null){
-				
-				if(map.cells[level][x][y].type.modifiers !== null){
-				
+
+			if(modifiers !== null){
+
+				if(map.cells[level][x][y].type.type !== this.terrainModifier.source.type.type){
+
+					for(var n in this.terrainModifier.stats){
+
+						this.stats[n] -= this.terrainModifier.stats[n];
+					}
+
+					this.terrainModifier = {source: map.cells[level][x][y], stats: {}};
+
 					for(var n in modifiers){
-				
-						this.stats[n] += modifiers[n];
-						
+
+						if(this.stats[n] + modifiers[n] > 0) {
+
+							this.terrainModifier.stats[n] = modifiers[n];
+						}else{
+
+							this.terrainModifier.stats[n] = -this.stats[n] + 1;
+						}
+					}
+
+					for(var n in this.terrainModifier.stats){
+
+						this.stats[n] += this.terrainModifier.stats[n];
+					}
+				}else if(map.cells[level][x][y].type.type !== this.terrainModifier.source.type.type){
+
+					this.terrainModifier.source = map.cells[level][x][y];
+				}
+			}else if(modifiers === null){
+
+				if(this.terrainModifier.stats !== null){
+
+					for(var n in this.terrainModifier.stats){
+
+						this.stats[n] -= this.terrainModifier.stats[n];
 					}
 				}
-			}else if(this.position.lastVisitedCell.type.modifiers !== null){
-			
-			/*
-			if lastVisitedCell had any modifiers, we have two options: either current cell can have other modifiers (like coming from sand to shallow water), or current cell can have no modifiers (like coming from sand to floor). In former option we remove modifiers from lastVisitedCell and add modifiers from current cell, in latter option we just remove modifiers from lastVisitedCell
-			*/
-			
-				if(map.cells[level][x][y].type.modifiers !== null && map.cells[level][x][y].type.type !== this.position.lastVisitedCell.type.type){
-					
-					for(var n in modifiers){
-						
-						this.stats[n] += modifiers[n];
-					}
-					
-					for(var n in this.position.lastVisitedCell.type.modifiers){
-						
-						this.stats[n] -= this.position.lastVisitedCell.type.modifiers[n];
-					}
-				}else if(map.cells[level][x][y].type.modifiers === null){
-					
-					for(var n in this.position.lastVisitedCell.type.modifiers){
-						
-						this.stats[n] -= this.position.lastVisitedCell.type.modifiers[n];
-					}
-				}
+
+				this.terrainModifier = {source: map.cells[level][x][y], stats: null};
 			}
 		}
 		
