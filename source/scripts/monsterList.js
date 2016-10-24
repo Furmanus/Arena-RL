@@ -11,6 +11,14 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			HD: '0.25d8',
 			size: 'tiny', 
 			stats: {strength: 2, dexterity: 15, constitution: 10, intelligence: 2, wisdom: 12, charisma: 2, speed: 15, perception: 8, baseAttackBonus: 0, defense: 14}, 
+			equipment: {
+				
+				'head': {description: 'empty'},
+                'torso': {description: 'empty'},
+                'arms': {description: 'empty'},
+                'legs': {description: 'empty'}
+                
+			},
 			ai: animalai.ai, 
 			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
 			hostileList: {species: ['human'], family: [], entity: []},

@@ -161,6 +161,26 @@ define([], function(){
 			document.getElementById('messageBox').removeChild(document.getElementById('messageBox').getElementsByTagName('li')[0]);
 		}
 	}
+	
+	function placeTemporaryMessage(string){
+		
+		if(string != currentMessage && string.length > 0){
+			var message = document.createElement('li');
+			message.innerHTML = string;
+			
+			document.getElementById('messageBox').appendChild(message);
+			document.getElementById('messages').scrollTop = message.offsetTop; 
+		}else if(string == currentMessage && string.length > 0){
+			
+			currentMessageCount++;
+			document.getElementById("messageBox").lastChild.innerHTML = currentMessage + ' x' + currentMessageCount;
+		}
+		
+		if(document.getElementById('messageBox').childNodes.length > 120){
+			
+			document.getElementById('messageBox').removeChild(document.getElementById('messageBox').getElementsByTagName('li')[0]);
+		}
+	}
 
 	function placeVisibleMessage(string, cell){
 
@@ -215,6 +235,8 @@ define([], function(){
 		drawVisibleCells: drawVisibleCells,
 		getDistanceSquare: getDistanceSquare,
 		removeFirst: removeFirst,
-		placeVisibleMessage: placeVisibleMessage
+		placeVisibleMessage: placeVisibleMessage,
+		currentMessage: currentMessage,
+		placeTemporaryMessage: placeTemporaryMessage
 	}
 });

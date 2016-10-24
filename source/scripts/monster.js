@@ -56,6 +56,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 			this.weapon = this.defaultWeapon;
 
             this.inventory = [];
+			this.equipment = monsterList.monsterType[type].equipment;
 			
 			this.init();
             this.doFov(this);
@@ -221,9 +222,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 						this.stats[n] += modifiers[n];
 					}
 					
-					for(var n in this.position.lastVisitedCell.modifiers){
+					for(var n in this.position.lastVisitedCell.type.modifiers){
 						
-						this.stats[n] -= this.position.lastVisitedCell.modifiers[n];
+						this.stats[n] -= this.position.lastVisitedCell.type.modifiers[n];
 					}
 				}else if(map.cells[level][x][y].type.modifiers === null){
 					

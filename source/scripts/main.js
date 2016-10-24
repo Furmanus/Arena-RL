@@ -6,9 +6,9 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	generator.createArenaLevel(0);
 	//map.setTerrain(0, 5, 5, 'tree');
 	//map.setTerrain(0, 6, 7, 'shallowWater');
-	map.setTerrain(0, 7, 7, 'shallowWater');
-	map.setTerrain(0, 8, 7, 'deepWater');
-	map.setTerrain(0, 9, 7, 'sand');
+	//map.setTerrain(0, 7, 7, 'shallowWater');
+	//map.setTerrain(0, 8, 7, 'deepWater');
+	//map.setTerrain(0, 9, 7, 'sand');
 	
 	/*
 	map.setTerrain(0, 7, 8, 'chasm');
@@ -24,10 +24,10 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	new items.Armour('chain mail', map.cells[0][12][13]);
 	new items.Armour('field plate', map.cells[0][22][13]);
 	*/
-	new items.Weapon('staff', map.cells[0][10][10]);
-	new items.Weapon('long sword', map.cells[0][13][10]);
+	//new items.Weapon('staff', map.cells[0][10][10]);
+	//new items.Weapon('long sword', map.cells[0][13][10]);
 	new items.Weapon('warhammer', map.cells[0][12][10]);
-	new items.Weapon('dagger', map.cells[0][11][13]);
+	//new items.Weapon('dagger', map.cells[0][11][13]);
 	/*
 	new items.Armour('chain mail', map.cells[0][16][13]);
 	new items.Armour('field plate', map.cells[0][21][13]);
@@ -43,6 +43,8 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	
     new items.Misc('torch', player1);
 	new items.Scroll('teleportation', player1);
+	new items.Boots('chain boots', player1);
+	new items.Armour('chain mail', player1);
 	map.cells[0].time.engine.start();
 	screen.setWindows();
 	

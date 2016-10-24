@@ -331,7 +331,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	look() - funkcja wyświetlająca opis aktualnego położenia kursora na ekranie. Startuje od pozycji na której znajduje się gracz, następnie wyświetla opis danego pola. Zastępuje podstawowy event listener swoim własnym. Następnie dla naciśniętego klawisza kierunku, funkcja wywołuje samą siebie dla innych współrzędnych
 	*/
 	
-	function look(x,y, player){
+	function look(x, y, player){
 		
 		var level = player.position.level
 			
@@ -345,13 +345,13 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			screen.display.draw(x, y, ['_', getDisplayChar(x,y)] , getDisplayColor(x, y), 'cornflowerblue');
 		}else{
 				
-			screen.display.draw(x, y, ['_'] , 'silver', 'transparent');
+			screen.display.draw(x, y, ['_'], 'silver', 'transparent');
 				
 		}
 			
 		if(screen.lookCount === 0){
 			
-			screen.placeMessage(returnLookText(x,y));
+			screen.placeTemporaryMessage(returnLookText(x,y));
 			screen.lookCount ++;
 				
 		}else if(screen.lookCount > 0){
@@ -361,14 +361,14 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			
 		function lookEventHandler(ev){
 			
-			if(ev.which != 27 && ev.which != 32 && (ev.which == 103 || ev.which == 104 || ev.which == 105 || ev.which == 102 || ev.which == 99 || ev.which == 98 || ev.which == 97 || ev.which == 100)){
+			if(ev.which !== 27 && ev.which !== 32 && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100)){
 					
 				if(x + moveActions[ev.which].x >= 0 && y + moveActions[ev.which].y >= 0 && x + moveActions[ev.which].x <= screen.options.width - 1 && y + moveActions[ev.which].y <= screen.options.height - 1){	
 					
 					look(x + moveActions[ev.which].x, y + moveActions[ev.which].y, this);
 						
 				}
-			}else if(ev.which == 27 || ev.which == 32){
+			}else if(ev.which === 27 || ev.which === 32){
 
 				screen.display.clear();
 				screen.drawVisibleCells(map.cells[this.position.level]);
@@ -376,6 +376,80 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				screen.lookCount = 0;
 				document.getElementById('messageBox').removeChild(document.getElementById('messageBox').childNodes[document.getElementById('messageBox').childNodes.length - 1]);
 					
+			}else if(ev.which === 77){
+				
+				if(map.cells[level][x][y].entity !== null){
+					
+					displayMonsterInfo(map.cells[level][x][y].entity);
+					this.handleEvent = function(ev){
+						
+						screen.display.clear();
+						screen.drawVisibleCells(map.cells[this.position.level]);
+						this.handleEvent = defaultEventHandler;
+						screen.lookCount = 0;
+						document.getElementById('messageBox').removeChild(document.getElementById('messageBox').childNodes[document.getElementById('messageBox').childNodes.length - 1]);
+					};
+				}
+			}
+		}
+		
+		function displayMonsterInfo(entity){
+			
+			var drawnText = '%c{' + entity.fgColor + '}' + entity.display +  '%c{} ' + entity.type.messageDisplay,
+				stats = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'speed', 'defense'],
+				properties = {'breatheUnderWater': {description: 'can swim'}, 'canFly': {description: 'flying'}, 'canOpenDoors': {description: 'can open doors'}},
+				propertyNumber = 0,
+				equipmentNumber = 0;
+			
+			screen.display.clear();
+			screen.display.drawText(Math.floor((screen.options.width - entity.display.length - entity.type.messageDisplay.length) / 2), 0, drawnText);
+			
+			for(var i=0; i<stats.length; i++){
+				
+				drawnText = stats[i] + addWhiteSpaces(stats[i], 12) + ': ' + entity.stats[stats[i]]
+				screen.display.drawText(1, 2 + i, drawnText);
+			}
+			
+			screen.display.drawText(20, 2, 'hit points: ' + entity.hp + '/' + entity.maxHp);
+			screen.display.drawText(20, 3, 'base to hit: ' + entity.stats.baseAttackBonus);
+			screen.display.drawText(20, 4, 'size: ' + entity.size);
+			
+			drawnText = '%c{darkgoldenrod}weapon: %c{}' + entity.weapon.name + ' ' + entity.weapon.damage;
+			screen.display.drawText(1, 11, drawnText);
+			
+			for(var n in entity.equipment){
+				
+				if(entity.equipment[n].type !== 'weapons' && n !== 'right hand' && n !== 'left hand'){
+					
+					drawnText = '%c{darkgoldenrod}' + n + ':%c{} ' + screen.removeFirst(entity.equipment[n].description) + (entity.equipment[n].description === 'empty' ? '' : ('[' + entity.equipment[n].armourBonus + ']'));
+					screen.display.drawText(1, 12 + equipmentNumber, drawnText);
+					equipmentNumber++;
+				}
+			}
+			
+			for(var n in properties){
+				
+				if(entity.abilities[n] === true){
+					
+					drawnText = '%c{darkgoldenrod}' + properties[n].description;
+					screen.display.drawText(1, 20 + propertyNumber, drawnText);
+					propertyNumber++;
+				}
+			}
+			
+			//adds white spaces to string in number equal to difference between string length and goal
+			
+			function addWhiteSpaces(string, goal){
+				
+				var number = goal - string.length,
+					result = '';
+					
+				for(var i=0; i<number; i++){
+					
+					result += ' ';
+				}
+				
+				return result;
 			}
 		}
 			
@@ -414,7 +488,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				
 				if(map.cells[level][x][y].entity != null){
 
-					displayText = 'You see ' + map.cells[level][x][y].entity.lookDescription + '.';
+					displayText = 'You see ' + map.cells[level][x][y].entity.lookDescription + '.[M]ore...';
 					
 					if(map.cells[level][x][y].isOnFire === true){
 						
@@ -595,6 +669,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 }
 
                 screen.placeMessage('You remove ' + this.equipment[equipmentType].description + '.');
+				doEquipmentModifiers(this, this.equipment[equipmentType], 'remove');
                 this.inventory.push(this.equipment[equipmentType]);
                 this.equipment[equipmentType] = {description: 'empty'};
 
@@ -618,12 +693,33 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
                     screen.placeMessage('You equip ' + this.inventory[identifier].description + '.');
                     this.equipment[equipmentType] = this.inventory.splice(identifier, 1)[0];
+					doEquipmentModifiers(this, this.equipment[equipmentType], 'apply');
 
                     esc(this);
                     map.cells[this.position.level].time.engine.unlock();
                 }
             }
 		}
+	}
+	
+	//third argument type can have two values, 'apply' or 'remove'
+	function doEquipmentModifiers(player, item, type){
+				
+		if(type === 'apply'){	
+					
+			for(var n in item.modifiers){
+					
+				player.stats[n] += item.modifiers[n];
+			}
+		}else if(type === 'remove'){
+					
+			for(var n in item.modifiers){
+					
+				player.stats[n] -= item.modifiers[n];
+			}
+		}
+				
+		player.updateScreenStats();
 	}
 	
 	function drop(x, y, player){
@@ -832,6 +928,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	return {
 		
 		displayInventory: displayInventory,
-		defaultEventHandler: defaultEventHandler
+		defaultEventHandler: defaultEventHandler,
+		doEquipmentModifiers: doEquipmentModifiers
 	}
 });

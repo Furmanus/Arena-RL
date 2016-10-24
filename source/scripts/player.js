@@ -17,6 +17,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
 				breatheUnderWater: false,
 				canFly: false,
 				isSuffocating: false,
+				canOpenDoors: true,
 				suffocateCounter: 0
 			};
 			
