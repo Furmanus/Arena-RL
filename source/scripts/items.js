@@ -3,51 +3,51 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   //hash objects with defined properties, used in class constructor
   var weapons = {
   
-    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapons', natural: false, damage: '1d4', critical: [19,20], dmgType: 'piercing', criticalMultiplier: 3},
+    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapons', slot: 'right hand', natural: false, damage: '1d4', critical: [19,20], dmgType: 'piercing', criticalMultiplier: 3, modifiers: null},
 	
-    'long sword': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'long sword', description: 'a long sword', type: 'weapons', natural: false,  damage: '1d8', critical: [19,20], dmgType: 'slashing', criticalMultiplier: 2},
+    'long sword': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'long sword', description: 'a long sword', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [19,20], dmgType: 'slashing', criticalMultiplier: 2, modifiers: null},
 	
-    'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapons', natural: false,  damage: '1d6', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 2},
+    'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d6', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 2, modifiers: null},
 	
-	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons', natural: false,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 3}
+	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 3, modifiers: null}
   };
   
   var armours = {
 	  
-	'leather armour': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather armour', description: 'a leather armour', type: 'armours', armourBonus: 2, skillPenalty: 0, modifiers: {speed: 0}},
+	'leather armour': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather armour', description: 'a leather armour', type: 'armours', slot: 'torso', armourBonus: 2, skillPenalty: 0, modifiers: {speed: 0}},
 	
-	'chain mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain mail', description: 'a chain mail', type: 'armours', armourBonus: 5, skillPenalty: -5, modifiers: {speed: -8}},
+	'chain mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain mail', description: 'a chain mail', type: 'armours', slot: 'torso', armourBonus: 5, skillPenalty: -5, modifiers: {speed: -8}},
 	
-	'ring mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'ring mail', description: 'a ring mail', type: 'armours', armourBonus: 3, skillPenalty: -3, modifiers: {speed: -5}},
+	'ring mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'ring mail', description: 'a ring mail', type: 'armours', slot: 'torso', armourBonus: 3, skillPenalty: -3, modifiers: {speed: -5}},
 	
-	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armours', armourBonus: 8, skillPenalty: -7, modifiers: {speed: -12}}
+	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armours', slot: 'torso', armourBonus: 8, skillPenalty: -7, modifiers: {speed: -12}}
   };
 
   var headwear = {
 
-      'leather helm': {display: '\u2313', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather helm', description: 'a leather helm', type: 'helmets', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
+      'leather helm': {display: '\u2313', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather helm', description: 'a leather helm', type: 'helmets', slot: 'head', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
 
-      'chain choif': {display: '\u2313', fgColor: 'silver', bgColor: 'transparent', name: 'chain choif', description: 'a chain choif', type: 'helmets', armourBonus: 2, skillPenalty: 0, modifiers: {speed: 0}},
+      'chain choif': {display: '\u2313', fgColor: 'silver', bgColor: 'transparent', name: 'chain choif', description: 'a chain choif', type: 'helmets', slot: 'head', armourBonus: 2, skillPenalty: 0, modifiers: {speed: 0}},
 
-      'plate helmet': {display: '\u2313', fgColor: 'silver', bgColor: 'transparent', name: 'plate helmet', description: 'a plate helmet', type: 'helmets', armourBonus: 3, skillPenalty: 0, modifiers: {speed: -1}},
+      'plate helmet': {display: '\u2313', fgColor: 'silver', bgColor: 'transparent', name: 'plate helmet', description: 'a plate helmet', type: 'helmets', slot: 'head', armourBonus: 3, skillPenalty: 0, modifiers: {speed: -1}},
   };
 
   var legs = {
 
-      'leather leggings': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather leggings', description: 'a leather leggings', type: 'legs', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
+      'leather leggings': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather leggings', description: 'a leather leggings', type: 'legs', slot: 'legs', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
 
-      'chain leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain leggings', description: 'a chain leggings', type: 'legs', armourBonus: 2, skillPenalty: -1, modifiers: {speed: -2}},
+      'chain leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain leggings', description: 'a chain leggings', type: 'legs', slot: 'legs', armourBonus: 2, skillPenalty: -1, modifiers: {speed: -2}},
 
-      'plate leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate leggings', description: 'a plate leggings', type: 'legs', armourBonus: 4, skillPenalty: -3, modifiers: {speed: -5}},
+      'plate leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate leggings', description: 'a plate leggings', type: 'legs', slot: 'legs', armourBonus: 4, skillPenalty: -3, modifiers: {speed: -5}},
   };
 
   var boots = {
 
-      'leather boots': {display: '{', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather boots', description: 'a leather boots', type: 'boots', armourBonus: 0, skillPenalty: 0, modifiers: {speed: 0}},
+      'leather boots': {display: '{', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather boots', description: 'a leather boots', type: 'boots', slot: 'feet', armourBonus: 0, skillPenalty: 0, modifiers: {speed: 0}},
 
-      'chain boots': {display: '{', fgColor: 'silver', bgColor: 'transparent', name: 'chain boots', description: 'a chain boots', type: 'boots', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
+      'chain boots': {display: '{', fgColor: 'silver', bgColor: 'transparent', name: 'chain boots', description: 'a chain boots', type: 'boots', slot: 'feet', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
 
-      'plate boots': {display: '{', fgColor: 'silver', bgColor: 'transparent', name: 'plate boots', description: 'a plate boots', type: 'boots', armourBonus: 2, skillPenalty: -2, modifiers: {speed: -2}},
+      'plate boots': {display: '{', fgColor: 'silver', bgColor: 'transparent', name: 'plate boots', description: 'a plate boots', type: 'boots', slot: 'feet', armourBonus: 2, skillPenalty: -2, modifiers: {speed: -2}},
   };
   
   var scrolls = {
@@ -62,7 +62,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
   var misc = {
 
-      'torch': {display: '\u00A1', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'torch', description: 'a torch', type: 'miscellaneous'}
+      'torch': {display: '\u00A1', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'torch', description: 'a torch', type: 'miscellaneous', slot: 'left hand', modifiers: null}
   };
 
   var bodies = {
@@ -86,6 +86,8 @@ define(['screen', 'map', 'use'], function(screen, map, use){
       this.critical = weapons[type].critical;
       this.dmgType = weapons[type].dmgType;
       this.criticalMultiplier = weapons[type].criticalMultiplier;
+	  this.modifiers = weapons[type].modifiers;
+	  this.slot = weapons[type].slot;
       
       object.inventory.push(this);
     }
@@ -105,6 +107,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 	  this.armourBonus = armours[type].armourBonus;
 	  this.skillPenalty = armours[type].skillPenalty;
 	  this.modifiers = armours[type].modifiers;
+	  this.slot = armours[type].slot;
       
       object.inventory.push(this);
     }
@@ -155,6 +158,8 @@ define(['screen', 'map', 'use'], function(screen, map, use){
           this.name = misc[type].name;
           this.description = misc[type].description;
           this.type = misc[type].type;
+		  this.modifiers = misc[type].modifiers;
+		  this.slot = misc[type].slot;
 
           object.inventory.push(this);
       }
@@ -174,6 +179,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 			this.armourBonus = headwear[type].armourBonus;
 			this.skillPenalty = headwear[type].skillPenalty;
 			this.modifiers = headwear[type].modifiers;
+			this.slot = headwear[type].slot;
 
             object.inventory.push(this);
         }
@@ -193,6 +199,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 			this.armourBonus = legs[type].armourBonus;
 			this.skillPenalty = legs[type].skillPenalty;
 			this.modifiers = legs[type].modifiers;
+			this.slot = legs[type].slot;
 
             object.inventory.push(this);
         }
@@ -212,6 +219,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 			this.armourBonus = boots[type].armourBonus;
 			this.skillPenalty = boots[type].skillPenalty;
 			this.modifiers = boots[type].modifiers;
+			this.slot = boots[type].slot;
 
             object.inventory.push(this);
         }

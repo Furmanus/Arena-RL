@@ -57,7 +57,8 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
             this.inventory = [];
 			this.equipment = monsterList.monsterType[type].equipment;
-
+			
+			this.modifiers;
 			this.terrainModifier = {source: undefined, stats: null};
 			
 			this.init();
@@ -187,7 +188,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
         }
 		
 		/*
-		terrainModifiers() - function applying terrain modifiers to player. Used at beginning of act() method.
+		terrainModifiers() - function applying terrain modifiers to player. Used at beginning of act() method. Description of algorithm is in equal method in player module
 		*/
 
 		terrainModifiers(){
@@ -223,7 +224,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 						this.stats[n] += this.terrainModifier.stats[n];
 					}
-				}else if(map.cells[level][x][y].type.type !== this.terrainModifier.source.type.type){
+				}else if(map.cells[level][x][y].type.type === this.terrainModifier.source.type.type){
 
 					this.terrainModifier.source = map.cells[level][x][y];
 				}

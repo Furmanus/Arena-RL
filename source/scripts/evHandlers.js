@@ -242,6 +242,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	
 	function displayInventory(player){
 		
+		var list;
+		
 		screen.display.clear();
 		
 		player.handleEvent = inventoryEventHandler.bind(player);
@@ -262,7 +264,25 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			
 			screen.display.drawText(8, 0, 'Your current inventory:');
 			
-			drawObjectInventory(player);
+			list = drawObjectInventory(player);
+			
+			player.handleEvent = selectItemInventory;
+			
+			function selectItemInventory(ev){
+				
+				if(ev.which === 27){
+					
+					esc(player);
+				}else if(ev.which - 65 < list.length){
+					
+					var identifier = list[ev.which - 65].identifier;
+					
+					drawnText = '%c{' + this.inventory[identifier].fgColor + '}' + this.inventory[identifier].display + ' %c{}' + this.inventory[identifier].name;
+					
+					screen.display.clear();
+					screen.display.drawText(Math.floor((screen.options.width - this.inventory[identifier].display.length - this.inventory[identifier].name.length) / 2), 1, drawnText);
+				}
+			}
 		}
 	}
 	
@@ -708,15 +728,28 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		if(type === 'apply'){	
 					
 			for(var n in item.modifiers){
+				
+				if(player.stats[n] + item.modifiers[n] > 0){
 					
-				player.stats[n] += item.modifiers[n];
+					player.equipmentModifiers[item.slot][n] = item.modifiers[n];
+				}else {
+					//if after modifier stat value would be less than 1, we set it to 1, and store substracted value
+					player.equipmentModifiers[item.slot][n] = 1 - player.stats[n];
+				}
+			}
+			//we apply modifiers
+			for(var n in player.equipmentModifiers[item.slot]){
+				
+				player.stats[n] += player.equipmentModifiers[item.slot][n];
 			}
 		}else if(type === 'remove'){
 					
 			for(var n in item.modifiers){
 					
-				player.stats[n] -= item.modifiers[n];
+				player.stats[n] -= player.equipmentModifiers[item.slot][n];
 			}
+			
+			player.equipmentModifiers[item.slot] = {};
 		}
 				
 		player.updateScreenStats();

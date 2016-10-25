@@ -4,11 +4,11 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	
 	map.initCells(0);
 	generator.createArenaLevel(0);
-	map.setTerrain(0, 5, 5, 'tree');
-	map.setTerrain(0, 6, 7, 'shallowWater');
-	map.setTerrain(0, 7, 7, 'shallowWater');
-	map.setTerrain(0, 8, 7, 'deepWater');
-	map.setTerrain(0, 9, 7, 'sand');
+	//map.setTerrain(0, 5, 5, 'tree');
+	//map.setTerrain(0, 6, 7, 'shallowWater');
+	//map.setTerrain(0, 7, 7, 'shallowWater');
+	//map.setTerrain(0, 8, 7, 'deepWater');
+	//map.setTerrain(0, 9, 7, 'sand');
 	
 	/*
 	map.setTerrain(0, 7, 8, 'chasm');
@@ -48,6 +48,7 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	new items.Armour('field plate', player1);
 	new items.Legs('plate leggings', player1);
 	new items.Helmet('plate helmet', player1);
+	new items.Potion('speed', player1);
 	map.cells[0].time.engine.start();
 	screen.setWindows();
 	

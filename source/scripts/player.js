@@ -23,6 +23,15 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
 
 			this.modifiers = [];
 			this.terrainModifier = {source: undefined, stats: null};
+			this.equipmentModifiers = {
+				
+				'head': {},
+				'torso': {},
+				'right hand': {},
+				'left hand': {},
+				'legs': {},
+				'feet': {}
+			};
 			
 			this.stats = {
 				
@@ -264,7 +273,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
 		}
 		
 		/*
-		terrainModifiers() - function applying terrain modifiers to player. Used at beginning of act() method.
+		terrainModifiers() - function applying terrain modifiers to player. Used at beginning of act() method. Current terrain modifiers are stored in entity this.terrainModifier object. This object has two cells: source which stores referrence to cell which is source to stored modifiers and stats which is object which holds modifiers to entity stats in form of object {statName: value}
 		*/
 		
 		terrainModifiers(){
@@ -273,9 +282,11 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
 				x = this.position.x,
 				y = this.position.y,
 				modifiers = map.cells[level][x][y].type.modifiers;
-			
+			//if newly stepped on cell has modifiers
 			if(modifiers !== null){
-
+				/*
+				if current cell type is not equal to previous cell type, we remove all modifiers from current terrainModifier entity object, replace terrainModifier with new object with new source, and then we fill new terrainModifier object with modifiers from current source. In last step we apply new modifiers from terrainModifier
+				*/
                 if(map.cells[level][x][y].type.type !== this.terrainModifier.source.type.type){
 
                     for(var n in this.terrainModifier.stats){
@@ -300,12 +311,20 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
 
                         this.stats[n] += this.terrainModifier.stats[n];
                     }
-                }else if(map.cells[level][x][y].type.type !== this.terrainModifier.source.type.type){
+					
+				/*
+				if new cell type is same type as previously visited cell, nothing happens, we only update terrainModifier source (which doesn't really matter)
+				*/
+                }else if(map.cells[level][x][y].type.type === this.terrainModifier.source.type.type){
 
                     this.terrainModifier.source = map.cells[level][x][y];
                 }
             }else if(modifiers === null){
-
+				
+				/*
+				if newly stepped on cell has no modifiers, and previously visited cell had modifiers, we remove them, and update terrainModifer object with new source and set stats variable to null
+				*/
+				
                 if(this.terrainModifier.stats !== null){
 
                     for(var n in this.terrainModifier.stats){

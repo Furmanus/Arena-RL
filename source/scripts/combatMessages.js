@@ -2,7 +2,7 @@
  * Created by Furman on 22.10.2016.
  */
 
-define(['screen'], function(screen){
+define(['screen', 'map'], function(screen, map){
 
     //key is equal to attacker weapon type
 
@@ -51,32 +51,44 @@ define(['screen'], function(screen){
 
     function calculateCombatMessage(attacker, defender, result, damage){
 
-        var message;
+        var message,
+			attackerPosition = map.cells[attacker.position.level][attacker.position.x][attacker.position.y],
+			defenderPosition = map.cells[defender.position.level][defender.position.x][defender.position.y];
+		
+		if(attackerPosition.isVisible === true && defenderPosition.isVisible === true){
+		
+			switch(result){
 
-        switch(result){
+				case 'hit':
 
-            case 'hit':
+					message = screen.capitalizeString(attacker.type.messageDisplay + msgHitWeapon[attacker.weapon.dmgType][attacker.type.type].random() + defender.type.messageDisplay + ' with ' + (attacker.type.type === 'player' ? ' your ' : ' his ') + attacker.weapon.name + '. Attack hits.');
+					break;
+				case 'miss':
 
-                message = screen.capitalizeString(attacker.type.messageDisplay + msgHitWeapon[attacker.weapon.dmgType][attacker.type.type].random() + defender.type.messageDisplay + ' with ' + (attacker.type.type === 'player' ? ' your ' : ' his ') + attacker.weapon.name + '. Attack hits.');
-                break;
-            case 'miss':
+					message = screen.capitalizeString(attacker.type.messageDisplay) + msgMissWeapon[attacker.weapon.dmgType][attacker.type.type].random() + defender.type.messageDisplay + ' with ' + (attacker.type.type === 'player' ? ' your ' : ' his ') + attacker.weapon.name + ', but attack misses.';
+					break;
+				case 'critical hit':
 
-                message = screen.capitalizeString(attacker.type.messageDisplay) + msgMissWeapon[attacker.weapon.dmgType][attacker.type.type].random() + defender.type.messageDisplay + ' with ' + (attacker.type.type === 'player' ? ' your ' : ' his ') + attacker.weapon.name + ', but attack misses.';
-                break;
-            case 'critical hit':
+					message = screen.capitalizeString(attacker.type.messageDisplay) + msgCriticalHitWeapon[attacker.weapon.dmgType][attacker.type.type].random() + defender.type.messageDisplay + ' with ' + (attacker.type.type === 'player' ? ' your ' : ' his ') + attacker.weapon.name + msgCriticalHitWeapon[attacker.weapon.dmgType].result.random();
+					break;
+				case 'critical miss':
 
-                message = screen.capitalizeString(attacker.type.messageDisplay) + msgCriticalHitWeapon[attacker.weapon.dmgType][attacker.type.type].random() + defender.type.messageDisplay + ' with ' + (attacker.type.type === 'player' ? ' your ' : ' his ') + attacker.weapon.name + msgCriticalHitWeapon[attacker.weapon.dmgType].result.random();
-                break;
-            case 'critical miss':
-
-                message = screen.capitalizeString(attacker.type.messageDisplay) + msgMissWeapon[attacker.weapon.dmgType][attacker.type.type].random() + defender.type.messageDisplay + ' with ' + (attacker.type.type === 'player' ? ' your ' : ' his ') + attacker.weapon.name + '. ' + screen.capitalizeString(attacker.type.messageDisplay) + msgCriticalMissWeapon[attacker.type.type].random();
-                break;
-            case 'dead':
-
-                message = (defender.type.type === 'player' ? msgDeath.player.random() : screen.capitalizeString(defender.type.messageDisplay) + msgDeath.monster.random());
-                break
-        }
-
+					message = screen.capitalizeString(attacker.type.messageDisplay) + msgMissWeapon[attacker.weapon.dmgType][attacker.type.type].random() + defender.type.messageDisplay + ' with ' + (attacker.type.type === 'player' ? ' your ' : ' his ') + attacker.weapon.name + '. ' + screen.capitalizeString(attacker.type.messageDisplay) + msgCriticalMissWeapon[attacker.type.type].random();
+					break;
+			}
+		}else if(attackerPosition.isVisible === false && defenderPosition.isVisible === true){
+			
+			message = screen.capitalizeString(defender.type.messageDisplay) + ' is attacked by something.';
+		}else if(attackerPosition.isVisible === true && defenderPosition.isVisible === false){
+			
+			message = screen.capitalizeString(attacker.type.messageDisplay) + ' attacks something.';
+		}
+		
+		if(result === 'dead' && defenderPosition.isVisible === true){
+			
+			message = (defender.type.type === 'player' ? msgDeath.player.random() : screen.capitalizeString(defender.type.messageDisplay) + msgDeath.monster.random());
+		}
+		
         return message;
     }
 

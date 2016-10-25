@@ -16,43 +16,33 @@ define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages
             defenderPosition = map.cells[defender.position.level][defender.position.x][defender.position.y],
             attackerPosition = map.cells[attacker.position.level][attacker.position.x][attacker.position.y];
 
-        if(defenderPosition.isVisible === true && attackerPosition.isVisible === true) {
+        if (attackerScore === 1) {
+     		
+            screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical miss', 0));
+        } else if (attackerScore === 20) {
 
-            if (attackerScore === 1) {
+            var damageDealt = calc(attacker.weapon.damage) + calc(attacker.weapon.damage);
 
-                if (defenderPosition.isVisible === true && attackerPosition.isVisible === true) {
+            defender.hp -= damageDealt;
+					
+            screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt));
+        } else {
 
-                    screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical miss', 0));
-                }
-            } else if (attackerScore === 20) {
+            attackerScore += attacker.stats.baseAttackBonus + Math.floor(attacker.stats.strength / 2 - 5) + sizeModifiers[attacker.size];
 
-                var damageDealt = calc(attacker.weapon.damage) + calc(attacker.weapon.damage);
+            defenderScore = defender.stats.defense + Math.floor(defender.stats.dexterity / 2 - 5) + sizeModifiers[defender.size] + calculateEquipmentBonus(defender);
+				
+            if (attackerScore >= defenderScore) {
+
+                var damageDealt = calc(attacker.weapon.damage);
 
                 defender.hp -= damageDealt;
-                screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt));
+                
+				screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'hit', damageDealt));
             } else {
-
-                attackerScore += attacker.stats.baseAttackBonus + Math.floor(attacker.stats.strength / 2 - 5) + sizeModifiers[attacker.size];
-
-                defenderScore = defender.stats.defense + Math.floor(defender.stats.dexterity / 2 - 5) + sizeModifiers[defender.size];
-
-                if (attackerScore >= defenderScore) {
-
-                    var damageDealt = calc(attacker.weapon.damage);
-
-                    defender.hp -= damageDealt;
-                    screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'hit', damageDealt));
-                } else {
-
-                    screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'miss', 0));
-                }
+					
+				screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'miss', 0));
             }
-        }else if(defenderPosition.isVisible === false && attackerPosition.isVisible === true){
-
-            screen.placeMessage(screen.capitalizeString(attacker.type.messageDisplay) + ' is attacking something.')
-        }else if(defenderPosition.isVisible === true && attackerPosition.isVisible === false){
-
-            screen.placeMessage(screen.capitalizeString(attacker.type.messageDisplay) + ' is attacked by something.')
         }
 
 		if(defender.hp < 0){
@@ -64,6 +54,21 @@ define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages
             screen.display.clear();
             screen.drawVisibleCells(map.cells[defender.position.level]);
         }
+		
+		function calculateEquipmentBonus(defender){
+			
+			var armourBonus = 0;
+			
+			for(var n in defender.equipment){
+				
+				if(defender.equipment[n].armourBonus !== undefined){
+				
+					armourBonus += defender.equipment[n].armourBonus;
+				}
+			}
+			
+			return armourBonus;
+		}
 	}
 	
 	function roll(rollNumber, diceSides){
