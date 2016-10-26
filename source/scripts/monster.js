@@ -39,10 +39,10 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				perception: monsterList.monsterType[type].stats.perception, 
 				baseAttackBonus: monsterList.monsterType[type].stats.baseAttackBonus, 
 				defense: monsterList.monsterType[type].stats.defense};
-			
-			this.hp = 4 + Math.floor(this.stats.constitution / 2 - 5);
-            this.maxHp = this.hp;
+
 			this.HD = monsterList.monsterType[type].HD;
+			this.hp = combat.calcMax(this.HD) + Math.floor(this.stats.constitution / 2 - 5);
+			this.maxHp = this.hp;
 			
 			this.abilities = {
 				breatheUnderWater: monsterList.monsterType[type].abilities.breatheUnderWater, 

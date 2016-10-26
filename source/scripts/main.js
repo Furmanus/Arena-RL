@@ -1,4 +1,4 @@
-requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'items', 'pathfinding'], function(map, generator, screen, noise, light, player, monster, items, pathfinding){
+requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'items', 'pathfinding', 'combat'], function(map, generator, screen, noise, light, player, monster, items, pathfinding, combat){
 	
 	var player1, enemy;
 	
@@ -37,10 +37,12 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	new items.Potion('speed', map.cells[0][4][15]);
     new items.Misc('torch', map.cells[0][14][15]);
 	*/
-	//enemy = new monster.Monster(0, 'rat');
 	new monster.Monster(0, 'rat');
+	new monster.Monster(0, 'wolf');
+	new monster.Monster(0, 'snake');
+	new monster.Monster(0, 'raven');
 	player1 = new player.Player();
-	
+
     new items.Misc('torch', player1);
 	new items.Scroll('teleportation', player1);
 	new items.Boots('plate boots', player1);

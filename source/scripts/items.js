@@ -14,13 +14,13 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   
   var armours = {
 	  
-	'leather armour': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather armour', description: 'a leather armour', type: 'armours', slot: 'torso', armourBonus: 2, skillPenalty: 0, modifiers: {speed: 0}},
+	'leather armour': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather armour', description: 'a leather armour', type: 'armours', slot: 'torso', armourBonus: 2, maxDexBonus: 6, skillPenalty: 0, modifiers: {speed: 0}},
 	
-	'chain mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain mail', description: 'a chain mail', type: 'armours', slot: 'torso', armourBonus: 5, skillPenalty: -5, modifiers: {speed: -8}},
+	'chain mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain mail', description: 'a chain mail', type: 'armours', slot: 'torso', armourBonus: 5, maxDexBonus: 2, skillPenalty: -5, modifiers: {speed: -8}},
 	
-	'ring mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'ring mail', description: 'a ring mail', type: 'armours', slot: 'torso', armourBonus: 3, skillPenalty: -3, modifiers: {speed: -5}},
+	'ring mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'ring mail', description: 'a ring mail', type: 'armours', slot: 'torso', armourBonus: 3, maxDexBonus: 4, skillPenalty: -3, modifiers: {speed: -5}},
 	
-	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armours', slot: 'torso', armourBonus: 8, skillPenalty: -7, modifiers: {speed: -12}}
+	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armours', slot: 'torso', armourBonus: 8, maxDexBonus: 0, skillPenalty: -7, modifiers: {speed: -12}}
   };
 
   var headwear = {
@@ -67,7 +67,10 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
   var bodies = {
 
-      'rat': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'rat corpse', description: 'a rat corpse', type: 'corpse'}
+      'rat': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'rat corpse', description: 'a rat corpse', type: 'corpse'},
+      'snake': {display: '%', fgColor: 'lightgreen', bgColor: 'transparent', name: 'snake corpse', description: 'a snake corpse', type: 'corpse'},
+      'wolf': {display: '%', fgColor: 'silver', bgColor: 'transparent', name: 'wolf corpse', description: 'a wolf corpse', type: 'corpse'},
+      'raven': {display: '%', fgColor: 'rgb(51,51,51)', bgColor: 'transparent', name: 'raven corpse', description: 'a raven corpse', type: 'corpse'}
   }
   
   class Weapon{
@@ -108,6 +111,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 	  this.skillPenalty = armours[type].skillPenalty;
 	  this.modifiers = armours[type].modifiers;
 	  this.slot = armours[type].slot;
+      this.maxDexBonus = armours[type].maxDexBonus;
       
       object.inventory.push(this);
     }
