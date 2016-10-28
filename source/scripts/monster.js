@@ -1,4 +1,4 @@
-define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 'monsterList', 'items'], function(map, screen, noise, pathfinding, light, animalai, combat, monsterList, items){
+define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 'monsterList', 'items', 'status'], function(map, screen, noise, pathfinding, light, animalai, combat, monsterList, items, status){
 		
 	class Monster{
 		
@@ -60,6 +60,11 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 			
 			this.modifiers;
 			this.terrainModifier = {source: undefined, stats: null};
+
+			this.status = {
+
+				'fallen': {value: 0}
+			};
 			
 			this.init();
             this.doFov(this);

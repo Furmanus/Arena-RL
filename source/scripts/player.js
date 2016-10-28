@@ -1,4 +1,4 @@
-define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(screen, map, noise, light, evHandlers, combat){	
+define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], function(screen, map, noise, light, evHandlers, combat, status){
 	
 	class Player{
 		
@@ -66,6 +66,11 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat'], function(scr
                 'legs': {description: 'empty'},
                 'feet': {description: 'empty'}
             };
+
+            this.status = {
+
+				'fallen': {value: 0}
+			};
 
             this.defaultWeapon = {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2};
             this.weapon = this.defaultWeapon;

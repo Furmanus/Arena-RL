@@ -33,7 +33,7 @@ define(['screen', 'map'], function(screen, map){
         'bludgeoning': {'player': [' crush ', ' grievously maul '], 'monster': [' crushes ', ' grievously mauls '], 'result': ['. It was excellent strike!', '. It was deadly attack! ']},
         'unarmed': {'player': [' punch ', ' jab ', ' hit '], 'monster': [' punches ', ' jabs ', ' hits '], 'result': ['. It was excellent strike!', '. It was grievous hit! ']},
         'bite': {'player': [' deeply bite ', ' grievously bite'], 'monster': [' deeply bites ', ' grievously bites '], 'result': ['. It was very deep bite!', '. It was very aggressive bite! ']},
-        'claws': {'player': [' cut ', ' tear '], 'monster': [' cuts ', ' tears ']}
+        'claws': {'player': [' cut ', ' tear '], 'monster': [' cuts ', ' tears '], 'result': ['. It was a deep cut!', '. It was a critical hit!']}
     }
 
     var msgCriticalMissWeapon = {

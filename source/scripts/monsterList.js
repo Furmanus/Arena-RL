@@ -10,7 +10,7 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			type: {messageDisplay: 'rat', type: 'monster', family: 'animal', species: 'rat', name: 'a rat'}, 
 			HD: '0.25d8',
 			size: 'tiny', 
-			stats: {strength: 2, dexterity: 15, constitution: 10, intelligence: 2, wisdom: 12, charisma: 2, speed: 20, perception: 8, baseAttackBonus: 0, defense: 14},
+			stats: {strength: 2, dexterity: 15, constitution: 10, intelligence: 2, wisdom: 12, charisma: 2, speed: 20, perception: 8, baseAttackBonus: 0, defense: 10},
 			equipment: {
 				
 				'head': {description: 'empty'},
@@ -33,7 +33,7 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			type: {messageDisplay: 'snake', type: 'monster', family: 'animal', species: 'snake', name: 'a snake'},
 			HD: '3d8+6',
 			size: 'medium',
-			stats: {strength: 17, dexterity: 17, constitution: 13, intelligence: 1, wisdom: 12, charisma: 2, speed: 20, perception: 4, baseAttackBonus: 2, defense: 15},
+			stats: {strength: 17, dexterity: 17, constitution: 13, intelligence: 1, wisdom: 12, charisma: 2, speed: 20, perception: 4, baseAttackBonus: 2, defense: 12},
 			equipment: {
 
 				'head': {description: 'empty'},
@@ -53,7 +53,7 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			type: {messageDisplay: 'wolf', type: 'monster', family: 'animal', species: 'wolf', name: 'a wolf'},
 			HD: '2d8+4',
 			size: 'medium',
-			stats: {strength: 13, dexterity: 15, constitution: 15, intelligence: 2, wisdom: 12, charisma: 6, speed: 50, perception: 5, baseAttackBonus: 1, defense: 14},
+			stats: {strength: 13, dexterity: 15, constitution: 15, intelligence: 2, wisdom: 12, charisma: 6, speed: 50, perception: 5, baseAttackBonus: 1, defense: 12},
 			equipment: {
 
 				'head': {description: 'empty'},
@@ -75,7 +75,7 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			type: {messageDisplay: 'raven', type: 'monster', family: 'animal', species: 'raven', name: 'a raven'},
 			HD: '0.25d8',
 			size: 'tiny',
-			stats: {strength: 1, dexterity: 15, constitution: 10, intelligence: 2, wisdom: 14, charisma: 6, speed: 40, perception: 7, baseAttackBonus: 0, defense: 14},
+			stats: {strength: 1, dexterity: 15, constitution: 10, intelligence: 2, wisdom: 14, charisma: 6, speed: 40, perception: 7, baseAttackBonus: 0, defense: 10},
 			equipment: {
 
 				'head': {description: 'empty'},

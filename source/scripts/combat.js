@@ -33,10 +33,10 @@ define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages
             screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt));
         } else {
 
-            attackerScore += attacker.stats.baseAttackBonus + Math.floor(attacker.stats.strength / 2 - 5) + sizeModifiers[attacker.size];
+            attackerScore += calculateBaseAttackBonus(attacker) + sizeModifiers[attacker.size];
 
-            defenderScore = defender.stats.defense + calculateDexterityBonus(defender) + sizeModifiers[defender.size] + calculateEquipmentBonus(defender);
-			
+            defenderScore = calculateBaseDefenseBonus(defender) + calculateDexterityBonus(defender) + sizeModifiers[defender.size] + calculateEquipmentBonus(defender);
+
             if (attackerScore >= defenderScore) {
 
                 var damageDealt = calc(attacker.weapon.damage);
@@ -55,7 +55,7 @@ define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages
             }
         }
 
-		if(defender.hp < 0){
+		if(defender.hp < 1){
 
             screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'dead', 0), defenderPosition);
             map.cells[defender.position.level].time.scheduler.remove(defender);
@@ -110,6 +110,30 @@ define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages
                         result = defender.equipment.torso.maxDexBonus;
                     }
                 }
+            }
+
+            return result;
+        }
+
+        function calculateBaseAttackBonus(attacker){
+
+            var result = attacker.stats.baseAttackBonus + Math.floor(attacker.stats.strength / 2 - 5);
+
+            if(attacker.status.fallen.value === 1){
+
+                result -= 4;
+            }
+
+            return result;
+        }
+
+        function calculateBaseDefenseBonus(defender){
+
+            var result = defender.stats.defense;
+
+            if(defender.status.fallen.value === 1){
+
+                result -= 4;
             }
 
             return result;
