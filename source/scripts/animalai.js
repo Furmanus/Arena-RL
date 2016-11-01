@@ -92,6 +92,11 @@ define(['map', 'screen', 'pathfinding'], function(map, screen, pathfinding){
 
         return {x: x, y: y};
     }
+
+    function examineStatus(entity){
+
+        //napisać kod dla którego potwór przed przekalkulowaniem kolejnego kroku dokonuje analizy swoich statusów. W przypadku np. gdy leży na ziemi i został powalony, wstaje
+    }
 	
 	return {
 		
