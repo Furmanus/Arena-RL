@@ -39,7 +39,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 		191: displayInfo,
 		188: ascendLevel,
-		190: descendLevel
+		190: descendLevel,
+		82: rise
 	};
 
 	/*
@@ -72,7 +73,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 				actions[ev.which](this);
 			}
-		}else if(ev.shiftKey === true && (ev.which === 191 || ev.which === 190 || ev.which === 188)){
+		}else if(ev.shiftKey === true && (ev.which === 191 || ev.which === 190 || ev.which === 188 || ev.which === 82)){
 
 			shiftActions[ev.which](this);
 		}else{
@@ -329,6 +330,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 screen.display.drawText(1, 11, '[e] - equip/unequip items');
 				screen.display.drawText(1, 12, '[q] - drink');
 				screen.display.drawText(1, 13, '[r] - read');
+				screen.display.drawText(1, 14, '[R] - rise on feet/fall on ground');
 				this.handleEvent = escapeEventHandler.bind(player);
 				
 				break
@@ -509,8 +511,30 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				
 				if(map.cells[level][x][y].entity != null){
 
-					displayText = 'You see ' + map.cells[level][x][y].entity.lookDescription + '.[M]ore...';
-					
+					displayText = 'You see ' + map.cells[level][x][y].entity.lookDescription;
+
+					if(verifySpecialStatus(map.cells[level][x][y].entity) === true){
+
+						var stateList = [];
+
+						statusList = Object.keys(map.cells[level][x][y].entity.status);
+
+						displayText += ' (';
+
+						for(var i=0; i<statusList.length; i++){
+
+							if(map.cells[level][x][y].entity.status[statusList[i]].value === 1) {
+
+								stateList.push(statusList[i]);
+							}
+						}
+
+						displayText += stateList.join(', ');
+						displayText += ')';
+					}
+
+					displayText += '. [M]ore...';
+
 					if(map.cells[level][x][y].isOnFire === true){
 						
 						displayText += ' Wild flames of fire are roaring here.';
@@ -553,6 +577,19 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				displayText = 'You can\'t see that place.';
 				
 				return displayText;
+			}
+			/*
+			function used to verify whether entity has any special status (confusion, bleeding, prone, etc.) active
+			 */
+			function verifySpecialStatus(entity){
+
+				for(var n in entity.status){
+
+					if(entity.status[n].value === 1){
+
+						return true;
+					}
+				}
 			}
 		}
 	}
@@ -948,6 +985,20 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 esc(this);
                 map.cells[this.position.level].time.engine.unlock();
 			}
+		}
+	}
+
+	function rise(player){
+
+		if(player.status.prone.value === 1){
+
+			screen.placeMessage('You rise back on your feet.');
+			player.status.prone.removeEffect(player);
+			map.cells[player.position.level].time.engine.unlock();
+		}else if(player.status.prone.value === 0){
+
+			player.status.prone.activateEffect(player);
+			map.cells[player.position.level].time.engine.unlock();
 		}
 	}
 

@@ -3,13 +3,13 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   //hash objects with defined properties, used in class constructor
   var weapons = {
   
-    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapons', slot: 'right hand', natural: false, damage: '1d4', critical: [19,20], dmgType: 'piercing', criticalMultiplier: 3, modifiers: null},
+    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapons', slot: 'right hand', natural: false, damage: '1d4', critical: [19,20], dmgType: 'piercing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
 	
-    'long sword': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'long sword', description: 'a long sword', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [19,20], dmgType: 'slashing', criticalMultiplier: 2, modifiers: null},
+    'long sword': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'long sword', description: 'a long sword', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [19,20], dmgType: 'slashing', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']},
 	
-    'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d6', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 2, modifiers: null},
+    'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d6', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 2, modifiers: null, criticalHit: ['prone']},
 	
-	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 3, modifiers: null}
+	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 3, modifiers: null, criticalHit: [null]}
   };
   
   var armours = {
@@ -91,6 +91,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
       this.criticalMultiplier = weapons[type].criticalMultiplier;
 	  this.modifiers = weapons[type].modifiers;
 	  this.slot = weapons[type].slot;
+      this.criticalHit = weapons[type].criticalHit;
       
       object.inventory.push(this);
     }

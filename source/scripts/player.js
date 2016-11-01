@@ -37,7 +37,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 				
 				strength: 15,
 				dexterity: 15,
-				constitution: 15, 
+				constitution: 15,
 				intelligence: 15, 
 				wisdom: 15, 
 				charisma: 15,
@@ -46,7 +46,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 				perception: 60,
 				
 				baseAttackBonus: 1,
-				defense: 10
+				defense: 30
 			};
 			
 			this.HD = '1d8';
@@ -69,10 +69,12 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 
             this.status = {
 
-				'fallen': {value: 0}
+				'prone': {value: 0, activatedEveryTurn: status.entityStatus.prone.activatedEveryTurn, activateEffect: status.entityStatus.prone.activateEffect, removeEffect: status.entityStatus.prone.removeEffect, modifiers: {}},
+
+				'bleeding': {value: 0, activatedEveryTurn: status.entityStatus.bleeding.activatedEveryTurn, activateEffect: status.entityStatus.bleeding.activateEffect, removeEffect: status.entityStatus.bleeding.removeEffect, modifiers: {}}
 			};
 
-            this.defaultWeapon = {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2};
+            this.defaultWeapon = {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]};
             this.weapon = this.defaultWeapon;
 			
 			this.init();
@@ -110,6 +112,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 			this.terrainModifiers();
 			this.doModifiers();
 			window.addEventListener('keydown', this, true);
+			this.applyStatus();
 			map.cells[this.position.level].time.engine.lock();
 		}
 		
@@ -376,6 +379,38 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 
 
         }
+
+        receiveDamage(number){
+
+			this.hp -= number;
+
+			if(this.hp < 1){
+
+				map.cells[this.position.level].time.scheduler.remove(this);
+				this.updateScreenStats();
+				map.cells[this.position.level].time.engine.lock();
+				this.handleEvent = function(){};
+
+				screen.placeMessage('You die...');
+			}
+
+			screen.display.clear();
+			screen.drawVisibleCells(map.cells[this.position.level]);
+		}
+
+		/*
+		function which iterates through this.status object. For each status which value equals 1 and activatedEveryTurn variable equals true, function calls activateEffect for appriopiate status
+		 */
+		applyStatus(){
+
+			for(var n in this.status){
+
+				if(this.status[n].value === 1 && this.status[n].activatedEveryTurn === true){
+
+					this.status[n].activateEffect(this);
+				}
+			}
+		}
 	}
 	
 	return{

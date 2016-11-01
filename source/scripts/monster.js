@@ -63,7 +63,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 			this.status = {
 
-				'fallen': {value: 0}
+				'prone': {value: 0, activatedEveryTurn: status.entityStatus.prone.activatedEveryTurn, activateEffect: status.entityStatus.prone.activateEffect, removeEffect: 				status.entityStatus.prone.removeEffect, modifiers: {}},
+
+				'bleeding': {value: 0, activatedEveryTurn: status.entityStatus.bleeding.activatedEveryTurn, activateEffect: status.entityStatus.bleeding.activateEffect, 				removeEffect: status.entityStatus.bleeding.removeEffect, modifiers: {}}
 			};
 			
 			this.init();
@@ -280,9 +282,45 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 		}
 		
 		act(){
-			
+
+			this.applyStatus();
 			this.ai.nextStep(this);
-			this.terrainModifiers();
+			this.terrainModifiers(); //after next step we need to calculate terrain modifiers for other entities turns
+		}
+
+		updateScreenStats(){
+
+
+		}
+
+		receiveDamage(number){
+
+			this.hp -= number;
+
+			if(this.hp < 1){
+
+				map.cells[this.position.level].time.scheduler.remove(this);
+				map.cells[this.position.level][this.position.x][this.position.y].entity = null;
+
+				screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + ' dies.');
+			}
+
+			screen.display.clear();
+			screen.drawVisibleCells(map.cells[defender.position.level]);
+		}
+
+		/*
+		 function which iterates through this.status object. For each status which value equals 1 and activatedEveryTurn variable equals true, function calls activateEffect for appriopiate status
+		 */
+		applyStatus(){
+
+			for(var n in this.status){
+
+				if(this.status[n].value === 1 && this.status[n].activatedEveryTurn === true){
+
+					this.status[n].activateEffect(this);
+				}
+			}
 		}
 	}
 	

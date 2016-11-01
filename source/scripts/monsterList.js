@@ -22,7 +22,7 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			ai: animalai.ai, 
 			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
 			hostileList: {species: ['human', 'snake'], family: [], entity: []},
-			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d3-4', critical: [20], dmgType: 'bite', criticalMultiplier: 2}
+			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d3-4', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
 			},
 
 		'snake': {
@@ -42,7 +42,7 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			ai: animalai.ai,
 			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
 			hostileList: {species: ['human', 'rat'], family: [], entity: []},
-			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d7', critical: [20], dmgType: 'bite', criticalMultiplier: 2}
+			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d7', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
 		},
 
 		'wolf': {
@@ -64,7 +64,7 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			ai: animalai.ai,
 			abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
 			hostileList: {species: ['human'], family: [], entity: []},
-			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d6+1', critical: [20], dmgType: 'bite', criticalMultiplier: 2}
+			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d6+1', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['bleeding']}
 		},
 
 		'raven': {
@@ -86,7 +86,7 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			ai: animalai.ai,
 			abilities: {breatheUnderWater: false, canFly: true, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
 			hostileList: {species: ['human'], family: [], entity: []},
-			defaultWeapon: {name: 'claws', description: 'a claws', natural: true, damage: '1d2-5', critical: [20], dmgType: 'claws', criticalMultiplier: 2}
+			defaultWeapon: {name: 'claws', description: 'a claws', natural: true, damage: '1d2-5', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding']}
 		}
 	};
 	

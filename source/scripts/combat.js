@@ -1,4 +1,4 @@
-define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages){
+define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, combatMessages, status){
 	
 	var sizeModifiers = {
 		
@@ -29,8 +29,13 @@ define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages
             }
 
             defender.hp -= damageDealt;
-					
             screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt));
+
+            if(attacker.weapon.criticalHit !== null && defender.hp > 0){
+
+                status.entityStatus[attacker.weapon.criticalHit.random()].activateEffect(defender);
+            }
+
         } else {
 
             attackerScore += calculateBaseAttackBonus(attacker) + sizeModifiers[attacker.size];
@@ -63,6 +68,7 @@ define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages
 
             if(defender.type.type === 'player'){
 
+                defender.updateScreenStats();
                 map.cells[defender.position.level].time.engine.lock();
                 defender.handleEvent = function(){};
             }else{
@@ -73,6 +79,8 @@ define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages
             screen.display.clear();
             screen.drawVisibleCells(map.cells[defender.position.level]);
         }
+
+        defender.updateScreenStats();
 		
 		function calculateEquipmentBonus(defender){
 			
@@ -119,7 +127,7 @@ define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages
 
             var result = attacker.stats.baseAttackBonus + Math.floor(attacker.stats.strength / 2 - 5);
 
-            if(attacker.status.fallen.value === 1){
+            if(attacker.status.prone.value === 1){
 
                 result -= 4;
             }
@@ -131,7 +139,7 @@ define(['screen', 'map', 'combatMessages'], function(screen, map, combatMessages
 
             var result = defender.stats.defense;
 
-            if(defender.status.fallen.value === 1){
+            if(defender.status.prone.value === 1){
 
                 result -= 4;
             }
