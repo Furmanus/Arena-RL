@@ -15,3 +15,7 @@ Things implemented so far:
 
 You can use http://rawgit.com/ site to preview result without downloading whole repository.
 
+TODO: 
+- napisać kod odpowiedzialny za analizę statusu każdego potwora na początku każdej jego tury, przed kalkulacją kolejnego kroku. W przypadku negatywnych statusów (np. powalony na ziemię), zamiast normalnej kalkulacji podjęcie działania do wyeliminowania statusu
+- napisać resztę statusów (konfuzja, ogłuszenie, trucizna)
+
