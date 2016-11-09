@@ -15,6 +15,4 @@ Things implemented so far:
 
 You can use http://rawgit.com/ site to preview result without downloading whole repository.
 
-TODO:
-- napisać resztę statusów (konfuzja, ogłuszenie, trucizna)
 
