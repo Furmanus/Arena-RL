@@ -1002,6 +1002,15 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		}
 	}
 
+	//event handler for situation where player is stunned or confused
+	function stunHandleEvent(ev){
+
+		if(ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100 || ev.which === 101){
+
+			this.move(1, 1, true);
+		}
+	}
+
 	//wyjście z danego ekranu z powrotem do głównego ekranu gry
 	function esc(player){
 
@@ -1019,6 +1028,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		
 		displayInventory: displayInventory,
 		defaultEventHandler: defaultEventHandler,
-		doEquipmentModifiers: doEquipmentModifiers
+		doEquipmentModifiers: doEquipmentModifiers,
+		stunHandleEvent: stunHandleEvent
 	}
 });

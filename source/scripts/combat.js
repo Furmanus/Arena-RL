@@ -33,7 +33,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
             if(attacker.weapon.criticalHit !== null && defender.hp > 0){
 
-                status.entityStatus[attacker.weapon.criticalHit.random()].activateEffect(defender);
+                status.entityStatus[attacker.weapon.criticalHit.random()].initEffect(defender);
             }
 
         } else {
@@ -118,6 +118,11 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
                         result = defender.equipment.torso.maxDexBonus;
                     }
                 }
+            }
+
+            if(result > 0 && defender.status.stunned.value === 1){
+
+                result = 0;
             }
 
             return result;

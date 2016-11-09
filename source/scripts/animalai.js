@@ -7,7 +7,11 @@ module containing AI methods for unintelligent animals
 
 define(['map', 'screen', 'pathfinding'], function(map, screen, pathfinding){
 
-    var ai = {nextStep: nextStep};
+    var ai = {
+
+        nextStep: nextStep,
+        examineStatus: examineStatus
+    };
 	
 	function nextStep(monster){
 
@@ -93,9 +97,27 @@ define(['map', 'screen', 'pathfinding'], function(map, screen, pathfinding){
         return {x: x, y: y};
     }
 
+    /*
+    function which examines current monster statuses, and returns appriopiate action if any negative status is detected. Returns 'status ok' otherwise. Currently only negative status detected is 'prone' (fallen on ground). Will be more complex in case of intelligent monsters capable of using equipment and items
+     */
+
     function examineStatus(entity){
 
-        //napisać kod dla którego potwór przed przekalkulowaniem kolejnego kroku dokonuje analizy swoich statusów. W przypadku np. gdy leży na ziemi i został powalony, wstaje
+        for(var n in entity.status){
+
+            if(entity.status[n].value === 1){
+
+                if(n === 'prone') {
+
+                    return 'rise';
+                }else if(n === 'stunned'){
+
+                    return 'stunned';
+                }
+            }
+        }
+
+        return 'status ok';
     }
 	
 	return {

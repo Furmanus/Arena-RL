@@ -50,7 +50,7 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	new items.Armour('field plate', player1);
 	new items.Legs('plate leggings', player1);
 	new items.Helmet('plate helmet', player1);
-	new items.Weapon('long sword', player1);
+	new items.Weapon('warhammer', player1);
 	new items.Weapon('staff', player1);
 	new items.Potion('speed', player1);
 	map.cells[0].time.engine.start();

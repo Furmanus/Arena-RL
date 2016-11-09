@@ -9,7 +9,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 	
     'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d6', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 2, modifiers: null, criticalHit: ['prone']},
 	
-	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 3, modifiers: null, criticalHit: [null]}
+	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 3, modifiers: null, criticalHit: ['stunned']}
   };
   
   var armours = {
@@ -25,11 +25,11 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
   var headwear = {
 
-      'leather helm': {display: '\u2313', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather helm', description: 'a leather helm', type: 'helmets', slot: 'head', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
+      'leather helm': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather helm', description: 'a leather helm', type: 'helmets', slot: 'head', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
 
-      'chain choif': {display: '\u2313', fgColor: 'silver', bgColor: 'transparent', name: 'chain choif', description: 'a chain choif', type: 'helmets', slot: 'head', armourBonus: 2, skillPenalty: 0, modifiers: {speed: 0}},
+      'chain choif': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain choif', description: 'a chain choif', type: 'helmets', slot: 'head', armourBonus: 2, skillPenalty: 0, modifiers: {speed: 0}},
 
-      'plate helmet': {display: '\u2313', fgColor: 'silver', bgColor: 'transparent', name: 'plate helmet', description: 'a plate helmet', type: 'helmets', slot: 'head', armourBonus: 3, skillPenalty: 0, modifiers: {speed: -1}},
+      'plate helmet': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate helmet', description: 'a plate helmet', type: 'helmets', slot: 'head', armourBonus: 3, skillPenalty: 0, modifiers: {speed: -1}},
   };
 
   var legs = {
@@ -43,11 +43,11 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
   var boots = {
 
-      'leather boots': {display: '{', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather boots', description: 'a leather boots', type: 'boots', slot: 'feet', armourBonus: 0, skillPenalty: 0, modifiers: {speed: 0}},
+      'leather boots': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather boots', description: 'a leather boots', type: 'boots', slot: 'feet', armourBonus: 0, skillPenalty: 0, modifiers: {speed: 0}},
 
-      'chain boots': {display: '{', fgColor: 'silver', bgColor: 'transparent', name: 'chain boots', description: 'a chain boots', type: 'boots', slot: 'feet', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
+      'chain boots': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain boots', description: 'a chain boots', type: 'boots', slot: 'feet', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
 
-      'plate boots': {display: '{', fgColor: 'silver', bgColor: 'transparent', name: 'plate boots', description: 'a plate boots', type: 'boots', slot: 'feet', armourBonus: 2, skillPenalty: -2, modifiers: {speed: -2}},
+      'plate boots': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate boots', description: 'a plate boots', type: 'boots', slot: 'feet', armourBonus: 2, skillPenalty: -2, modifiers: {speed: -2}},
   };
   
   var scrolls = {
@@ -62,7 +62,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
   var misc = {
 
-      'torch': {display: '\u00A1', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'torch', description: 'a torch', type: 'miscellaneous', slot: 'left hand', modifiers: null}
+      'torch': {display: '[', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'torch', description: 'a torch', type: 'miscellaneous', slot: 'left hand', modifiers: null}
   };
 
   var bodies = {

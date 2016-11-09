@@ -69,9 +69,11 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 
             this.status = {
 
-				'prone': {value: 0, activatedEveryTurn: status.entityStatus.prone.activatedEveryTurn, activateEffect: status.entityStatus.prone.activateEffect, removeEffect: status.entityStatus.prone.removeEffect, modifiers: {}},
+				'prone': {value: 0, activatedEveryTurn: status.entityStatus.prone.activatedEveryTurn, activateEffect: status.entityStatus.prone.activateEffect, removeEffect: status.entityStatus.prone.removeEffect, initEffect: status.entityStatus.prone.initEffect,  modifiers: {}},
 
-				'bleeding': {value: 0, activatedEveryTurn: status.entityStatus.bleeding.activatedEveryTurn, activateEffect: status.entityStatus.bleeding.activateEffect, removeEffect: status.entityStatus.bleeding.removeEffect, modifiers: {}}
+				'bleeding': {value: 0, activatedEveryTurn: status.entityStatus.bleeding.activatedEveryTurn, activateEffect: status.entityStatus.bleeding.activateEffect, removeEffect: status.entityStatus.bleeding.removeEffect, initEffect: status.entityStatus.bleeding.initEffect, modifiers: {}},
+
+				'stunned': {value: 0, activatedEveryTurn: status.entityStatus.stunned.activatedEveryTurn, activateEffect: status.entityStatus.stunned.activateEffect, removeEffect: status.entityStatus.stunned.removeEffect, initEffect: status.entityStatus.stunned.initEffect, modifiers: {}, counter: 0}
 			};
 
             this.defaultWeapon = {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]};
@@ -132,13 +134,19 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 		}
 		
 		/*
-		move() - funkcja odpowiedzialna za poruszanie się. x, y to wartości od -1 do 1 odpowiadające kierunkom ruchu poziomo/pionowo
+		move() - funkcja odpowiedzialna za poruszanie się. x, y to wartości od -1 do 1 odpowiadające kierunkom ruchu poziomo/pionowo. Trzeci argument opcjonalny, określa czy ruch jest losowy czy nie (przyjmuje wartosc true lub false)
 		*/
 		
-		move(x, y){
+		move(x, y, random){
 			
 			var tmpX = this.position.x + x,
 				tmpY = this.position.y + y;
+
+			if(random === true){
+
+				tmpX = this.position.x + [-1, 0, 1].random();
+				tmpY = this.position.y + [-1, 0, 1].random();
+			}
 			
 			if(map.cells[this.position.level][tmpX][tmpY].entity != null && map.cells[this.position.level][tmpX][tmpY].entity != this){
 				

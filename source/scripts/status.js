@@ -2,15 +2,16 @@
  * Created by Furman on 27.10.2016.
  */
 
-define(['screen', 'map'], function(screen, map){
+define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
     entityStatus = {
 
-        'prone': {activatedEveryTurn: false, activateEffect: proneActivate, removeEffect: proneRemove},
-        'bleeding': {activatedEveryTurn: true, activateEffect: bleedActivate, removeEffect: bleedRemove}
+        'prone': {activatedEveryTurn: false, activateEffect: proneActivate, removeEffect: proneRemove, initEffect: proneInit},
+        'bleeding': {activatedEveryTurn: true, activateEffect: bleedActivate, removeEffect: bleedRemove, initEffect: bleedingInit},
+        'stunned': {activatedEveryTurn: true, activateEffect: stunActivate, removeEffect: stunRemove, initEffect: stunInit}
     }
 
-    function proneActivate(entity){
+    function proneInit(entity){
 
         if(checkIfHaveBodyPart(entity, 'legs')) {
 
@@ -38,6 +39,11 @@ define(['screen', 'map'], function(screen, map){
         }
     }
 
+    function proneActivate(entity){
+
+
+    }
+
     function proneRemove(entity){
 
         entity.stats.speed -= entity.status.prone.modifiers.speed;
@@ -54,10 +60,9 @@ define(['screen', 'map'], function(screen, map){
 
         var position = map.cells[entity.position.level][entity.position.x][entity.position.y];
 
-        entity.status.bleeding.value = 1;
-
         if(Math.floor((entity.stats.constitution / 2) - 5) + roll(1, 20) >= 15){
 
+            screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' stop' : ' stops') + ' bleeding.', position);
             entity.status.bleeding.value = 0;
         }else{
 
@@ -68,9 +73,69 @@ define(['screen', 'map'], function(screen, map){
         }
     }
 
+    function bleedingInit(entity){
+
+        var damageDealt = calc('1d1'),
+            position = map.cells[entity.position.level][entity.position.x][entity.position.y];
+
+        entity.status.bleeding.value = 1;
+        screen.placeVisibleMessage('Deep wound is open in ' + (entity.type.type === 'player' ? 'your ' : (entity.type.messageDisplay + 's ')) + 'body. ' + screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' lose blood!' : ' loses blood!'), position);
+        entity.receiveDamage(damageDealt);
+    }
+
     function bleedRemove(entity){
 
 
+    }
+
+    function stunInit(entity){
+
+        var position = map.cells[entity.position.level][entity.position.x][entity.position.y];
+
+        //make entity stunned status active, and set counter to 1 (so entity will be stunned for at least 1 turn)
+        entity.status.stunned.value = 1;
+        entity.status.stunned.counter = 1;
+        screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are stunned!' : ' is stunned!'), position);
+        entity.stats.defense -= 2;
+
+        for(var i=0; i<6; i++){
+            //make seven constitution stat checks - for each failed check we increase number of turns for which entity will be stunned
+            if(Math.floor((entity.stats.constitution / 2) - 5) + roll(1, 20) < 15){
+
+                entity.status.stunned.counter++
+            }
+        }
+
+        if(entity.type.type === 'player'){
+
+            entity.handleEvent = evHandlers.stunHandleEvent.bind(entity);
+        }
+    }
+
+    function stunActivate(entity){
+
+        var position = map.cells[entity.position.level][entity.position.x][entity.position.y];
+
+        if(entity.status.stunned.counter === 0){
+
+            entity.status.stunned.removeEffect(entity);
+
+            if(entity.type.type === 'player'){
+
+                entity.handleEvent = evHandlers.defaultEventHandler.bind(entity);
+            }
+        }
+
+        entity.status.stunned.counter--;
+    }
+
+    function stunRemove(entity){
+
+        var position = map.cells[entity.position.level][entity.position.x][entity.position.y];
+
+        entity.status.stunned.value = 0;
+        screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are no longer stunned.' : ' is no longer stunned.'), position);
+        entity.stats.defense += 2;
     }
 
     function roll(rollNumber, diceSides){
@@ -85,7 +150,7 @@ define(['screen', 'map'], function(screen, map){
         return Math.ceil(result);
     }
 
-    //function to calculate dmg number from description like 'xdy+z'. Can be read as "roll x y-sided dices and add z to result. x can be float or integer
+    //function to calculate dmg number from string like 'xdy+z'. Can be read as "roll x y-sided dices and add z to result. x can be float or integer
 
     function calc(dice) {
 

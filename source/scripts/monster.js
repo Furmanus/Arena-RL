@@ -63,9 +63,11 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 			this.status = {
 
-				'prone': {value: 0, activatedEveryTurn: status.entityStatus.prone.activatedEveryTurn, activateEffect: status.entityStatus.prone.activateEffect, removeEffect: 				status.entityStatus.prone.removeEffect, modifiers: {}},
+				'prone': {value: 0, activatedEveryTurn: status.entityStatus.prone.activatedEveryTurn, activateEffect: status.entityStatus.prone.activateEffect, removeEffect: 				status.entityStatus.prone.removeEffect, initEffect: status.entityStatus.prone.initEffect, modifiers: {}},
 
-				'bleeding': {value: 0, activatedEveryTurn: status.entityStatus.bleeding.activatedEveryTurn, activateEffect: status.entityStatus.bleeding.activateEffect, 				removeEffect: status.entityStatus.bleeding.removeEffect, modifiers: {}}
+				'bleeding': {value: 0, activatedEveryTurn: status.entityStatus.bleeding.activatedEveryTurn, activateEffect: status.entityStatus.bleeding.activateEffect, 				removeEffect: status.entityStatus.bleeding.removeEffect, initEffect: status.entityStatus.bleeding.initEffect, modifiers: {}},
+
+				'stunned': {value: 0, activatedEveryTurn: status.entityStatus.stunned.activatedEveryTurn, activateEffect: status.entityStatus.stunned.activateEffect, removeEffect: status.entityStatus.stunned.removeEffect, initEffect: status.entityStatus.stunned.initEffect, modifiers: {}, counter: 0}
 			};
 			
 			this.init();
@@ -149,6 +151,40 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				
 				this.doFov(this);
 				
+				return 'moved';
+			}
+		}
+
+		randomMove(){
+
+			var tmpX = this.position.x + [-1, 0, 1].random(),
+				tmpY = this.position.y + [-1, 0, 1].random();
+
+			if(map.cells[this.position.level][tmpX][tmpY].type.blockMovement === true){
+
+				return 'wall';
+			}else if(map.cells[this.position.level][tmpX][tmpY].entity !== null && map.cells[this.position.level][tmpX][tmpY].entity !== this){
+
+				combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity);
+				return 'entity';
+			}else if(map.cells[this.position.level][tmpX][tmpY].entity === null){
+
+				this.currentFov = [];
+				map.cells[this.position.level][this.position.x][this.position.y].entity = null;
+
+				this.position.lastVisitedCell = map.cells[this.position.level][this.position.x][this.position.y];
+				this.position.x = tmpX;
+				this.position.y = tmpY;
+
+				map.cells[this.position.level][this.position.x][this.position.y].entity = this;
+
+				map.cells[this.position.level][this.position.x][this.position.y].type.walkEffect(this, this.position.x, this.position.y);
+
+				screen.display.clear();
+				screen.drawVisibleCells(map.cells[this.position.level]);
+
+				this.doFov(this);
+
 				return 'moved';
 			}
 		}
@@ -283,8 +319,22 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 		
 		act(){
 
+			var examinedStatus = this.ai.examineStatus(this);
+
 			this.applyStatus();
-			this.ai.nextStep(this);
+
+			if(examinedStatus === 'status ok') {
+
+				this.ai.nextStep(this);
+			}else if(examinedStatus === 'rise'){
+
+				this.rise();
+			}else if(examinedStatus === 'stunned'){
+
+				this.randomMove();
+			}
+
+
 			this.terrainModifiers(); //after next step we need to calculate terrain modifiers for other entities turns
 		}
 
@@ -307,6 +357,14 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 			screen.display.clear();
 			screen.drawVisibleCells(map.cells[defender.position.level]);
+		}
+
+		//changes 'prone' status, if it's set to 1(monster is fallen on ground)
+
+		rise(){
+
+			screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' rises back on feet.', map.cells[this.position.level][this.position.x][this.position.y]);
+			this.status.prone.removeEffect(this);
 		}
 
 		/*
