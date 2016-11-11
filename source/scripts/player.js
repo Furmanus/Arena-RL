@@ -50,7 +50,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 			};
 			
 			this.HD = '1d8';
-			this.hp = 8 + Math.floor(this.stats.constitution / 2 - 5);
+			this.hp = 8 + Math.floor(this.stats.constitution / 2 - 5) + 50;
             this.maxHp = this.hp;
 			this.lookDescription = 'anonymous brave adventurer';
 			this.type = {messageDisplay: 'you', type: 'player', species: 'human', family: 'player', name: 'you'};
@@ -73,7 +73,9 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 
 				'bleeding': {value: 0, activatedEveryTurn: status.entityStatus.bleeding.activatedEveryTurn, activateEffect: status.entityStatus.bleeding.activateEffect, removeEffect: status.entityStatus.bleeding.removeEffect, initEffect: status.entityStatus.bleeding.initEffect, modifiers: {}},
 
-				'stunned': {value: 0, activatedEveryTurn: status.entityStatus.stunned.activatedEveryTurn, activateEffect: status.entityStatus.stunned.activateEffect, removeEffect: status.entityStatus.stunned.removeEffect, initEffect: status.entityStatus.stunned.initEffect, modifiers: {}, counter: 0}
+				'stunned': {value: 0, activatedEveryTurn: status.entityStatus.stunned.activatedEveryTurn, activateEffect: status.entityStatus.stunned.activateEffect, removeEffect: status.entityStatus.stunned.removeEffect, initEffect: status.entityStatus.stunned.initEffect, modifiers: {}, counter: 0},
+
+				'poisoned': {value: 0, activatedEveryTurn: status.entityStatus.poisoned.activatedEveryTurn, activateEffect: status.entityStatus.poisoned.activateEffect, removeEffect: status.entityStatus.poisoned.removeEffect, initEffect: status.entityStatus.poisoned.initEffect, modifiers: {}, counter: 0}
 			};
 
             this.defaultWeapon = {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]};
@@ -387,6 +389,17 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 
 
         }
+
+        dropWeapon(){
+
+			if(this.equipment['right hand'].description !== 'empty'){
+
+				screen.placeMessage('You drop your ' + this.equipment['right hand'].name + '(' + this.equipment['right hand'].damage + ').');
+				map.cells[this.position.level][this.position.x][this.position.y].inventory.push(this.equipment['right hand']);
+				this.equipment['right hand'] = {description: 'empty'};
+				this.weapon = this.defaultWeapon;
+			}
+		}
 
         receiveDamage(number){
 

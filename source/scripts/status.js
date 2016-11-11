@@ -8,7 +8,8 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
         'prone': {activatedEveryTurn: false, activateEffect: proneActivate, removeEffect: proneRemove, initEffect: proneInit},
         'bleeding': {activatedEveryTurn: true, activateEffect: bleedActivate, removeEffect: bleedRemove, initEffect: bleedingInit},
-        'stunned': {activatedEveryTurn: true, activateEffect: stunActivate, removeEffect: stunRemove, initEffect: stunInit}
+        'stunned': {activatedEveryTurn: true, activateEffect: stunActivate, removeEffect: stunRemove, initEffect: stunInit},
+        'poisoned': {activatedEveryTurn: true, activateEffect: poisonActivate, removeEffect: poisonRemove, initEffect: poisonInit}
     }
 
     function proneInit(entity){
@@ -60,7 +61,7 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
         var position = map.cells[entity.position.level][entity.position.x][entity.position.y];
 
-        if(Math.floor((entity.stats.constitution / 2) - 5) + roll(1, 20) >= 15){
+        if(entity.status.bleeding.counter === 0){
 
             screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' stop' : ' stops') + ' bleeding.', position);
             entity.status.bleeding.value = 0;
@@ -70,6 +71,7 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
             screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' lose' : ' loses') + ' blood!', position);
             entity.receiveDamage(damageDealt);
+            entity.status.bleeding.counter--;
         }
     }
 
@@ -79,11 +81,60 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
             position = map.cells[entity.position.level][entity.position.x][entity.position.y];
 
         entity.status.bleeding.value = 1;
-        screen.placeVisibleMessage('Deep wound is open in ' + (entity.type.type === 'player' ? 'your ' : (entity.type.messageDisplay + 's ')) + 'body. ' + screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' lose blood!' : ' loses blood!'), position);
-        entity.receiveDamage(damageDealt);
+        entity.status.bleeding.counter = 1;
+        screen.placeVisibleMessage('Deep wound is open in ' + (entity.type.type === 'player' ? 'your ' : (entity.type.messageDisplay + 's ')) + 'body.', position);
+        //entity.receiveDamage(damageDealt);
+
+        for(var i=0; i<6; i++){
+
+            if(Math.floor((entity.stats.constitution / 2) - 5) + roll(1, 20) >= 15){
+
+                entity.status.bleeding.counter++;
+            }
+        }
     }
 
     function bleedRemove(entity){
+
+
+    }
+
+    function poisonInit(entity){
+
+        var position = map.cells[entity.position.level][entity.position.x][entity.position.y];
+
+        entity.status.poisoned.value = 1;
+        entity.status.poisoned.counter = 1;
+        screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are poisoned!' : ' is poisoned!'), position);
+
+        for(var i=0; i<6; i++){
+
+            if(Math.floor((entity.stats.constitution / 2) - 5) + roll(1, 20) >= 15){
+
+                entity.status.poisoned.counter++;
+            }
+        }
+    }
+
+    function poisonActivate(entity){
+
+        var position = map.cells[entity.position.level][entity.position.x][entity.position.y];
+
+        if(entity.status.poisoned.counter === 0){
+
+            screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are' : ' is') + ' no longer poisoned.', position);
+            entity.status.poisoned.value = 0;
+        }else{
+
+            var damageDealt = calc('1d1');
+
+            screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' cringe' : ' cringes') + ' in pain.', position);
+            entity.receiveDamage(damageDealt);
+            entity.status.poisoned.counter--;
+        }
+    }
+
+    function poisonRemove(entity){
 
 
     }
@@ -97,6 +148,11 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
         entity.status.stunned.counter = 1;
         screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are stunned!' : ' is stunned!'), position);
         entity.stats.defense -= 2;
+
+        if(entity.type.family === 'player') {
+
+            entity.dropWeapon();
+        }
 
         for(var i=0; i<6; i++){
             //make seven constitution stat checks - for each failed check we increase number of turns for which entity will be stunned
@@ -211,6 +267,7 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
    return {
 
-       entityStatus: entityStatus
+       entityStatus: entityStatus,
+       checkIfHaveBodyPart: checkIfHaveBodyPart
    }
 });

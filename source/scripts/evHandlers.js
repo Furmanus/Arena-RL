@@ -997,17 +997,72 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			map.cells[player.position.level].time.engine.unlock();
 		}else if(player.status.prone.value === 0){
 
-			player.status.prone.activateEffect(player);
+			player.status.prone.initEffect(player);
 			map.cells[player.position.level].time.engine.unlock();
 		}
 	}
 
-	//event handler for situation where player is stunned or confused
+	//event handler for situations where player is stunned
 	function stunHandleEvent(ev){
 
-		if(ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100 || ev.which === 101){
+		if(ev.which === 16){
 
+			//nothing happens, shift presses alone shouldn't do anything
+		}else if(ev.shiftKey === false && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100 || ev.which === 101)){
+			//if movement key is presses, we do random move
 			this.move(1, 1, true);
+			screen.placeMessage('You stagger.');
+		}else if(ev.shiftKey === false && (ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69 || ev.which === 81 || ev.which === 82 || ev.which === 89)){
+
+			switch(ev.which){
+				case 81:
+
+					screen.placeMessage('Your hands are too shaky to drink anything!');
+					break;
+				case 82:
+
+					screen.placeMessage('Your can\'t read anything in your current state');
+					break;
+				default:
+
+					screen.placeMessage('You are too shaky to do anything!');
+			}
+		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76)){
+
+			if(ev.which === 73){
+
+				actions[ev.which](this);
+			}else{
+
+				actions[ev.which](this.position.x, this.position.y, this);
+			}
+		}else if(ev.shiftKey === true && (ev.which === 191 || ev.which === 190 || ev.which === 188 || ev.which === 82)){
+
+			if(ev.which === 191){
+
+				shiftActions[ev.which](this);
+			}else if(ev.which === 190 || ev.which === 188){
+
+				if(map.cells[this.position.level][this.position.x][this.position.y].type.type === 'stairs up' || map.cells[this.position.level][this.position.x][this.position.y].type.type === 'stairs down') {
+
+					screen.placeMessage('You won\'t risk using stairs in your current state.');
+				}else{
+
+					screen.placeMessage('There are no stairs to use here. In your condition it wouldn\'t be wise anyway...');
+				}
+			}else if(ev.which === 82){
+
+				if(this.status.prone.value === 1){
+
+					screen.placeMessage('You have trouble with getting up on your feet!');
+				}else{
+
+					rise(this);
+				}
+			}
+		}else{
+
+			screen.placeMessage('Unknown command.');
 		}
 	}
 

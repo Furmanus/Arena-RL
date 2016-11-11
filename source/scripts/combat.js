@@ -1,5 +1,32 @@
 define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, combatMessages, status){
-	
+
+    /*
+    object containing function triggered when critical miss in combat happens
+     */
+    var criticalMissEffect = {
+
+        'dropWeapon': function(entity){
+
+            entity.dropWeapon()
+        },
+
+        'prone': function(entity){
+            //we check if entity have legs
+            if(status.checkIfHaveBodyPart(entity, 'legs') === true) {
+
+                //we make dexterity roll, if it fails, entity falls on ground
+                if (Math.floor(entity.stats.dexterity / 2 - 5) + roll(1, 20) < 15) {
+
+                    screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' stagger and fail to maintain your balance.' : ' staggers and fails to maintain its balance.'), map.cells[entity.position.level][entity.position.x][entity.position.y]);
+                    entity.status.prone.initEffect(entity);
+                } else {
+
+                    screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' stagger but manage to maintain your balance.' : ' staggers but manages to maintain its balance.'), map.cells[entity.position.level][entity.position.x][entity.position.y]);
+                }
+            }
+        }
+    };
+
 	var sizeModifiers = {
 		
 		'huge': -2,
@@ -19,6 +46,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
         if (attackerScore === 1) {
      		
             screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical miss', 0));
+            criticalMissEffect[Object.keys(criticalMissEffect).random()](attacker);
         } else if (attackerScore === 20) {
 
             var damageDealt = calc(attacker.weapon.damage) + calc(attacker.weapon.damage);
@@ -31,7 +59,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
             defender.hp -= damageDealt;
             screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt));
 
-            if(attacker.weapon.criticalHit !== null && defender.hp > 0){
+            if(attacker.weapon.criticalHit[0] !== null && defender.hp > 0){
 
                 status.entityStatus[attacker.weapon.criticalHit.random()].initEffect(defender);
             }

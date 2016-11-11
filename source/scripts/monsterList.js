@@ -42,7 +42,7 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			ai: animalai.ai,
 			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
 			hostileList: {species: ['human', 'rat'], family: [], entity: []},
-			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d7', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
+			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d7', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['poisoned']}
 		},
 
 		'wolf': {
