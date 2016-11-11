@@ -14,4 +14,4 @@ Things implemented so far:
 Things I'm working on right now:
 
 - humanoid monsters with more complex AI (they will be able to pick up, equip and use items, just like player)
-- more critical hits (poison)
+- special effects for critical miss in combat (drop weapon, fall down on ground)
