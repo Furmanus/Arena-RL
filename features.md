@@ -9,11 +9,9 @@ Things implemented so far:
 - inventory management and items
 - basic monsters (animals with simple AI)
 - combat system based on D20
-- special critical hits (bleeding, falling on ground)
+- special critical hits (bleeding, falling on ground, stunning your opponent)
 
 Things I'm working on right now:
 
 - humanoid monsters with more complex AI (they will be able to pick up, equip and use items, just like player)
-- more critical hits (stunning, poison)
-
-//TODO dokończyć status stunned: gracz przy ogłuszeniu upuszcza broń, ponadto dokończyć stunEventHandler, tak aby wyświetlał odpowiednie wiadomości przy próbie podniesienia czegoś, założenia, przeczytania, itp.
+- more critical hits (poison)
