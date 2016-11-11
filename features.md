@@ -8,10 +8,10 @@ Things implemented so far:
 - fire spreading system
 - inventory management and items
 - basic monsters (animals with simple AI)
-- combat system based on D20
+- combat system based on D20, with special effects for critical hits and critical misses
 - special critical hits (bleeding, falling on ground, stunning your opponent)
 
 Things I'm working on right now:
 
 - humanoid monsters with more complex AI (they will be able to pick up, equip and use items, just like player)
-- special effects for critical miss in combat (drop weapon, fall down on ground)
+
