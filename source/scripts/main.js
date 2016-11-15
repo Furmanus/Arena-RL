@@ -28,7 +28,7 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	//new items.Weapon('long sword', map.cells[0][13][10]);
 	new items.Weapon('warhammer', map.cells[0][12][10]);
 	//new items.Weapon('dagger', map.cells[0][11][13]);
-	/*
+
 	new items.Armour('chain mail', map.cells[0][16][13]);
 	new items.Armour('field plate', map.cells[0][21][13]);
 	new items.Weapon('dagger', map.cells[0][15][13]);
@@ -36,11 +36,12 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	new items.Scroll('teleportation', map.cells[0][16][15]);
 	new items.Potion('speed', map.cells[0][4][15]);
     new items.Misc('torch', map.cells[0][14][15]);
-	*/
+
 	//new monster.Monster(0, 'rat');
 	//new monster.Monster(0, 'wolf');
-	new monster.Monster(0, 'snake');
+	//new monster.Monster(0, 'snake');
 	//new monster.Monster(0, 'raven');
+	new monster.Monster(0, 'kobold');
 	player1 = new player.Player();
 
     new items.Misc('torch', player1);

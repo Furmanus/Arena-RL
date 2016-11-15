@@ -23,7 +23,7 @@ define(['screen', 'map'], function(screen, map){
         'bludgeoning': {'player': [' try to swing at ', ' attempt to maul ', ' try to hit '], 'monster': [' tries to swing at ', ' attempts to maul ', ' tries to hit ']},
         'unarmed': {'player': [' try to swing at ', ' try to jab ', ' try to hit '], 'monster': [' tries to swing at ', ' tries to jab ', ' tries to hit ']},
         'bite': {'player': [' try to bite '], 'monster': [' tries to bite ']},
-        'claws': {'player': [' try toscratch ', ' try to cut '], 'monster': [' tries to scratch ', ' tries to cut ']}
+        'claws': {'player': [' try to scratch ', ' try to cut '], 'monster': [' tries to scratch ', ' tries to cut ']}
     };
 
     var msgCriticalHitWeapon = {

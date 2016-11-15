@@ -1,4 +1,4 @@
-define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
+define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, combat, creatai){
 	
 	var monsterType = {
 		
@@ -87,6 +87,30 @@ define(['screen', 'animalai', 'combat'], function(screen, animalai, combat){
 			abilities: {breatheUnderWater: false, canFly: true, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
 			hostileList: {species: ['human'], family: [], entity: []},
 			defaultWeapon: {name: 'claws', description: 'a claws', natural: true, damage: '1d2-5', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding']}
+		},
+
+		'kobold': {
+			display: 'k',
+			fgColor: 'green',
+			bgColor: 'transparent',
+			lookDescription: 'a kobold',
+			type: {messageDisplay: 'kobold', type: 'monster', family: 'creature', species: 'kobold', name: 'a kobold'},
+			HD: '1d8',
+			size: 'small',
+			stats: {strength: 9, dexterity: 13, constitution: 10, intelligence: 10, wisdom: 9, charisma: 8, speed: 30, perception: 8, baseAttackBonus: 1, defense: 11},
+			equipment: {
+
+				'head': {description: 'empty'},
+				'torso': {description: 'empty'},
+				'right hand': {description: 'empty'},
+				'left hand': {description: 'empty'},
+				'legs': {description: 'empty'},
+				'feet': {description: 'empty'}
+			},
+			ai: creatai.ai,
+			abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0},
+			hostileList: {species: ['human'], family: [], entity: []},
+			defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
 		}
 	};
 	

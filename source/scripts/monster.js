@@ -1,4 +1,4 @@
-define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 'monsterList', 'items', 'status'], function(map, screen, noise, pathfinding, light, animalai, combat, monsterList, items, status){
+define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 'monsterList', 'items', 'status', 'creatai'], function(map, screen, noise, pathfinding, light, animalai, combat, monsterList, items, status, creatai){
 		
 	class Monster{
 		

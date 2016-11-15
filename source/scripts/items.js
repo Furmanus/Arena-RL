@@ -52,12 +52,12 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   
   var scrolls = {
 	  
-	'teleportation': {display: '?', fgColor: 'white', bgColor: 'transparent', name: 'teleportation scroll', description: 'a teleportation scroll', type: 'scrolls', key: 'teleportation'}
+	'teleportation': {display: '?', fgColor: 'white', bgColor: 'transparent', name: 'teleportation scroll', description: 'a teleportation scroll', type: 'scrolls', key: 'teleportation', group: 'escape'}
   };
   
   var potions = {
 	  
-	  'speed': {display: '!', fgColor: 'red', bgColor: 'transparent', name: 'speed potion', description: 'a speed potion', type: 'potions', key: 'speed'}
+	  'speed': {display: '!', fgColor: 'red', bgColor: 'transparent', name: 'speed potion', description: 'a speed potion', type: 'potions', key: 'speed', group: 'boost'}
   };
 
   var misc = {
@@ -70,7 +70,8 @@ define(['screen', 'map', 'use'], function(screen, map, use){
       'rat': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'rat corpse', description: 'a rat corpse', type: 'corpse'},
       'snake': {display: '%', fgColor: 'lightgreen', bgColor: 'transparent', name: 'snake corpse', description: 'a snake corpse', type: 'corpse'},
       'wolf': {display: '%', fgColor: 'silver', bgColor: 'transparent', name: 'wolf corpse', description: 'a wolf corpse', type: 'corpse'},
-      'raven': {display: '%', fgColor: 'rgb(51,51,51)', bgColor: 'transparent', name: 'raven corpse', description: 'a raven corpse', type: 'corpse'}
+      'raven': {display: '%', fgColor: 'rgb(51,51,51)', bgColor: 'transparent', name: 'raven corpse', description: 'a raven corpse', type: 'corpse'},
+      'kobold': {display: '%', fgColor: 'green', bgColor: 'transparent', name: 'kobold corpse', description: 'a kobold corpse', type: 'corpse'}
   }
   
   class Weapon{
