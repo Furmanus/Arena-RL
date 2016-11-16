@@ -1,4 +1,17 @@
 define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 'monsterList', 'items', 'status', 'creatai'], function(map, screen, noise, pathfinding, light, animalai, combat, monsterList, items, status, creatai){
+
+    //object literal which contains directions used in several monster methods (right now only in drop method)
+    var moveActions = {
+        103: {x: -1, y: -1},
+        104: {x: 0,y: -1},
+        105: {x: 1, y: -1},
+        102: {x: 1, y: 0},
+        99: {x: 1, y: 1},
+        98: {x: 0, y: 1},
+        97: {x: -1, y: 1},
+        100: {x: -1, y: 0},
+        101: {x: 0, y: 0}
+    };
 		
 	class Monster{
 		
@@ -316,13 +329,53 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 		dropCorpse(){
 
+            var examinedCell = map.cells[this.position.level][this.position.x][this.position.y];
+
 			new items.Corpse(this.type.species, map.cells[this.position.level][this.position.x][this.position.y]);
+
+            while(this.inventory.length > 0) {
+
+                this.dropItem(0);
+            }
 		}
 
 		dropWeapon(){
 
+            if(this.weapon.natural === false){
 
+                var examinedCell = map.cells[this.position.level][this.position.x][this.position.y];
+
+                screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' drops ' + this.weapon.type.description + '.');
+                examinedCell.inventory.push(this.equipment['right hand']);
+                this.equipment['right hand'].owner = examinedCell;
+                this.equipment['right hand'] = {description: 'empty'};
+                this.weapon = this.defaultWeapon;
+            }
 		}
+
+		dropItem(index){
+
+            var examinedCell = map.cells[this.position.level][this.position.x][this.position.y];
+
+            if(examinedCell.inventory.length <= 12) {
+
+                this.inventory[index].owner = examinedCell;
+                examinedCell.inventory.push(this.inventory.splice(index, 1)[0]);
+            }else{
+
+                for(var n in moveActions){
+
+                    examinedCell = map.cells[this.position.level][this.position.x + moveActions[n].x][this.position.y + moveActions[n].y];
+
+                    if(examinedCell.type.blockMovement == false && examinedCell.inventory.length <= 12){
+
+                        this.inventory[index].owner = examinedCell;
+                        examinedCell.inventory.push(player.inventory.splice(index, 1)[0]);
+                        break;
+                    }
+                }
+            }
+        }
 		
 		act(){
 
@@ -387,6 +440,19 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				}
 			}
 		}
+
+		/*
+		function responsible for picking up items from ground by monster. As an argument it takes index from ground cell inventory
+		 */
+		pickUp(index){
+
+            var examinedCell = map.cells[this.position.level][this.position.x][this.position.y];
+
+            screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' picks up ' + examinedCell.inventory[index].description + '.', examinedCell);
+            this.inventory.push(examinedCell.inventory[index]);
+            examinedCell.inventory[index].owner = this;
+            examinedCell.inventory.splice(index, 1);
+        }
 	}
 	
 	return{

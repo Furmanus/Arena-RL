@@ -15,7 +15,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
        var nextStep,
            examineFovResult = examineFov(monster),
            examineGroundResult = examineGroundItems(monster, examineFovResult);
-       console.log(examineFovResult);
+
        if(examineGroundResult['no_action'] === true) {
 
            if (monster.currentGoal !== null && monster.position.x === monster.currentGoal.x && monster.position.y === monster.currentGoal.y) {
@@ -48,7 +48,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
            monster.move(nextStep.x - monster.position.x, nextStep.y - monster.position.y);
        }else if(examineGroundResult['no_action'] === false){
 
-           console.log('Pick up');
+           monster.pickUp(examineGroundResult['pick_up']);
        }
 
        function setGoal(monster){
@@ -87,15 +87,18 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                        y: monster.currentFov[i].y,
                        type: 'hostile',
                        target: examinedCell.entity,
+                       index: null,
                        distance: screen.getDistance(examinedCell.x, examinedCell.y, monster.position.x, monster.position.y),
                        priority: undefined
                    });
 
                    setPriority(monster, cellsOfInterest[cellsOfInterest.length - 1]);
-               }else if(examinedCell.entity === null && examinedCell.inventory.length > 0){
+               }
+
+               if(examinedCell.inventory.length > 0){
 
                    /*
-                   if examined cell inventory isn't empty, we iterate through mentioned inventory, and push all the items found. Later we will filter them by removing not interesing items
+                   if examined cell inventory isn't empty and there are no entities other than examining monster, we iterate through mentioned inventory, and push all the items found. Later we will filter them by removing not interesing items
                     */
                    for(var j=0; j<examinedCell.inventory.length; j++) {
 
@@ -104,6 +107,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                            y: monster.currentFov[i].y,
                            type: 'item',
                            target: examinedCell.inventory[j],
+                           index: j,
                            distance: screen.getDistance(examinedCell.x, examinedCell.y, monster.position.x, monster.position.y),
                            priority: undefined
                        });
@@ -193,6 +197,9 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
            }
        }
 
+       /*
+       function which examines ground items in monster current position. If top priority item is there, monster picks it up. Top priority item is always first element of cellsOfInterest array (because it was sorted by priority parameter in examineFov method)
+        */
        function examineGroundItems(monster, cellsOfInterest){
 
            var examinedCell = map.cells[monster.position.level][monster.position.x][monster.position.y];

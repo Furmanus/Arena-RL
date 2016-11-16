@@ -396,6 +396,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 
 				screen.placeMessage('You drop your ' + this.equipment['right hand'].name + '(' + this.equipment['right hand'].damage + ').');
 				map.cells[this.position.level][this.position.x][this.position.y].inventory.push(this.equipment['right hand']);
+				this.equipment['right hand'].owner = this;
 				this.equipment['right hand'] = {description: 'empty'};
 				this.weapon = this.defaultWeapon;
 			}
