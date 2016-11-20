@@ -14,7 +14,28 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
        var nextStep,
            examineFovResult = examineFov(monster),
-           examineGroundResult = examineGroundItems(monster, examineFovResult);
+           examineGroundResult = examineGroundItems(monster, examineFovResult), //returns object {'pick up': (index or null), 'no_action': true or false}
+           examineInventoryResult = examineInventory(monster); //returns array of objects {action: action, index: index, slot: slot, priority: priority}
+
+       /*
+       we examine if monster wants to use any item from its inventory. If yes, we call proper action from examineInventoryResult and stop whole nextStep function
+        */
+       if(examineInventoryResult.length > 0){
+
+           switch(examineInventoryResult[0].action){
+
+               case 'equip':
+
+                   monster.equip(examineInventoryResult[0].index, examineInventoryResult[0].slot);
+                   break;
+               case 'unequip':
+
+                   monster.unequip(examineInventoryResult[0].slot);
+                   break;
+           }
+
+           return;
+       }
 
        if(examineGroundResult['no_action'] === true) {
 
@@ -88,6 +109,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                        type: 'hostile',
                        target: examinedCell.entity,
                        index: null,
+                       slatedForRemoval: false,
                        distance: screen.getDistance(examinedCell.x, examinedCell.y, monster.position.x, monster.position.y),
                        priority: undefined
                    });
@@ -108,6 +130,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                            type: 'item',
                            target: examinedCell.inventory[j],
                            index: j,
+                           slatedForRemoval: false,
                            distance: screen.getDistance(examinedCell.x, examinedCell.y, monster.position.x, monster.position.y),
                            priority: undefined
                        });
@@ -142,7 +165,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                //basic value
                target.priority = 6;
-               if(target.type === 'hostile' && target.distance >= 3){
+               if(target.type === 'hostile' && target.distance >= 4){
 
                    //distant hostiles gets lowest priority
                    target.priority = 5;
@@ -153,8 +176,8 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                }else if(target.type === 'item' && target.target.type === 'weapons' && monster.equipment['right hand'].description === 'empty'){
 
                    //if there are no close hostiles, and monster is bare handed and there is a weapon in his field of view
-                   target.priority = 4;
-               }else if(target.type === 'hostile' && target.distance < 3){
+                   target.priority = 1;
+               }else if(target.type === 'hostile' && target.distance < 4){
 
                    //if there is hostile in nearest vicinity
                    target.priority = 2;
@@ -172,26 +195,73 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                for(var i=0; i<items.length; i++){
 
-                   //first we consider weapons. If examined weapon max damage is lower or equal than current weapon, ignore it
+                   //in first step we check if there exist clear path to item. If not, ignore it.
+                   var pathToCurrentItem = pathfinding.findPath(items[i].x, items[i].y, monster.position.x, monster.position.y, monster, 'pass');
+
+                   if(pathToCurrentItem.length === 0 && (monster.position.x !== items[i].x || monster.position.y !== items[i].y)){
+
+                       items[i].slatedForRemoval = true;
+                   }
+
                    if(items[i].target.type === 'weapons'){
 
+                       //first we consider weapons. If examined weapon max damage is lower or equal than current weapon, ignore it
                        if(combat.calcMax(monster.weapon.damage) >= combat.calcMax(items[i].target.damage)){
 
-                           items.splice(i, 1);
-                           i--;
+                           items[i].slatedForRemoval = true;
+                       }
+
+                       //now we look if items already have other weapon. If yes, we remove worst of two, so monster will pick up always best weapon
+
+                       for(var j=0; j<i; j++){
+
+                           if(items[j].target.type === 'weapons'){
+
+                               if(combat.calcMax(items[j].target.damage) < combat.calcMax(items[i].target.damage)){
+
+                                   items[j].slatedForRemoval = true;
+                               }else{
+
+                                   items[i].slatedForRemoval = true;
+                               }
+                           }
                        }
                    }else if(items[i].target.type === 'armours' || items[i].target.type === 'helmets' || items[i].target.type === 'legs' || items[i].target.type === 'boots'){
 
                        //next we examine armours. We iterate through monster equipment. If item type is same as equipped item type, we compare them
-                       //if examined items defense is lower or equal than currently weared, ignore it
+                       //if examined items defense is lower or equal than currently worn, ignore it
                        for(var n in monster.equipment){
 
-                           if(monster.equipment[n].description !== 'empty' && monster.equipment[n].type === items[i].target.type && monster.equipment[n].defense >= items[i].target.defense){
+                           if(monster.equipment[n].description !== 'empty' && monster.equipment[n].type === items[i].target.type && monster.equipment[n].armourBonus >= items[i].target.armourBonus){
 
-                               items.splice(i, 1);
-                               i--;
+                               items[i].slatedForRemoval = true;
                            }
                        }
+                       //if there are two armour pieces of same type in field of view, monster will pick up better one
+                       for(var j=0; j<i; j++){
+
+                           if(items[j].target.type === items[i].target.type){
+
+                               if(items[j].target.armourBonus < items[i].target.armourBonus){
+
+                                   items[j].slatedForRemoval = true;
+                               }else{
+
+                                   items[i].slatedForRemoval = true;
+                               }
+                           }
+                       }
+                   }
+               }
+
+               //we remove all items from items array marked to remove
+
+               for(var i=0; i<items.length; i++){
+
+                   if(items[i].slatedForRemoval === true){
+
+                       items.splice(i, 1);
+                       i--;
                    }
                }
            }
@@ -206,13 +276,115 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
            for(var i=0; i<examinedCell.inventory.length; i++){
 
-               if(examinedCell.inventory[i] === cellsOfInterest[0].target){
+               if(cellsOfInterest.length > 0 && examinedCell.inventory[i] === cellsOfInterest[0].target){
 
                    return {'pick_up': i, 'no_action': false};
                }
            }
 
            return {'pick_up': null, 'no_action': true};
+       }
+   }
+
+   function examineInventory(monster){
+
+       //array with inventory item indexes and set priority of that item
+       var items = [],
+           enemyInSight = [],
+           examinedCell,
+           examinedItem,
+           enemyDistance;
+
+       lookForHostiles(monster);
+
+       for(var i=0; i<monster.inventory.length; i++){
+
+           examinedItem = monster.inventory[i];
+
+           if(enemyInSight.length === 0){
+
+               if(examinedItem.type === 'armours' || examinedItem.type === 'legs' || examinedItem.type === 'helmets' || examinedItem.type === 'boots'){
+
+                   if(monster.equipment[examinedItem.slot].description === 'empty'){
+
+                       items.push({action: 'equip', index: i, slot: examinedItem.slot, priority: 2});
+                   }else{
+
+                       if(examinedItem.armourBonus > monster.equipment[examinedItem.slot].armourBonus){
+
+                           items.push({action: 'unequip', index: examinedItem.slot, slot: examinedItem.slot, priority: 2})
+                       }
+                   }
+               }else if(examinedItem.type === 'weapons'){
+
+                   if(combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)){
+
+                       if(monster.weapon.natural === true){
+
+                           items.push({action: 'equip', index: i, slot: 'right hand', priority: 2});
+                       }else{
+
+                           items.push({action: 'unequip', index: 'right hand', slot: examinedItem.slot, priority: 1});
+                       }
+                   }
+               }
+           }else if(enemyInSight.length > 0){
+
+               enemyDistance = screen.getDistance(monster.position.x, monster.position.y, enemyInSight[0].x, enemyInSight[0].y);
+
+               if(enemyDistance >= 4){
+
+                   if(examinedItem.type === 'armours' || examinedItem.type === 'legs' || examinedItem.type === 'helmets' || examinedItem.type === 'boots'){
+
+                       if(monster.equipment[examinedItem.slot].description === 'empty'){
+
+                           items.push({action: 'equip', index: i, slot: examinedItem.slot, priority: 2});
+                       }else{
+
+                           if(examinedItem.armourBonus > monster.equipment[examinedItem.slot].armourBonus){
+
+                               items.push({action: 'unequip', index: examinedItem.slot, slot: examinedItem.slot, priority: 2})
+                           }
+                       }
+                   }
+               }
+
+               if(examinedItem.type === 'weapons'){
+
+                   if(combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)){
+
+                       if(monster.weapon.natural === true){
+
+                           items.push({action: 'equip', index: i, slot: 'right hand', priority: 1});
+                       }else{
+
+                           items.push({action: 'unequip', index: 'right hand', slot: examinedItem.slot, priority: 2});
+                       }
+                   }
+               }
+           }
+       }
+
+       screen.bubbleSort(items, 'priority');
+
+       return items;
+
+       function lookForHostiles(monster){
+
+           for(var i=0; i<monster.currentFov.length; i++){
+
+               examinedCell = map.cells[monster.position.level][monster.currentFov[i].x][monster.currentFov[i].y];
+
+               if(examinedCell.entity !== null && monster.checkIfHostile(examinedCell.entity) === true){
+
+                   enemyInSight.push({x: monster.currentFov[i].x, y: monster.currentFov[i].y, entity: examinedCell.entity, distance: screen.getDistance(monster.position.x, monster.position.y, examinedCell.x, examinedCell.y)});
+               }
+           }
+
+           if(enemyInSight.length > 0){
+
+               screen.bubbleSort(enemyInSight, 'distance');
+           }
        }
    }
 

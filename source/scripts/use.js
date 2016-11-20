@@ -36,18 +36,8 @@ define(['screen', 'map'], function(screen, map){
    
    function speedPotion(item, entity){
 	   
-	   var wearOffText,
-		   useText;
-	   
-	   if(entity.type.type === 'player'){
-		   
-		   useText = 'You quaff a speed potion. Suddenly you are moving faster!';
-		   wearOffText = 'You are no longer moving faster.';
-	   }else{
-		   
-		   useText = screen.capitalizeString(entity.type.name) + ' quaffs a speed potion. ' + screen.capitalizeString(entity.type.name) + ' suddenly is moving faster!';
-		   wearOffText = screen.capitalizeString(entity.type.name) + ' is no longer moving faster.';
-	   }
+	   var wearOffText = screen.capitalizeString(entity.type.name) + (entity.type.type === 'player' ? ' are ' : ' is ') + ' no longer moving faster.',
+		   useText = screen.capitalizeString(entity.type.name) + (entity.type.type === 'player' ? ' quaff' : 'quaffs') + ' a speed potion. Suddenly ' + (entity.type.name) + (entity.type.type === 'player' ? ' are moving faster!' : ' is moving faster!');
 	   
 	   entity.modifiers.push({type: 'speed', value: 40, counter: 15, applied: false, useText: useText, wearOffText: wearOffText});   
    }

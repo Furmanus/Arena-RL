@@ -345,7 +345,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
                 var examinedCell = map.cells[this.position.level][this.position.x][this.position.y];
 
-                screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' drops ' + this.weapon.type.description + '.');
+                screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' drops ' + this.weapon.description + '.', map.cells[this.position.level][this.position.x][this.position.y]);
                 examinedCell.inventory.push(this.equipment['right hand']);
                 this.equipment['right hand'].owner = examinedCell;
                 this.equipment['right hand'] = {description: 'empty'};
@@ -453,6 +453,30 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
             examinedCell.inventory[index].owner = this;
             examinedCell.inventory.splice(index, 1);
         }
+
+        equip(index, slot){
+
+			screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' equips ' + this.inventory[index].description + '.', map.cells[this.position.level][this.position.x][this.position.y]);
+			this.equipment[slot] = this.inventory.splice(index, 1)[0];
+
+			if(slot === 'right hand'){
+
+				this.weapon = this.equipment['right hand'];
+			}
+		}
+
+		unequip(slot){
+
+			screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' removes ' + this.equipment[slot].description + '.', map.cells[this.position.level][this.position.x][this.position.y]);
+
+			this.inventory.push(this.equipment[slot]);
+			this.equipment[slot] = {description: 'empty'};
+
+			if(slot === 'right hand'){
+
+				this.weapon = this.defaultWeapon;
+			}
+		}
 	}
 	
 	return{

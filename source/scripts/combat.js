@@ -11,8 +11,8 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
         },
 
         'prone': function(entity){
-            //we check if entity have legs
-            if(status.checkIfHaveBodyPart(entity, 'legs') === true) {
+            //we check if entity have legs and isn't prone already
+            if(status.checkIfHaveBodyPart(entity, 'legs') === true && entity.status.prone.value === 0) {
 
                 //we make dexterity roll, if it fails, entity falls on ground
                 if (Math.floor(entity.stats.dexterity / 2 - 5) + roll(1, 20) < 15) {
@@ -45,7 +45,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
         if (attackerScore === 1) {
      		
-            screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical miss', 0));
+            screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical miss', 0), attackerPosition);
             criticalMissEffect[Object.keys(criticalMissEffect).random()](attacker);
         } else if (attackerScore === 20) {
 
@@ -57,7 +57,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
             }
 
             defender.hp -= damageDealt;
-            screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt));
+            screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt), attackerPosition);
 
             if(attacker.weapon.criticalHit[0] !== null && defender.hp > 0){
 
