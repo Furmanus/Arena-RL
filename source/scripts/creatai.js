@@ -173,6 +173,9 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                    //if there is no close hostiles, and there are boosting or healing items in field of view
                    target.priority = 4;
+               }else if(target.type === 'item' && (target.target.type === 'armours' || target.target.type === 'helmets' || target.target.type === 'legs' || target.target.type === 'boots')){
+
+                   target.priority = 3;
                }else if(target.type === 'item' && target.target.type === 'weapons' && monster.equipment['right hand'].description === 'empty'){
 
                    //if there are no close hostiles, and monster is bare handed and there is a weapon in his field of view
@@ -215,13 +218,13 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                        for(var j=0; j<i; j++){
 
-                           if(items[j].target.type === 'weapons'){
+                           if(items[j].slatedForRemoval !== true && items[i].slatedForRemoval !== true && items[j].target.type === 'weapons'){
 
                                if(combat.calcMax(items[j].target.damage) < combat.calcMax(items[i].target.damage)){
 
                                    items[j].slatedForRemoval = true;
                                }else{
-
+                                   
                                    items[i].slatedForRemoval = true;
                                }
                            }
@@ -240,7 +243,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                        //if there are two armour pieces of same type in field of view, monster will pick up better one
                        for(var j=0; j<i; j++){
 
-                           if(items[j].target.type === items[i].target.type){
+                           if(items[j].slatedForRemoval !== true && items[i].slatedForRemoval !== true && (items[j].target.type === items[i].target.type)){
 
                                if(items[j].target.armourBonus < items[i].target.armourBonus){
 
@@ -312,7 +315,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                        if(examinedItem.armourBonus > monster.equipment[examinedItem.slot].armourBonus){
 
-                           items.push({action: 'unequip', index: examinedItem.slot, slot: examinedItem.slot, priority: 2})
+                           items.push({action: 'unequip', index: examinedItem.slot, slot: examinedItem.slot, priority: 2});
                        }
                    }
                }else if(examinedItem.type === 'weapons'){

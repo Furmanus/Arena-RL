@@ -46,22 +46,35 @@ define(['screen', 'map'], function(screen, map){
 	   
 	   var level = entity.position.level,
 		   newCoords,
-		   useText;
+		   useText = screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' read ' : ' reads ') + item.description + '. ' + (screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' teleport.' : ' suddenly is gone! ')),
+		   visibleFirstMessage = false;
 		   
-		getNewCoordinates();
+	   getNewCoordinates();
+
+	   if(map.cells[level][entity.position.x][entity.position.y] === true){
+
+		   visibleFirstMessage = true;
+	   }
+	   screen.placeVisibleMessage(useText, map.cells[level][entity.position.x][entity.position.y]);
 		
-		map.cells[level][entity.position.x][entity.position.y].entity = null;	
-		entity.position.x = newCoords.x;
-		entity.position.y = newCoords.y;
-		map.cells[level][entity.position.x][entity.position.y].entity = entity;
+	   map.cells[level][entity.position.x][entity.position.y].entity = null;
+	   entity.position.x = newCoords.x;
+	   entity.position.y = newCoords.y;
+	   map.cells[level][entity.position.x][entity.position.y].entity = entity;
 		
-		screen.display.clear();
-		map.clearVisibility(map.cells[entity.position.level]);
+	   screen.display.clear();
+	   map.clearVisibility(map.cells[entity.position.level]);
 		
-		entity.currentFov = [];
-		entity.doFov(entity);
+	   entity.currentFov = [];
+	   entity.doFov(entity);
 		
-		screen.drawVisibleCells(map.cells[entity.position.level]);
+	   screen.drawVisibleCells(map.cells[entity.position.level]);
+
+	   if(entity.type.type !== 'player') {
+
+		   useText = screen.capitalizeString(entity.type.messageDisplay) + (visibleFirstMessage === true ? ' reappears.' : ' appears out of nowhere.');
+		   screen.placeVisibleMessage(useText, map.cells[level][entity.position.x][entity.position.y]);
+	   }
 
 	   function getNewCoordinates(){
 		   

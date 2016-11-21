@@ -333,6 +333,15 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 			new items.Corpse(this.type.species, map.cells[this.position.level][this.position.x][this.position.y]);
 
+            for(var n in this.equipment){
+
+                if(this.equipment[n].description !== 'empty'){
+
+                    this.inventory.push(this.equipment[n]);
+                    this.equipment[n] = {description: 'empty'};
+                }
+            }
+
             while(this.inventory.length > 0) {
 
                 this.dropItem(0);
