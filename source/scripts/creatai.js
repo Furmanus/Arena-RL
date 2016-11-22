@@ -32,6 +32,10 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                    monster.unequip(examineInventoryResult[0].slot);
                    break;
+               case 'use':
+
+                   examineInventoryResult[0].item.useEffect(examineInventoryResult[0].item, monster);
+                   break;
            }
 
            return;
@@ -224,7 +228,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                                    items[j].slatedForRemoval = true;
                                }else{
-                                   
+
                                    items[i].slatedForRemoval = true;
                                }
                            }
@@ -362,6 +366,20 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                        }else{
 
                            items.push({action: 'unequip', index: 'right hand', slot: examinedItem.slot, priority: 2});
+                       }
+                   }
+               }
+
+               if(enemyDistance < 4){
+
+                   if(examinedItem.type === 'potions' || examinedItem.type === 'scrolls'){
+
+                       if(examinedItem.group === 'boost'){
+
+                           items.push({action: 'use', index: i, priority: 1, item: examinedItem});
+                       }else if(examinedItem.group === 'escape' && monster.hp < 0.25 * monster.maxHp){
+
+                           items.push({action: 'use', index: i, priority: 2, item: examinedItem});
                        }
                    }
                }

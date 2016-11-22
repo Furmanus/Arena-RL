@@ -35,17 +35,22 @@ define(['screen', 'map'], function(screen, map){
    }
    
    function speedPotion(item, entity){
-	   
+
 	   var wearOffText = screen.capitalizeString(entity.type.name) + (entity.type.type === 'player' ? ' are ' : ' is ') + ' no longer moving faster.',
-		   useText = screen.capitalizeString(entity.type.name) + (entity.type.type === 'player' ? ' quaff' : 'quaffs') + ' a speed potion. Suddenly ' + (entity.type.name) + (entity.type.type === 'player' ? ' are moving faster!' : ' is moving faster!');
-	   
-	   entity.modifiers.push({type: 'speed', value: 40, counter: 15, applied: false, useText: useText, wearOffText: wearOffText});   
+		   useText = screen.capitalizeString(entity.type.name) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a speed potion. Suddenly ' + (entity.type.name) + (entity.type.type === 'player' ? ' are moving faster!' : ' is moving faster!');
+
+	   entity.modifiers.push({type: 'speed', value: 40, counter: 15, applied: false, useText: useText, wearOffText: wearOffText});
+
+	   if(entity.type.type !== 'player'){
+
+		   entity.inventory.splice(entity.inventory.indexOf(item), 1);
+	   }
    }
    
    function teleport(item, entity){
 	   
 	   var level = entity.position.level,
-		   newCoords,
+		   newCoords = {},
 		   useText = screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' read ' : ' reads ') + item.description + '. ' + (screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' teleport.' : ' suddenly is gone! ')),
 		   visibleFirstMessage = false;
 		   
@@ -63,17 +68,23 @@ define(['screen', 'map'], function(screen, map){
 	   map.cells[level][entity.position.x][entity.position.y].entity = entity;
 		
 	   screen.display.clear();
-	   map.clearVisibility(map.cells[entity.position.level]);
+
+	   if(entity.type.type === 'player') {
+
+		   map.clearVisibility(map.cells[entity.position.level]);
+	   }
 		
 	   entity.currentFov = [];
 	   entity.doFov(entity);
 		
-	   screen.drawVisibleCells(map.cells[entity.position.level]);
+	   screen.drawVisibleCells(map.cells[level]);
 
 	   if(entity.type.type !== 'player') {
 
 		   useText = screen.capitalizeString(entity.type.messageDisplay) + (visibleFirstMessage === true ? ' reappears.' : ' appears out of nowhere.');
 		   screen.placeVisibleMessage(useText, map.cells[level][entity.position.x][entity.position.y]);
+
+		   entity.inventory.splice(entity.inventory.indexOf(item), 1);
 	   }
 
 	   function getNewCoordinates(){

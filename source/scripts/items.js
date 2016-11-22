@@ -131,6 +131,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
       this.description = scrolls[type].description;
 	  this.type = scrolls[type].type;
 	  this.useEffect = use.use.scrolls[scrolls[type].key];
+      this.group = scrolls[type].group;
       
       object.inventory.push(this);
     }
@@ -148,6 +149,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
       this.description = potions[type].description;
 	  this.type = potions[type].type;
 	  this.useEffect = use.use.potions[potions[type].key];
+      this.group = potions[type].group;
       
       object.inventory.push(this);
     }
