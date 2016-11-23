@@ -6,7 +6,7 @@
 module for use/equip effects function for items used inside items module
  */
 
-define(['screen', 'map'], function(screen, map){
+define(['screen', 'map', 'combat'], function(screen, map, combat){
 
    var equip = {
 
@@ -20,7 +20,11 @@ define(['screen', 'map'], function(screen, map){
 	   
 	   'potions': {
 		   
-		   'speed': speedPotion
+		   'speed': speedPotion,
+		   'healing': healingPotion,
+		   'rejuvenation': rejuvenationPotion,
+		   'might': mightPotion,
+		   'agility': agilityPotion
 	   },
 	   
 	   'scrolls':{
@@ -36,10 +40,77 @@ define(['screen', 'map'], function(screen, map){
    
    function speedPotion(item, entity){
 
-	   var wearOffText = screen.capitalizeString(entity.type.name) + (entity.type.type === 'player' ? ' are ' : ' is ') + ' no longer moving faster.',
-		   useText = screen.capitalizeString(entity.type.name) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a speed potion. Suddenly ' + (entity.type.name) + (entity.type.type === 'player' ? ' are moving faster!' : ' is moving faster!');
+	   var wearOffText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' are ' : ' is ') + ' no longer moving faster.',
+		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a speed potion. Suddenly ' + (screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' are moving faster!' : ' is moving faster!');
 
 	   entity.modifiers.push({type: 'speed', value: 40, counter: 15, applied: false, useText: useText, wearOffText: wearOffText});
+
+	   if(entity.type.type !== 'player'){
+
+		   entity.inventory.splice(entity.inventory.indexOf(item), 1);
+	   }
+   }
+
+   function mightPotion(item, entity){
+
+	   var wearOffText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel ' : ' looks ') + ' weaker.',
+		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a might potion. Suddenly ' + (screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel mighty!' : ' looks mighty!');
+
+	   entity.modifiers.push({type: 'strength', value: 5, counter: 24, applied: false, useText: useText, wearOffText: wearOffText});
+
+	   if(entity.type.type !== 'player'){
+
+		   entity.inventory.splice(entity.inventory.indexOf(item), 1);
+	   }
+   }
+
+   function agilityPotion(item, entity){
+
+	   var wearOffText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel ' : ' looks ') + ' less agile.',
+		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a might potion. Suddenly ' + (screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel agile!' : ' looks more agile!');
+
+	   entity.modifiers.push({type: 'dexterity', value: 5, counter: 24, applied: false, useText: useText, wearOffText: wearOffText});
+
+	   if(entity.type.type !== 'player'){
+
+		   entity.inventory.splice(entity.inventory.indexOf(item), 1);
+	   }
+   }
+
+   function healingPotion(item, entity){
+
+	   entity.hp += combat.calc('1d8');
+
+	   if(entity.hp >=  entity.maxHp){
+
+		   entity.hp = entity.maxHp;
+
+		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' drink ' : ' drinks ') + item.description + '. ' + screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel better.' : ' looks better.');
+	   }else {
+
+		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' drink ' : ' drinks ') + item.description + '. Nothing seems to happen.';
+	   }
+
+	   screen.placeVisibleMessage(useText, map.cells[entity.position.level][entity.position.x][entity.position.y]);
+
+	   if(entity.type.type !== 'player'){
+
+		   entity.inventory.splice(entity.inventory.indexOf(item), 1);
+	   }
+   }
+
+   function rejuvenationPotion(item, entity){
+
+	   if(entity.hp < entity.maxHp){
+
+		   entity.hp = entity.maxHp;
+		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' drink ' : ' drinks ') + item.description + '. ' + screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' are completly healed.' : ' looks completly healed.');
+	   }else{
+
+		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' drink ' : ' drinks ') + item.description + '. Nothing seems to happen.';
+	   }
+
+	   screen.placeVisibleMessage(useText, map.cells[entity.position.level][entity.position.x][entity.position.y]);
 
 	   if(entity.type.type !== 'player'){
 

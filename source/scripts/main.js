@@ -42,7 +42,7 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	new items.Weapon('long sword', map.cells[0][5][5]);
 	new items.Armour('chain mail', map.cells[0][12][15]);
 	new items.Scroll('teleportation', map.cells[0][16][15]);
-	new items.Potion('speed', map.cells[0][4][15]);
+	new items.Potion('agility', map.cells[0][4][15]);
     new items.Misc('torch', map.cells[0][14][15]);
 
 	//new monster.Monster(0, 'rat');

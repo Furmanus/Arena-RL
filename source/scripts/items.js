@@ -57,7 +57,11 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   
   var potions = {
 	  
-	  'speed': {display: '!', fgColor: 'red', bgColor: 'transparent', name: 'speed potion', description: 'a speed potion', type: 'potions', key: 'speed', group: 'boost'}
+	  'speed': {display: '!', fgColor: 'red', bgColor: 'transparent', name: 'speed potion', description: 'a speed potion', type: 'potions', key: 'speed', group: 'boost'},
+      'healing': {display: '!', fgColor: 'yellow', bgColor: 'transparent', name: 'healing potion', description: 'a healing potion', type: 'potions', key: 'healing', group: 'healing'},
+      'rejuvenation': {display: '!', fgColor: 'skyblue', bgColor: 'transparent', name: 'rejuvenation potion', description: 'a rejuvenation potion', type: 'potions', key: 'rejuvenation', group: 'healing'},
+      'might': {display: '!', fgColor: 'red', bgColor: 'transparent', name: 'might potion', description: 'a might potion', type: 'potions', key: 'might', group: 'boost'},
+      'agility': {display: '!', fgColor: 'violet', bgColor: 'transparent', name: 'agility potion', description: 'an agility potion', type: 'potions', key: 'agility', group: 'boost'}
   };
 
   var misc = {

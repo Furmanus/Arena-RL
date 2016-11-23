@@ -368,6 +368,9 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                            items.push({action: 'unequip', index: 'right hand', slot: examinedItem.slot, priority: 2});
                        }
                    }
+               }else if(examinedItem.type === 'potions' && monster.hp < (0.33 * monster.maxHp) && examinedItem.group === 'healing'){
+
+                   items.push({action: 'use', index: i, priority: 1, item: examinedItem});
                }
 
                if(enemyDistance < 4){
