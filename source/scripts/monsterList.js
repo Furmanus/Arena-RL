@@ -41,7 +41,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			},
 			ai: animalai.ai,
 			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
-			hostileList: {species: ['human', 'rat'], family: [], entity: []},
+			hostileList: {species: ['human', 'rat', 'kobold'], family: [], entity: []},
 			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d7', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['poisoned']}
 		},
 
@@ -109,7 +109,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			},
 			ai: creatai.ai,
 			abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0},
-			hostileList: {species: ['human'], family: [], entity: []},
+			hostileList: {species: ['human', 'snake'], family: [], entity: []},
 			defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
 		}
 	};

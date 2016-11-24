@@ -24,12 +24,16 @@ define(['screen', 'map', 'combat'], function(screen, map, combat){
 		   'healing': healingPotion,
 		   'rejuvenation': rejuvenationPotion,
 		   'might': mightPotion,
-		   'agility': agilityPotion
+		   'agility': agilityPotion,
+           'heroism': heroismPotion,
+           'rage': ragePotion
 	   },
 	   
 	   'scrolls':{
 		   
-		   'teleportation': teleport
+		   'teleportation': teleportScroll,
+           'blink': blinkScroll,
+           'armour': armourScroll
 	   }
    }
 
@@ -51,6 +55,34 @@ define(['screen', 'map', 'combat'], function(screen, map, combat){
 	   }
    }
 
+   function ragePotion(item, entity){
+
+       var modifiedSpeed = Math.floor(entity.stats.speed * 0.5);
+
+       var wearOffText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' calm down.' : ' calms down.'),
+           useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a rage potion. Suddenly ' + (screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' go berserk!' : ' goes berserk!');
+
+       entity.modifiers.push({type: [{stat: 'speed', value: modifiedSpeed}, {stat: 'baseAttackBonus', value: 6}, {stat: 'strength', value: 5}, {stat: 'defense', value: -5}], counter: 20, applied: false, useText: useText, wearOffText: wearOffText});
+
+       if(entity.type.type !== 'player'){
+
+           entity.inventory.splice(entity.inventory.indexOf(item), 1);
+       }
+   }
+
+   function heroismPotion(item, entity){
+
+       var wearOffText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel your unnatural combat skills came back to normal.' : ' looks weaker.'),
+           useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a heroism potion. ' + screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel your combat skills has been greatly enchanted!' : ' looks stronger and more proficient with its combat skills!');
+
+       entity.modifiers.push({type: [{stat: 'strength', value: 2}, {stat: 'dexterity', value: 2}, {stat: 'baseAttackBonus', value: 3}, {stat: 'defense', value: 2}], counter: 24, applied: false, useText: useText, wearOffText: wearOffText});
+
+       if(entity.type.type !== 'player'){
+
+           entity.inventory.splice(entity.inventory.indexOf(item), 1);
+       }
+   }
+
    function mightPotion(item, entity){
 
 	   var wearOffText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel ' : ' looks ') + ' weaker.',
@@ -67,7 +99,7 @@ define(['screen', 'map', 'combat'], function(screen, map, combat){
    function agilityPotion(item, entity){
 
 	   var wearOffText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel ' : ' looks ') + ' less agile.',
-		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a might potion. Suddenly ' + (screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel agile!' : ' looks more agile!');
+		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' an agility potion. Suddenly ' + (screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel agile!' : ' looks more agile!');
 
 	   entity.modifiers.push({type: [{stat: 'dexterity', value: 5}], counter: 24, applied: false, useText: useText, wearOffText: wearOffText});
 
@@ -117,8 +149,74 @@ define(['screen', 'map', 'combat'], function(screen, map, combat){
 		   entity.inventory.splice(entity.inventory.indexOf(item), 1);
 	   }
    }
+
+   function armourScroll(item, entity){
+
+       var useText = screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' read ' : ' reads ') + item.description + '. ' + (screen.capitalizeString(entity.type.messageDisplay) + ' body is covered by light green arcane light.'),
+           wearOffText = 'Arcane gleam surrounding ' + (entity.type.type === 'player' ? ' your ' : (screen.removeFirst(entity.type.name))) + ' body disappears.';
+
+       entity.modifiers.push({type: [{stat: 'defense', value: 7}], counter: 24, applied: false, useText: useText, wearOffText: wearOffText});
+
+       if(entity.type.type !== 'player'){
+
+           entity.inventory.splice(entity.inventory.indexOf(item), 1);
+       }
+   }
+
+   function blinkScroll(item, entity){
+
+       var level = entity.position.level,
+           newCoords = {},
+           useText = screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' read ' : ' reads ') + item.description + '. ' + (screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' blink.' : ' blinks.'));
+
+       getNewCoordinates();
+
+       screen.placeVisibleMessage(useText, map.cells[level][entity.position.x][entity.position.y]);
+
+       map.cells[level][entity.position.x][entity.position.y].entity = null;
+       entity.position.x = newCoords.x;
+       entity.position.y = newCoords.y;
+       map.cells[level][entity.position.x][entity.position.y].entity = entity;
+
+       screen.display.clear();
+
+       if(entity.type.type === 'player') {
+
+           map.clearVisibility(map.cells[entity.position.level]);
+       }
+
+       entity.currentFov = [];
+       entity.doFov(entity);
+
+       screen.drawVisibleCells(map.cells[level]);
+
+       if(entity.type.type !== 'player'){
+
+           entity.inventory.splice(entity.inventory.indexOf(item), 1);
+       }
+
+       function getNewCoordinates(){
+
+           newCoords = getCoordinates(Object.keys(map.cells[level].floorTiles).random());
+
+           if(map.cells[level][newCoords.x][newCoords.y].type.blockMovement === true || map.cells[level][newCoords.x][newCoords.y].entity !== null){
+
+               getNewCoordinates();
+           }
+
+           if(map.cells[level][newCoords.x][newCoords.y].type.type === 'chasm' || map.cells[level][newCoords.x][newCoords.y].type.type === 'deep water' || map.cells[level][newCoords.x][newCoords.y].type.type === 'lava'){
+
+               getNewCoordinates();
+           }
+
+           if(screen.getDistance(entity.position.x, entity.position.y, newCoords.x, newCoords.y) > 8){
+
+               getNewCoordinates();
+           }
+       }
+   }
    
-   function teleport(item, entity){
+   function teleportScroll(item, entity){
 	   
 	   var level = entity.position.level,
 		   newCoords = {},
