@@ -495,13 +495,20 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				if(this.modifiers[i].applied === false){
 
 					this.modifiers[i].applied = true;
-					this.stats[this.modifiers[i].type] += this.modifiers[i].value;
+					
+					for(var j=0; j<this.modifiers[i].type.length; j++){
+						
+						this.stats[this.modifiers[i].type[j].stat] += this.modifiers[i].type[j].value;
+					}
 					screen.placeVisibleMessage(this.modifiers[i].useText, map.cells[this.position.level][this.position.x][this.position.y]);
 				}
 
 				if(this.modifiers[i].counter === 0){
 
-					this.stats[this.modifiers[i].type] -= this.modifiers[i].value;
+					for(var j=0; j<this.modifiers[i].type.length; j++){
+						
+						this.stats[this.modifiers[i].type[j].stat] -= this.modifiers[i].type[j].value;
+					}
 					screen.placeVisibleMessage(this.modifiers[i].wearOffText, map.cells[this.position.level][this.position.x][this.position.y]);
 					this.modifiers.splice(i, 1);
 					i--;

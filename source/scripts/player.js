@@ -366,14 +366,22 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 				if(this.modifiers[i].applied === false){
 					
 					this.modifiers[i].applied = true;
-					this.stats[this.modifiers[i].type] += this.modifiers[i].value;
+					
+					for(var j=0; j<this.modifiers[i].type.length; j++){
+						
+						this.stats[this.modifiers[i].type[j].stat] += this.modifiers[i].type[j].value;
+					}
 					screen.placeMessage(this.modifiers[i].useText);
 					this.updateScreenStats();
 				}
 				
 				if(this.modifiers[i].counter === 0){
 					
-					this.stats[this.modifiers[i].type] -= this.modifiers[i].value;
+					for(var j=0; j<this.modifiers[i].type.length; j++){
+						
+						this.stats[this.modifiers[i].type[j].stat] -= this.modifiers[i].type[j].value;
+					}
+					
 					screen.placeMessage(this.modifiers[i].wearOffText);
 					this.modifiers.splice(i, 1);
 					this.updateScreenStats();

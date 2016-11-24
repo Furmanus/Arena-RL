@@ -43,7 +43,7 @@ define(['screen', 'map', 'combat'], function(screen, map, combat){
 	   var wearOffText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' are ' : ' is ') + ' no longer moving faster.',
 		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a speed potion. Suddenly ' + (screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' are moving faster!' : ' is moving faster!');
 
-	   entity.modifiers.push({type: 'speed', value: 40, counter: 15, applied: false, useText: useText, wearOffText: wearOffText});
+	   entity.modifiers.push({type: [{stat: 'speed', value: 40}], counter: 15, applied: false, useText: useText, wearOffText: wearOffText});
 
 	   if(entity.type.type !== 'player'){
 
@@ -56,7 +56,7 @@ define(['screen', 'map', 'combat'], function(screen, map, combat){
 	   var wearOffText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel ' : ' looks ') + ' weaker.',
 		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a might potion. Suddenly ' + (screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel mighty!' : ' looks mighty!');
 
-	   entity.modifiers.push({type: 'strength', value: 5, counter: 24, applied: false, useText: useText, wearOffText: wearOffText});
+	   entity.modifiers.push({type: [{stat: 'strength', value: 5}], counter: 24, applied: false, useText: useText, wearOffText: wearOffText});
 
 	   if(entity.type.type !== 'player'){
 
@@ -69,7 +69,7 @@ define(['screen', 'map', 'combat'], function(screen, map, combat){
 	   var wearOffText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel ' : ' looks ') + ' less agile.',
 		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a might potion. Suddenly ' + (screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel agile!' : ' looks more agile!');
 
-	   entity.modifiers.push({type: 'dexterity', value: 5, counter: 24, applied: false, useText: useText, wearOffText: wearOffText});
+	   entity.modifiers.push({type: [{stat: 'dexterity', value: 5}], counter: 24, applied: false, useText: useText, wearOffText: wearOffText});
 
 	   if(entity.type.type !== 'player'){
 
