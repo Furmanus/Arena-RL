@@ -13,6 +13,5 @@ Things implemented so far:
 
 Things I'm working on right now:
 
-- implement more items (scrolls and potions right now)
 - implementing flee and panic to monster AI
 
