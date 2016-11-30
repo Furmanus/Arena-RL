@@ -4,14 +4,14 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	
 	map.initCells(0);
 	generator.createArenaLevel(0);
-	map.setTerrain(0, 4, 6, 'tree');
-	map.setTerrain(0, 4, 5, 'tree');
-	map.setTerrain(0, 6, 5, 'tree');
-	map.setTerrain(0, 5, 4, 'tree');
-	map.setTerrain(0, 4, 4, 'tree');
-	map.setTerrain(0, 6, 4, 'tree');
-	map.setTerrain(0, 5, 6, 'tree');
-	map.setTerrain(0, 6, 6, 'tree');
+	//map.setTerrain(0, 4, 6, 'tree');
+	//map.setTerrain(0, 4, 5, 'tree');
+	//map.setTerrain(0, 6, 5, 'tree');
+	//map.setTerrain(0, 5, 4, 'tree');
+	//map.setTerrain(0, 4, 4, 'tree');
+	//map.setTerrain(0, 6, 4, 'tree');
+	//map.setTerrain(0, 5, 6, 'tree');
+	//map.setTerrain(0, 6, 6, 'tree');
 	//map.setTerrain(0, 6, 7, 'shallowWater');
 	//map.setTerrain(0, 7, 7, 'shallowWater');
 	//map.setTerrain(0, 8, 7, 'deepWater');
@@ -31,23 +31,23 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	new items.Armour('chain mail', map.cells[0][12][13]);
 	new items.Armour('field plate', map.cells[0][22][13]);
 	*/
-	new items.Weapon('staff', map.cells[0][10][10]);
+	//new items.Weapon('staff', map.cells[0][10][10]);
 	//new items.Weapon('long sword', map.cells[0][13][10]);
 	//new items.Weapon('warhammer', map.cells[0][12][10]);
 	//new items.Weapon('dagger', map.cells[0][11][13]);
 
-	new items.Armour('chain mail', map.cells[0][16][13]);
-	new items.Armour('field plate', map.cells[0][21][13]);
-	new items.Weapon('dagger', map.cells[0][15][13]);
-	new items.Weapon('long sword', map.cells[0][5][5]);
-	new items.Armour('chain mail', map.cells[0][12][15]);
-	new items.Scroll('armour', map.cells[0][16][15]);
-	new items.Potion('rage', map.cells[0][4][15]);
-    new items.Misc('torch', map.cells[0][14][15]);
+	//new items.Armour('chain mail', map.cells[0][16][13]);
+	//new items.Armour('field plate', map.cells[0][21][13]);
+	//new items.Weapon('dagger', map.cells[0][15][13]);
+	//new items.Weapon('long sword', map.cells[0][5][5]);
+	//new items.Armour('chain mail', map.cells[0][12][15]);
+	//new items.Scroll('armour', map.cells[0][16][15]);
+	//new items.Potion('rage', map.cells[0][4][15]);
+   // new items.Misc('torch', map.cells[0][14][15]);
 
 	//new monster.Monster(0, 'rat');
 	//new monster.Monster(0, 'wolf');
-	new monster.Monster(0, 'snake');
+	//new monster.Monster(0, 'snake');
 	//new monster.Monster(0, 'raven');
 	new monster.Monster(0, 'kobold');
 	player1 = new player.Player();
@@ -60,7 +60,7 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	new items.Legs('plate leggings', player1);
 	new items.Helmet('plate helmet', player1);
 	new items.Weapon('warhammer', player1);
-	new items.Weapon('staff', player1);
+	new items.Weapon('long sword', player1);
 	new items.Potion('speed', player1);
 	map.cells[0].time.engine.start();
 	screen.setWindows();

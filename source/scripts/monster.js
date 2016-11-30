@@ -32,6 +32,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 			this.fgColor = monsterList.monsterType[type].fgColor;
 			this.bgColor = monsterList.monsterType[type].bgColor;
 			this.lookDescription = monsterList.monsterType[type].lookDescription;
+			this.waitCounter = 0; //used when monster collides in corridor with other monster (with no other way around). Monster waits 3 turns and sets new goal
+			this.retreatEntity = null; //hostile wants to avoid and flee from. It is set in combat module, when monster is injured and has less than 25% hp
+			this.lastSeenTreatPosition = {}; //stores coordinates of last seen treat from which monster flees (they are used if treat is not visible)
 			
 			this.size = monsterList.monsterType[type].size;
 			this.type = {
@@ -54,15 +57,18 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				defense: monsterList.monsterType[type].stats.defense};
 
 			this.HD = monsterList.monsterType[type].HD;
+			this.xp = monsterList.monsterType[type].xp;
 			this.hp = combat.calcMax(this.HD) + Math.floor(this.stats.constitution / 2 - 5);
 			this.maxHp = this.hp;
 			
 			this.abilities = {
 				breatheUnderWater: monsterList.monsterType[type].abilities.breatheUnderWater, 
 				canFly: monsterList.monsterType[type].abilities.canFly, 
-				canOpenDoors: monsterList.monsterType[type].abilities.canOpenDoors, 
+				canOpenDoors: monsterList.monsterType[type].abilities.canOpenDoors,
+				fearless: monsterList.monsterType[type].abilities.fearless,
 				isSuffocating: false, 
-				suffocateCounter: 0};
+				suffocateCounter: 0
+			};
 
 			this.ai = monsterList.monsterType[type].ai;
 			this.defaultWeapon = monsterList.monsterType[type].defaultWeapon;
@@ -82,7 +88,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 				'stunned': {value: 0, activatedEveryTurn: status.entityStatus.stunned.activatedEveryTurn, activateEffect: status.entityStatus.stunned.activateEffect, removeEffect: status.entityStatus.stunned.removeEffect, initEffect: status.entityStatus.stunned.initEffect, modifiers: {}, counter: 0},
 
-				'poisoned': {value: 0, activatedEveryTurn: status.entityStatus.poisoned.activatedEveryTurn, activateEffect: status.entityStatus.poisoned.activateEffect, removeEffect: status.entityStatus.poisoned.removeEffect, initEffect: status.entityStatus.poisoned.initEffect, modifiers: {}, counter: 0}
+				'poisoned': {value: 0, activatedEveryTurn: status.entityStatus.poisoned.activatedEveryTurn, activateEffect: status.entityStatus.poisoned.activateEffect, removeEffect: status.entityStatus.poisoned.removeEffect, initEffect: status.entityStatus.poisoned.initEffect, modifiers: {}, counter: 0},
+
+				'afraid': {value: 0, activatedEveryTurn: function(){}, activateEffect: function(){}, removeEffect: function(){}, initEffect: function(){}, modifiers: {}, counter: 0}
 			};
 			
 			this.init();
@@ -137,7 +145,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 		*/
 		
 		move(x,y){
-			
+
 			var tmpX = this.position.x + x,
 				tmpY = this.position.y + y;
 			
@@ -426,7 +434,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 			}
 
 			screen.display.clear();
-			screen.drawVisibleCells(map.cells[defender.position.level]);
+			screen.drawVisibleCells(map.cells[this.position.level]);
 		}
 
 		//changes 'prone' status, if it's set to 1(monster is fallen on ground)

@@ -9,6 +9,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			lookDescription: 'a rat', 
 			type: {messageDisplay: 'rat', type: 'monster', family: 'animal', species: 'rat', name: 'a rat'}, 
 			HD: '0.25d8',
+			xp: 135,
 			size: 'tiny', 
 			stats: {strength: 2, dexterity: 15, constitution: 10, intelligence: 2, wisdom: 12, charisma: 2, speed: 20, perception: 8, baseAttackBonus: 0, defense: 10},
 			equipment: {
@@ -20,7 +21,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
                 
 			},
 			ai: animalai.ai, 
-			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
+			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false},
 			hostileList: {species: ['human', 'snake'], family: [], entity: []},
 			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d3-4', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
 			},
@@ -32,6 +33,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			lookDescription: 'a snake',
 			type: {messageDisplay: 'snake', type: 'monster', family: 'animal', species: 'snake', name: 'a snake'},
 			HD: '3d8+6',
+			xp: 600,
 			size: 'medium',
 			stats: {strength: 17, dexterity: 17, constitution: 13, intelligence: 1, wisdom: 12, charisma: 2, speed: 20, perception: 4, baseAttackBonus: 2, defense: 12},
 			equipment: {
@@ -40,8 +42,8 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 				'torso': {description: 'empty'}
 			},
 			ai: animalai.ai,
-			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
-			hostileList: {species: ['human', 'rat', 'kobold'], family: [], entity: []},
+			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false},
+			hostileList: {species: ['human', 'rat', 'kobold', 'wolf'], family: [], entity: []},
 			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d7', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['poisoned']}
 		},
 
@@ -52,6 +54,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			lookDescription: 'a wolf',
 			type: {messageDisplay: 'wolf', type: 'monster', family: 'animal', species: 'wolf', name: 'a wolf'},
 			HD: '2d8+4',
+			xp: 400,
 			size: 'medium',
 			stats: {strength: 13, dexterity: 15, constitution: 15, intelligence: 2, wisdom: 12, charisma: 6, speed: 50, perception: 5, baseAttackBonus: 1, defense: 12},
 			equipment: {
@@ -62,8 +65,8 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 				'legs': {description: 'empty'}
 			},
 			ai: animalai.ai,
-			abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
-			hostileList: {species: ['human'], family: [], entity: []},
+			abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false},
+			hostileList: {species: ['human', 'snake'], family: [], entity: []},
 			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d6+1', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['bleeding']}
 		},
 
@@ -74,6 +77,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			lookDescription: 'a raven',
 			type: {messageDisplay: 'raven', type: 'monster', family: 'animal', species: 'raven', name: 'a raven'},
 			HD: '0.25d8',
+			xp: 65,
 			size: 'tiny',
 			stats: {strength: 1, dexterity: 15, constitution: 10, intelligence: 2, wisdom: 14, charisma: 6, speed: 40, perception: 7, baseAttackBonus: 0, defense: 10},
 			equipment: {
@@ -84,7 +88,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 				'legs': {description: 'empty'}
 			},
 			ai: animalai.ai,
-			abilities: {breatheUnderWater: false, canFly: true, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0},
+			abilities: {breatheUnderWater: false, canFly: true, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false},
 			hostileList: {species: ['human'], family: [], entity: []},
 			defaultWeapon: {name: 'claws', description: 'a claws', natural: true, damage: '1d2-5', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding']}
 		},
@@ -96,6 +100,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			lookDescription: 'a kobold',
 			type: {messageDisplay: 'kobold', type: 'monster', family: 'creature', species: 'kobold', name: 'a kobold'},
 			HD: '1d8',
+			xp: 100,
 			size: 'small',
 			stats: {strength: 9, dexterity: 13, constitution: 10, intelligence: 10, wisdom: 9, charisma: 8, speed: 30, perception: 8, baseAttackBonus: 1, defense: 11},
 			equipment: {
@@ -108,7 +113,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 				'feet': {description: 'empty'}
 			},
 			ai: creatai.ai,
-			abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0},
+			abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false},
 			hostileList: {species: ['human', 'snake'], family: [], entity: []},
 			defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
 		}

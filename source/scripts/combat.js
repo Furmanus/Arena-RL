@@ -37,7 +37,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 	};
 	
 	function doCombatMelee(attacker, defender){
-		
+
 		var attackerScore = roll(1, 20),
 			defenderScore,
             defenderPosition = map.cells[defender.position.level][defender.position.x][defender.position.y],
@@ -81,10 +81,10 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
                 defender.hp -= damageDealt;
                 
-				screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'hit', damageDealt));
+				screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'hit', damageDealt), defenderPosition);
             } else {
 					
-				screen.placeMessage(combatMessages.calculateCombatMessage(attacker, defender, 'miss', 0));
+				screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'miss', 0), defenderPosition);
             }
         }
 
@@ -106,6 +106,20 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
             screen.display.clear();
             screen.drawVisibleCells(map.cells[defender.position.level]);
+        }else if(defender.hp <= Math.floor(0.25 * defender.maxHp) && defender.type.type !== 'player' && defender.abilities.fearless === false){
+
+		    var action = ROT.RNG.getUniformInt(1, 5);
+		    //monster panics
+		    if(action === 1 || action === 2) {
+
+                defender.retreatEntity = attacker;
+
+                if(defender.retreatEntity === attacker && defender.status.afraid.value === 0){
+
+                    screen.placeVisibleMessage(screen.capitalizeString(defender.type.messageDisplay) + ' suddenly seems to panic!', map.cells[defender.position.level][defender.position.x][defender.position.y]);
+                    defender.status.afraid.value = 1;
+                }
+            }
         }
 
         defender.updateScreenStats();

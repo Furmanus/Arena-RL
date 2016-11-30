@@ -44,8 +44,25 @@ define(['map', 'screen', 'pathfinding'], function(map, screen, pathfinding){
             nextStep = pathfinding.findPath(monster.currentGoal.x, monster.currentGoal.y, monster.position.x, monster.position.y, monster, 'pass')[0]
         }
 
-        //we call monster move() method for direction towards monster next step
-        monster.move(nextStep.x - monster.position.x, nextStep.y - monster.position.y);
+        //check if next step cell is empty or is occupied by hostile
+        if(map.cells[monster.position.level][nextStep.x][nextStep.y].entity === null || (map.cells[monster.position.level][nextStep.x][nextStep.y].entity !== null && monster.checkIfHostile(map.cells[monster.position.level][nextStep.x][nextStep.y].entity) === true)) {
+
+            //we call monster move() method for direction towards monster next step
+            monster.move(nextStep.x - monster.position.x, nextStep.y - monster.position.y);
+            //and we reset monster wait counter, in case in previous turn it was non zero
+            monster.waitCounter = 0;
+        }else if(map.cells[monster.position.level][nextStep.x][nextStep.y].entity !== null && monster.checkIfHostile(map.cells[monster.position.level][nextStep.x][nextStep.y].entity) !== true){
+
+            //else if next step cell is occupied by friendly entity, monster waits 1 turns and if nothing changes, sets new goal
+            if(monster.waitCounter > 0){
+
+                monster.waitCounter = 0;
+                setGoal(monster);
+            }else{
+
+                monster.waitCounter++;
+            }
+        }
 
         function setGoal(monster){
 

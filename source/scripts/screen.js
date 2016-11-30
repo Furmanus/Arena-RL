@@ -214,7 +214,7 @@ define([], function(){
 		if(string.charAt(0) == 'a' && string.charAt(1) == ' '){
 			result = string.slice(2);
 			return result;
-		}else if(string.charAt(0) == 'a' && string.charAt(1) == 'n'){
+		}else if(string.charAt(0) == 'a' && string.charAt(1) == 'n' && string.charAt(2) == ' '){
 			result = string.slice(3);
 			return result;
 		}else {

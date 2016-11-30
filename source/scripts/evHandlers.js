@@ -420,7 +420,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			
 			var drawnText = '%c{' + entity.fgColor + '}' + entity.display +  '%c{} ' + entity.type.messageDisplay,
 				stats = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'speed', 'defense'],
-				properties = {'breatheUnderWater': {description: 'can swim'}, 'canFly': {description: 'flying'}, 'canOpenDoors': {description: 'can open doors'}},
+				properties = {'breatheUnderWater': {description: 'can swim'}, 'canFly': {description: 'flying'}, 'canOpenDoors': {description: 'can open doors'}, 'fearless': {description: 'fearless'}},
 				propertyNumber = 0,
 				equipmentNumber = 0;
 			

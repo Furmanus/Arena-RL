@@ -51,6 +51,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 			
 			this.HD = '1d8';
 			this.hp = 8 + Math.floor(this.stats.constitution / 2 - 5) + 50;
+			this.experience = 0;
             this.maxHp = this.hp;
 			this.lookDescription = 'anonymous brave adventurer';
 			this.type = {messageDisplay: 'you', type: 'player', species: 'human', family: 'player', name: 'you'};
@@ -160,6 +161,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 				
 				this.doFov(this);
 				screen.drawVisibleCells(map.cells[this.position.level]);
+				//screen.drawCells(map.cells[this.position.level]);
 				
 				map.cells[this.position.level].time.engine.unlock();
 				
@@ -202,6 +204,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 				
 						this.doFov(this);
 						screen.drawVisibleCells(map.cells[this.position.level]);
+						//screen.drawCells(map.cells[this.position.level]);
 				
 						map.cells[this.position.level].time.engine.unlock();
 					}
@@ -212,6 +215,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 				
 					this.doFov(this);
 					screen.drawVisibleCells(map.cells[this.position.level]);
+					//screen.drawCells(map.cells[this.position.level]);
 				
 					map.cells[this.position.level].time.engine.unlock();
 				}else if(walkAttempt == 'abort'){

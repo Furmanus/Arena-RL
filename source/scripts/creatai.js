@@ -17,10 +17,74 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
            examineGroundResult = examineGroundItems(monster, examineFovResult), //returns object {'pick up': (index or null), 'no_action': true or false}
            examineInventoryResult = examineInventory(monster); //returns array of objects {action: action, index: index, slot: slot, priority: priority}
 
-       /*
-       we examine if monster wants to use any item from its inventory. If yes, we call proper action from examineInventoryResult and stop whole nextStep function
-        */
-       if(examineInventoryResult.length > 0){
+       //if monster is panicked, he runs away from source (hostile monster) of panic
+       if(monster.retreatEntity !== null) {
+
+           var escapeArray = [], //will contain possible cells to escape with distance
+               examinedCell,
+               isTreatInSight = false,
+               currentRetreatPath;
+
+           //monster examines current field of view in search of hostile which is cause of panic
+           for(var i=0; i<monster.currentFov.length; i++) {
+
+               examinedCell = map.cells[monster.position.level][monster.currentFov[i].x][monster.currentFov[i].y];
+
+               if(examinedCell.entity === monster.retreatEntity) {
+
+                   //if panic source is found, we remember his position
+                   isTreatInSight = true;
+                   monster.lastSeenTreatPosition.x = examinedCell.x;
+                   monster.lastSeenTreatPosition.y = examinedCell.y;
+               }
+           }
+
+           /*
+           monster examines his current field of view, and for each reachable cell, we push it into escapeArray with coordinates and distance
+            */
+           for(var i=0; i<monster.currentFov.length; i++){
+
+               examinedCell = map.cells[monster.position.level][monster.currentFov[i].x][monster.currentFov[i].y];
+
+               if(isTreatInSight === true && pathfinding.findPath(examinedCell.x, examinedCell.y, monster.position.x, monster.position.y, monster, 'block').length > 0){
+
+                   //if panic source is in field of view, each examined cell gets distance between that cell and hostile
+                   escapeArray.push({x: examinedCell.x, y: examinedCell.y, distance: screen.getDistance(examinedCell.x, examinedCell.y, monster.retreatEntity.position.x, monster.retreatEntity.position.y)});
+               }else if(isTreatInSight === false && pathfinding.findPath(monster.lastSeenTreatPosition.x, monster.lastSeenTreatPosition.y, examinedCell.x, examinedCell.y, monster, 'block').length > 0){
+
+                   //if panic source is not in field of view, each examined cell gets distance equal of distance between that cell and last remembered hostile position
+                   escapeArray.push({x: examinedCell.x, y: examinedCell.y, distance: screen.getDistance(examinedCell.x, examinedCell.y, monster.lastSeenTreatPosition.x, monster.lastSeenTreatPosition.y)});
+               }
+           }
+
+           //we sort escapeArray by distance
+           screen.bubbleSort(escapeArray, 'distance');
+
+           //we calculate path between monster and cell of greatest distance from panic source
+           currentRetreatPath = pathfinding.findPath(escapeArray[escapeArray.length - 1].x, escapeArray[escapeArray.length - 1].y, monster.position.x, monster.position.y, monster, 'block');
+
+           //if such path exists, we move monster
+           if(currentRetreatPath.length > 0) {
+
+               monster.move(currentRetreatPath[0].x - monster.position.x, currentRetreatPath[0].y - monster.position.y);
+           }else{
+
+               if(isTreatInSight === true && screen.getDistance(monster.position.x, monster.position.y, monster.retreatEntity.position.x, monster.retreatEntity.position.y) < 1.5){
+
+                   monster.move(retreatEntity.position.x - monster.position.x, retreatEntity.position.y - monster.position.y);
+               }else if(isTreatInSight === true && screen.getDistance(monster.position.x, monster.position.y, monster.retreatEntity.position.x, monster.retreatEntity.position.y) > 1.5) {
+                   //kod odpowiadający za losowe wiadomości o mercy itp.
+
+               }else if(isTreatInSight === false){
+
+                   //losowa wiadomość o wnerwie
+               }
+           }
+           return;
+           /*
+            we examine if monster wants to use any item from its inventory. If yes, we call proper action from examineInventoryResult and stop whole nextStep function
+            */
+       }else if(examineInventoryResult.length > 0){
 
            switch(examineInventoryResult[0].action){
 
@@ -57,7 +121,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
            }
 
            /*
-            now we calculate next step. nextStep is {x: x, y: y} coordinates object, first element of array returned by findPath method. First for current goal we check if there exists clear path (not blocked by other monsters/player). If such path doesn't exist (is blocked), nextStep is first element of array returned by findPath method with enabled path blocked by other creatures
+            now we calculate next step. nextStep is {x: x, y: y} coordinates object, first element of array returned by findPath method. First thing, for current goal we check if there exists clear path (not blocked by other monsters/player). If such path doesn't exist (is blocked), nextStep is first element of array returned by findPath method with enabled path blocked by other creatures
             */
 
            if (pathfinding.findPath(monster.currentGoal.x, monster.currentGoal.y, monster.position.x, monster.position.y, monster, 'block').length > 0) {
@@ -67,10 +131,24 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                nextStep = pathfinding.findPath(monster.currentGoal.x, monster.currentGoal.y, monster.position.x, monster.position.y, monster, 'pass')[0]
            }
+           //check if next step cell is empty or is occupied by hostile
+           if(map.cells[monster.position.level][nextStep.x][nextStep.y].entity === null || (map.cells[monster.position.level][nextStep.x][nextStep.y].entity !== null && monster.checkIfHostile(map.cells[monster.position.level][nextStep.x][nextStep.y].entity) === true)) {
 
-           //we call monster move() method for direction towards monster next step
+               monster.move(nextStep.x - monster.position.x, nextStep.y - monster.position.y); //we call monster move() method for direction towards monster next step
+               monster.waitCounter = 0; //and we reset monster wait counter, in case in previous turn it was non zero
+           }else if(map.cells[monster.position.level][nextStep.x][nextStep.y].entity !== null && monster.checkIfHostile(map.cells[monster.position.level][nextStep.x][nextStep.y].entity) !== true){
 
-           monster.move(nextStep.x - monster.position.x, nextStep.y - monster.position.y);
+               //else if next step cell is occupied by friendly entity, monster waits 1 turns and if nothing changes, sets new goal
+               if(monster.waitCounter > 1){
+
+                   monster.waitCounter = 0;
+                   setGoal(monster);
+               }else{
+
+                   monster.waitCounter++;
+               }
+           }
+
        }else if(examineGroundResult['no_action'] === false){
 
            monster.pickUp(examineGroundResult['pick_up']);
