@@ -22,7 +22,8 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				
 				species: monsterList.monsterType[type].hostileList.species,
 				family: monsterList.monsterType[type].hostileList.family,
-				entity: monsterList.monsterType[type].hostileList.entity
+				entity: monsterList.monsterType[type].hostileList.entity,
+				group: monsterList.monsterType[type].hostileList.group
 			};
 
 			this.currentFov = [];
@@ -41,8 +42,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				messageDisplay: monsterList.monsterType[type].type.messageDisplay, 
 				type: monsterList.monsterType[type].type.type, 
 				family: monsterList.monsterType[type].type.family, 
-				species: monsterList.monsterType[type].type.species, 
-				name: monsterList.monsterType[type].type.name};
+				species: monsterList.monsterType[type].type.species,
+				group: monsterList.monsterType[type].type.group,
+                name: monsterList.monsterType[type].type.name};
 			
 			this.stats = {
 				strength: monsterList.monsterType[type].stats.strength, 
@@ -58,6 +60,8 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 			this.HD = monsterList.monsterType[type].HD;
 			this.xp = monsterList.monsterType[type].xp;
+			this.experienceLevel = 1;
+			this.experience = 0;
 			this.hp = combat.calcMax(this.HD) + Math.floor(this.stats.constitution / 2 - 5);
 			this.maxHp = this.hp;
 			
@@ -66,6 +70,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				canFly: monsterList.monsterType[type].abilities.canFly, 
 				canOpenDoors: monsterList.monsterType[type].abilities.canOpenDoors,
 				fearless: monsterList.monsterType[type].abilities.fearless,
+				cantDrinkPotions: monsterList.monsterType[type].abilities.cantDrinkPotions,
+				illiterate: monsterList.monsterType[type].abilities.illiterate,
+				mindless: monsterList.monsterType[type].abilities.mindless,
 				isSuffocating: false, 
 				suffocateCounter: 0
 			};
@@ -325,6 +332,14 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 					return true;
 				}
 			}
+
+            for(var i=0; i<this.hostileList.group.length; i++){
+
+                if(entity.type.group === this.hostileList.group[i]){
+
+                    return true;
+                }
+            }
 			
 			for(var i=0; i<this.hostileList.entity.length; i++){
 				

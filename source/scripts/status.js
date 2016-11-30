@@ -77,19 +77,22 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
     function bleedingInit(entity){
 
-        var damageDealt = calc('1d1'),
-            position = map.cells[entity.position.level][entity.position.x][entity.position.y];
+        if(entity.abilities.bloodless !== true) {
 
-        entity.status.bleeding.value = 1;
-        entity.status.bleeding.counter = 1;
-        screen.placeVisibleMessage('Deep wound is open in ' + (entity.type.type === 'player' ? 'your ' : (entity.type.messageDisplay + 's ')) + 'body.', position);
-        //entity.receiveDamage(damageDealt);
+            var damageDealt = calc('1d1'),
+                position = map.cells[entity.position.level][entity.position.x][entity.position.y];
 
-        for(var i=0; i<6; i++){
+            entity.status.bleeding.value = 1;
+            entity.status.bleeding.counter = 1;
+            screen.placeVisibleMessage('Deep wound is open in ' + (entity.type.type === 'player' ? 'your ' : (entity.type.messageDisplay + 's ')) + 'body.', position);
+            //entity.receiveDamage(damageDealt);
 
-            if(Math.floor((entity.stats.constitution / 2) - 5) + roll(1, 20) >= 15){
+            for (var i = 0; i < 6; i++) {
 
-                entity.status.bleeding.counter++;
+                if (Math.floor((entity.stats.constitution / 2) - 5) + roll(1, 20) >= 15) {
+
+                    entity.status.bleeding.counter++;
+                }
             }
         }
     }

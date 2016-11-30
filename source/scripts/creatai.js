@@ -336,6 +336,9 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                                }
                            }
                        }
+                   }else if((items[i].target.type === 'potions' && monster.abilities.cantDrinkPotions === true) || (items[i].target.type === 'scrolls' && monster.abilities.illiterate === true)){
+
+                       items[i].slatedForRemoval = true;
                    }
                }
 

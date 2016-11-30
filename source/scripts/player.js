@@ -16,6 +16,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 				
 				breatheUnderWater: false,
 				canFly: false,
+				cantDrinkPotions: false,
 				isSuffocating: false,
 				canOpenDoors: true,
 				suffocateCounter: 0
@@ -52,6 +53,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 			this.HD = '1d8';
 			this.hp = 8 + Math.floor(this.stats.constitution / 2 - 5) + 50;
 			this.experience = 0;
+			this.experienceLevel = 1;
             this.maxHp = this.hp;
 			this.lookDescription = 'anonymous brave adventurer';
 			this.type = {messageDisplay: 'you', type: 'player', species: 'human', family: 'player', name: 'you'};

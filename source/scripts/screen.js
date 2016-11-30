@@ -1,4 +1,28 @@
 define([], function(){
+
+	var experienceTable = {
+
+		1: {required: 0},
+		2: {required: 1000},
+		3: {required: 3000},
+		4: {required: 6000},
+		5: {required: 10000},
+		6: {required: 15000},
+		7: {required: 21000},
+		8: {required: 28000},
+		9: {required: 36000},
+		10: {required: 45000},
+		11: {required: 55000},
+		12: {required: 66000},
+		13: {required: 78000},
+		14: {required: 91000},
+		15: {required: 105000},
+		16: {required: 120000},
+		17: {required: 136000},
+		18: {required: 153000},
+		19: {required: 171000},
+		20: {required: 190000}
+	};
 	
 	var options = {
 		width: 40,
@@ -237,6 +261,7 @@ define([], function(){
 		removeFirst: removeFirst,
 		placeVisibleMessage: placeVisibleMessage,
 		currentMessage: currentMessage,
-		placeTemporaryMessage: placeTemporaryMessage
+		placeTemporaryMessage: placeTemporaryMessage,
+		experienceTable: experienceTable
 	}
 });

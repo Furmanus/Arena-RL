@@ -79,7 +79,8 @@ define(['screen', 'map', 'use'], function(screen, map, use){
       'snake': {display: '%', fgColor: 'lightgreen', bgColor: 'transparent', name: 'snake corpse', description: 'a snake corpse', type: 'corpse'},
       'wolf': {display: '%', fgColor: 'silver', bgColor: 'transparent', name: 'wolf corpse', description: 'a wolf corpse', type: 'corpse'},
       'raven': {display: '%', fgColor: 'rgb(51,51,51)', bgColor: 'transparent', name: 'raven corpse', description: 'a raven corpse', type: 'corpse'},
-      'kobold': {display: '%', fgColor: 'green', bgColor: 'transparent', name: 'kobold corpse', description: 'a kobold corpse', type: 'corpse'}
+      'kobold': {display: '%', fgColor: 'green', bgColor: 'transparent', name: 'kobold corpse', description: 'a kobold corpse', type: 'corpse'},
+      'skeleton': {display: '%', fgColor: 'white', bgColor: 'transparent', name: 'pile of bones', description: 'a pile of bones', type: 'bones'}
   }
   
   class Weapon{
