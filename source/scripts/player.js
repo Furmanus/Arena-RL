@@ -1,4 +1,4 @@
-define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], function(screen, map, noise, light, evHandlers, combat, status){
+define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'messages'], function(screen, map, noise, light, evHandlers, combat, status, messages){
 	
 	class Player{
 		
@@ -52,8 +52,10 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 			
 			this.HD = '1d8';
 			this.hp = 8 + Math.floor(this.stats.constitution / 2 - 5) + 50;
+			this.xp = 0;
 			this.experience = 0;
 			this.experienceLevel = 1;
+			this.class = 'fighter';
             this.maxHp = this.hp;
 			this.lookDescription = 'anonymous brave adventurer';
 			this.type = {messageDisplay: 'you', type: 'player', species: 'human', family: 'player', name: 'you'};
@@ -120,6 +122,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 			this.doModifiers();
 			window.addEventListener('keydown', this, true);
 			this.applyStatus();
+			this.gainLevel();
 			map.cells[this.position.level].time.engine.lock();
 		}
 		
@@ -445,6 +448,25 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status'], fu
 
 					this.status[n].activateEffect(this);
 				}
+			}
+		}
+
+		/*
+		function responsible for gaining levels
+		 */
+		gainLevel(){
+
+			if(this.experience >= screen.experienceTable[this.experienceLevel + 1].required){
+
+				var gainedStat = screen.statGain[this.class].random();
+
+				this.experienceLevel++;
+				screen.placeMessage('You have gained a level!');
+				this.stats[gainedStat]++; //increase one random stat from class stats
+				screen.placeMessage(messages.statGainMessages[gainedStat]);
+				this.stats.baseAttackBonus++;
+				this.maxHp += combat.calc(this.HD);
+				this.hp = this.maxHp;
 			}
 		}
 	}

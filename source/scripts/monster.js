@@ -1,4 +1,4 @@
-define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 'monsterList', 'items', 'status', 'creatai'], function(map, screen, noise, pathfinding, light, animalai, combat, monsterList, items, status, creatai){
+define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 'monsterList', 'items', 'status', 'creatai', 'messages'], function(map, screen, noise, pathfinding, light, animalai, combat, monsterList, items, status, creatai, messages){
 
     //object literal which contains directions used in several monster methods (right now only in drop method)
     var moveActions = {
@@ -38,6 +38,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 			this.lastSeenTreatPosition = {}; //stores coordinates of last seen treat from which monster flees (they are used if treat is not visible)
 			
 			this.size = monsterList.monsterType[type].size;
+			this.favouredStat = monsterList.monsterType[type].favouredStat;
 			this.type = {
 				messageDisplay: monsterList.monsterType[type].type.messageDisplay, 
 				type: monsterList.monsterType[type].type.type, 
@@ -429,6 +430,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 			this.terrainModifiers(); //after next step we need to calculate terrain modifiers for other entities turns
 			this.doModifiers();
+			this.gainLevel();
 		}
 
 		updateScreenStats(){
@@ -541,6 +543,20 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				}
 			}
 		}
+
+        gainLevel(){
+
+            if(this.experience >= screen.experienceTable[this.experienceLevel + 1].required){
+
+                this.experienceLevel++;
+                screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' looks more experienced!', map.cells[this.position.level][this.position.x][this.position.y]);
+                this.stats[this.favouredStat]++; //increase one random stat from class stats
+                screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + messages.statGainMonsterMessages[this.favouredStat], map.cells[this.position.level][this.position.x][this.position.y]);
+                this.stats.baseAttackBonus++;
+                this.maxHp += combat.calc(this.HD);
+                this.hp = this.maxHp;
+            }
+        }
 	}
 	
 	return{

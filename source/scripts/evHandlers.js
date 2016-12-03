@@ -418,14 +418,14 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		
 		function displayMonsterInfo(entity){
 			
-			var drawnText = '%c{' + entity.fgColor + '}' + entity.display +  '%c{} ' + entity.type.messageDisplay,
+			var drawnText = '%c{' + entity.fgColor + '}' + entity.display +  '%c{} level ' + entity.experienceLevel + ' ' + (entity.type.type === 'player' ? entity.class : entity.type.messageDisplay),
 				stats = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'speed', 'defense'],
 				properties = {'breatheUnderWater': {description: 'can swim'}, 'canFly': {description: 'flying'}, 'canOpenDoors': {description: 'can open doors'}, 'fearless': {description: 'fearless'}, 'cantDrinkPotions': {description: 'can\'t drink potions'}, 'illiterate': {description: 'illiterate'}, 'mindless': {description: 'mindless'}},
 				propertyNumber = 0,
 				equipmentNumber = 0;
 			
 			screen.display.clear();
-			screen.display.drawText(Math.floor((screen.options.width - entity.display.length - entity.type.messageDisplay.length) / 2), 0, drawnText);
+			screen.display.drawText(Math.floor((screen.options.width - drawnText.length) / 2), 0, drawnText);
 			
 			for(var i=0; i<stats.length; i++){
 				
@@ -436,6 +436,14 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			screen.display.drawText(20, 2, 'hit points: ' + entity.hp + '/' + entity.maxHp);
 			screen.display.drawText(20, 3, 'base to hit: ' + entity.stats.baseAttackBonus);
 			screen.display.drawText(20, 4, 'size: ' + entity.size);
+
+			if(entity.type.type === 'player') {
+
+                screen.display.drawText(20, 5, 'xp: ' + entity.experience + '/' + screen.experienceTable[entity.experienceLevel + 1].required);
+            }else{
+
+                screen.display.drawText(20, 5, 'xp: ' + entity.xp);
+			}
 			
 			drawnText = '%c{darkgoldenrod}weapon: %c{}' + entity.weapon.name + ' ' + entity.weapon.damage;
 			screen.display.drawText(1, 11, drawnText);

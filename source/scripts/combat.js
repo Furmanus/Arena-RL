@@ -93,6 +93,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
             screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'dead', 0), defenderPosition);
             map.cells[defender.position.level].time.scheduler.remove(defender);
             defender.dropCorpse();
+            attacker.experience += defender.xp;
 
             if(defender.type.type === 'player'){
 

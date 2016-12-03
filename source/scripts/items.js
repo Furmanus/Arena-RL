@@ -78,8 +78,20 @@ define(['screen', 'map', 'use'], function(screen, map, use){
       'rat': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'rat corpse', description: 'a rat corpse', type: 'corpse'},
       'snake': {display: '%', fgColor: 'lightgreen', bgColor: 'transparent', name: 'snake corpse', description: 'a snake corpse', type: 'corpse'},
       'wolf': {display: '%', fgColor: 'silver', bgColor: 'transparent', name: 'wolf corpse', description: 'a wolf corpse', type: 'corpse'},
+      'hyena': {display: '%', fgColor: 'yellow', bgColor: 'transparent', name: 'hyena corpse', description: 'a hyena corpse', type: 'corpse'},
+      'lion': {display: '%', fgColor: 'yellow', bgColor: 'transparent', name: 'lion corpse', description: 'a lion corpse', type: 'corpse'},
+      'goblin': {display: '%', fgColor: 'blue', bgColor: 'transparent', name: 'goblin corpse', description: 'a goblin corpse', type: 'corpse'},
+      'hobgoblin': {display: '%', fgColor: 'lightgreen', bgColor: 'transparent', name: 'hobgoblin corpse', description: 'a hobgoblin corpse', type: 'corpse'},
+      'giant lizard': {display: '%', fgColor: 'lightgreen', bgColor: 'transparent', name: 'giant lizard corpse', description: 'a giant lizard corpse', type: 'corpse'},
       'raven': {display: '%', fgColor: 'rgb(51,51,51)', bgColor: 'transparent', name: 'raven corpse', description: 'a raven corpse', type: 'corpse'},
       'kobold': {display: '%', fgColor: 'green', bgColor: 'transparent', name: 'kobold corpse', description: 'a kobold corpse', type: 'corpse'},
+      'bugbear': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'bugbear corpse', description: 'a bugbear corpse', type: 'corpse'},
+      'gnoll': {display: '%', fgColor: 'brown', bgColor: 'transparent', name: 'gnoll corpse', description: 'a gnoll corpse', type: 'corpse'},
+      'drow': {display: '%', fgColor: 'silver', bgColor: 'transparent', name: 'drow corpse', description: 'a drow corpse', type: 'corpse'},
+      'ghoul': {display: '%', fgColor: 'silver', bgColor: 'transparent', name: 'ghoul corpse', description: 'a ghoul corpse', type: 'corpse'},
+      'horse': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'horse corpse', description: 'a horse corpse', type: 'corpse'},
+      'beetle': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'beetle corpse', description: 'a beetle corpse', type: 'corpse'},
+      'giant centipide': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'giant centipide corpse', description: 'a giant centipide corpse', type: 'corpse'},
       'skeleton': {display: '%', fgColor: 'white', bgColor: 'transparent', name: 'pile of bones', description: 'a pile of bones', type: 'bones'}
   }
   

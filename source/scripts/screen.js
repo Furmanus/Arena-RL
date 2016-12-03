@@ -23,6 +23,12 @@ define([], function(){
 		19: {required: 171000},
 		20: {required: 190000}
 	};
+
+	//list of stats gained on every fourth level by different classes
+	var statGain = {
+
+		'fighter': ['strength', 'strength', 'dexterity', 'constitution']
+	};
 	
 	var options = {
 		width: 40,
@@ -262,6 +268,7 @@ define([], function(){
 		placeVisibleMessage: placeVisibleMessage,
 		currentMessage: currentMessage,
 		placeTemporaryMessage: placeTemporaryMessage,
-		experienceTable: experienceTable
+		experienceTable: experienceTable,
+		statGain: statGain
 	}
 });
