@@ -10,10 +10,11 @@ Things implemented so far:
 - humanoid monsters with a little bit more complex AI (they are able to pick up, equip and use items, they will flee when hurt)
 - combat system based on D20, with special effects for critical hits and critical misses
 - special critical hits (bleeding, falling on ground, stunning your opponent)
+- experience and progression system
 
 Things I'm working on right now:
 
-- experience and progression system
+- more special attacks effects (paralysis, etc.)
 - more monsters, animals and items
 - complete level generation (with random monsters and items), monsters will be more difficult as player dives deeper
 - level bigger than screen, camera should follow player
