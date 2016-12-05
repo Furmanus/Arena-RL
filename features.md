@@ -14,7 +14,6 @@ Things implemented so far:
 
 Things I'm working on right now:
 
-- more special attacks effects (paralysis, etc.)
 - more monsters, animals and items
 - complete level generation (with random monsters and items), monsters will be more difficult as player dives deeper
 - level bigger than screen, camera should follow player
