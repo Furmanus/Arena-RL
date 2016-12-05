@@ -14,7 +14,8 @@ define(['screen', 'map'], function(screen, map){
         'unarmed': {'player': [' punch ', ' jab ', ' hit '], 'monster': [' punches ', ' jabs ', ' hits ']},
         'bite': {'player': [' bite '], 'monster': [' bites ']},
         'claws': {'player': [' scratch ', ' cut '], 'monster': [' scratches ', ' cuts ']},
-        'hooves': {'player': [' kick '], 'monster': [ ' kicks ']}
+        'hooves': {'player': [' kick '], 'monster': [ ' kicks ']},
+        'horns': {'player': [' gore '], 'monster': [ ' gores ']}
     };
 
     var msgMissWeapon = {
@@ -25,7 +26,8 @@ define(['screen', 'map'], function(screen, map){
         'unarmed': {'player': [' try to swing at ', ' try to jab ', ' try to hit '], 'monster': [' tries to swing at ', ' tries to jab ', ' tries to hit ']},
         'bite': {'player': [' try to bite '], 'monster': [' tries to bite ']},
         'claws': {'player': [' try to scratch ', ' try to cut '], 'monster': [' tries to scratch ', ' tries to cut ']},
-        'hooves': {'player': [' try to kick '], 'monster': [ ' tries to kick ']}
+        'hooves': {'player': [' try to kick '], 'monster': [ ' tries to kick ']},
+        'horns': {'player': [' try to gore ', ' make attempt to gore '], 'monster': [ ' tries to gore ', ' makes attempt to gore ']}
     };
 
     var msgCriticalHitWeapon = {
@@ -36,7 +38,8 @@ define(['screen', 'map'], function(screen, map){
         'unarmed': {'player': [' punch ', ' jab ', ' hit '], 'monster': [' punches ', ' jabs ', ' hits '], 'result': ['. It was excellent strike!', '. It was grievous hit! ']},
         'bite': {'player': [' deeply bite ', ' grievously bite'], 'monster': [' deeply bites ', ' grievously bites '], 'result': ['. It was very deep bite!', '. It was very aggressive bite! ']},
         'claws': {'player': [' cut ', ' tear '], 'monster': [' cuts ', ' tears '], 'result': ['. It was a deep cut!', '. It was a critical hit!']},
-        'hooves': {'player': [' kick '], 'monster': [' kicks '], 'result': ['. It was strong kick!']}
+        'hooves': {'player': [' kick '], 'monster': [' kicks '], 'result': ['. It was strong kick!']},
+        'horns': {'player': [' deeply gore ', ' mightily gore '], 'monster': [ ' deeply gores ', ' mightily gores '], 'result': ['. It was critical hit!']}
     }
 
     var msgCriticalMissWeapon = {

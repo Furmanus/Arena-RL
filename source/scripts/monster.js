@@ -98,7 +98,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 				'poisoned': {value: 0, activatedEveryTurn: status.entityStatus.poisoned.activatedEveryTurn, activateEffect: status.entityStatus.poisoned.activateEffect, removeEffect: status.entityStatus.poisoned.removeEffect, initEffect: status.entityStatus.poisoned.initEffect, modifiers: {}, counter: 0},
 
-				'afraid': {value: 0, activatedEveryTurn: function(){}, activateEffect: function(){}, removeEffect: function(){}, initEffect: function(){}, modifiers: {}, counter: 0}
+				'afraid': {value: 0, activatedEveryTurn: function(){}, activateEffect: function(){}, removeEffect: function(){}, initEffect: function(){}, modifiers: {}, counter: 0},
+
+                'paralyzed': {value: 0, activatedEveryTurn: status.entityStatus.paralyzed.activatedEveryTurn, activateEffect: status.entityStatus.paralyzed.activateEffect, removeEffect: status.entityStatus.paralyzed.removeEffect, initEffect: status.entityStatus.paralyzed.initEffect, modifiers: {}, counter: 0}
 			};
 			
 			this.init();

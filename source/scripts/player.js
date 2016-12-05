@@ -80,7 +80,9 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 
 				'stunned': {value: 0, activatedEveryTurn: status.entityStatus.stunned.activatedEveryTurn, activateEffect: status.entityStatus.stunned.activateEffect, removeEffect: status.entityStatus.stunned.removeEffect, initEffect: status.entityStatus.stunned.initEffect, modifiers: {}, counter: 0},
 
-				'poisoned': {value: 0, activatedEveryTurn: status.entityStatus.poisoned.activatedEveryTurn, activateEffect: status.entityStatus.poisoned.activateEffect, removeEffect: status.entityStatus.poisoned.removeEffect, initEffect: status.entityStatus.poisoned.initEffect, modifiers: {}, counter: 0}
+				'poisoned': {value: 0, activatedEveryTurn: status.entityStatus.poisoned.activatedEveryTurn, activateEffect: status.entityStatus.poisoned.activateEffect, removeEffect: status.entityStatus.poisoned.removeEffect, initEffect: status.entityStatus.poisoned.initEffect, modifiers: {}, counter: 0},
+
+                'paralyzed': {value: 0, activatedEveryTurn: status.entityStatus.paralyzed.activatedEveryTurn, activateEffect: status.entityStatus.paralyzed.activateEffect, removeEffect: status.entityStatus.paralyzed.removeEffect, initEffect: status.entityStatus.paralyzed.initEffect, modifiers: {}, counter: 0}
 			};
 
             this.defaultWeapon = {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]};

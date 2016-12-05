@@ -49,8 +49,8 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	//new monster.Monster(0, 'wolf');
 	//new monster.Monster(0, 'snake');
 	//new monster.Monster(0, 'raven');
-	new monster.Monster(0, 'lion');
-    new monster.Monster(0, 'drow');
+	new monster.Monster(0, 'cyclops');
+    new monster.Monster(0, 'cave bear');
 	player1 = new player.Player();
 
     new items.Misc('torch', player1);

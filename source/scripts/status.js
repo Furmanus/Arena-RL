@@ -9,7 +9,8 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
         'prone': {activatedEveryTurn: false, activateEffect: proneActivate, removeEffect: proneRemove, initEffect: proneInit},
         'bleeding': {activatedEveryTurn: true, activateEffect: bleedActivate, removeEffect: bleedRemove, initEffect: bleedingInit},
         'stunned': {activatedEveryTurn: true, activateEffect: stunActivate, removeEffect: stunRemove, initEffect: stunInit},
-        'poisoned': {activatedEveryTurn: true, activateEffect: poisonActivate, removeEffect: poisonRemove, initEffect: poisonInit}
+        'poisoned': {activatedEveryTurn: true, activateEffect: poisonActivate, removeEffect: poisonRemove, initEffect: poisonInit},
+        'paralyzed': {activatedEveryTurn: false, activateEffect: paralyzeActivate, removeEffect: paralyzeRemove, initEffect: paralyzeInit}
     }
 
     function proneInit(entity){
@@ -195,6 +196,21 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
         entity.status.stunned.value = 0;
         screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are no longer stunned.' : ' is no longer stunned.'), position);
         entity.stats.defense += 2;
+    }
+
+    function paralyzeActivate(entity){
+
+
+    }
+
+    function paralyzeInit(entity){
+
+
+    }
+
+    function paralyzeRemove(entity){
+
+
     }
 
     function roll(rollNumber, diceSides){

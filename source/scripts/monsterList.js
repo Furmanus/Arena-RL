@@ -1,12 +1,13 @@
 define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, combat, creatai){
 
-	//monster list by their danger level (key equals to level depth on which monster can appear
+	//monster list by their danger level (numbers equals to level depth on which monster can appear
 	var monsterList = {
 
 		1: [{key: 'rat'}, {key: 'raven'}, {key: 'bettle'}, {key: 'giant centipide'}],
 		2: [{key: 'kobold'}, {key: 'skeleton'}, {key: 'ghoul'}, {key: 'gnoll'}, {key: 'goblin'}, {key: 'heyna'}, {key: 'horse'}, {key: 'hobgoblin'}],
-		3: [{key: 'snake'}, {key: 'wolf'}, {key: 'bugbear'}, {key: 'giant lizard'}, {key: 'lion'}]
-	}
+		3: [{key: 'snake'}, {key: 'wolf'}, {key: 'bugbear'}, {key: 'giant lizard'}, {key: 'lion'}, {key: 'centaur'}, {key: 'ogre'}],
+		4: [{key: 'minotaur'}, {key: 'cyclops'}, {key: 'cave bear'}]
+	};
 	
 	var monsterType = {
 		
@@ -53,7 +54,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			},
 			ai: animalai.ai,
 			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
-			hostileList: {species: ['human', 'rat', 'kobold', 'wolf', 'hyena', 'horse'], family: [], entity: [], group: []},
+			hostileList: {species: ['human', 'rat', 'kobold', 'wolf', 'hyena'], family: [], entity: [], group: ['horses']},
 			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d7', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['poisoned']}
 		},
 
@@ -126,6 +127,30 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: ['canine']},
             defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d8+5', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
+        },
+
+        'cave bear': {
+            display: 'B',
+            fgColor: 'brown',
+            bgColor: 'transparent',
+            lookDescription: 'a cave bear',
+            type: {messageDisplay: 'cave bear', type: 'monster', family: 'animal', species: 'cave bear', group: 'bears', name: 'a cave bear'},
+            favouredStat: 'strength',
+            HD: '5d8+20',
+            xp: 1200,
+            size: 'large',
+            stats: {strength: 21, dexterity: 13, constitution: 19, intelligence: 2, wisdom: 12, charisma: 6, speed: 40, perception: 6, baseAttackBonus: 3, defense: 16},
+            equipment: {
+
+                'head': {description: 'empty'},
+                'torso': {description: 'empty'},
+                'legs': {description: 'empty'},
+                'arms': {description: 'empty'}
+            },
+            ai: animalai.ai,
+            abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
+            hostileList: {species: ['human'], family: [], entity: [], group: []},
+            defaultWeapon: {name: 'claws', description: 'a claws', natural: true, damage: '1d6+5', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding']}
         },
 
 		'wolf': {
@@ -225,30 +250,133 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 		},
 
 		'kobold': {
-			display: 'k',
-			fgColor: 'green',
-			bgColor: 'transparent',
-			lookDescription: 'a kobold',
-			type: {messageDisplay: 'kobold', type: 'monster', family: 'creature', group: 'kobolds', species: 'kobold', name: 'a kobold'},
+            display: 'k',
+            fgColor: 'green',
+            bgColor: 'transparent',
+            lookDescription: 'a kobold',
+            type: {messageDisplay: 'kobold', type: 'monster', family: 'creature', group: 'kobolds', species: 'kobold', name: 'a kobold'},
             favouredStat: 'dexterity',
-			HD: '1d8',
-			xp: 100,
-			size: 'small',
-			stats: {strength: 9, dexterity: 13, constitution: 10, intelligence: 10, wisdom: 9, charisma: 8, speed: 30, perception: 8, baseAttackBonus: 1, defense: 11},
-			equipment: {
+            HD: '1d8',
+            xp: 100,
+            size: 'small',
+            stats: {strength: 9, dexterity: 13, constitution: 10, intelligence: 10, wisdom: 9, charisma: 8, speed: 30, perception: 8, baseAttackBonus: 1, defense: 11},
+            equipment: {
 
-				'head': {description: 'empty'},
-				'torso': {description: 'empty'},
-				'right hand': {description: 'empty'},
-				'left hand': {description: 'empty'},
-				'legs': {description: 'empty'},
-				'feet': {description: 'empty'}
-			},
-			ai: creatai.ai,
-			abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
-			hostileList: {species: ['human', 'snake'], family: [], entity: [], group: ['undead']},
-			defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
-		},
+                'head': {description: 'empty'},
+                'torso': {description: 'empty'},
+                'right hand': {description: 'empty'},
+                'left hand': {description: 'empty'},
+                'legs': {description: 'empty'},
+                'feet': {description: 'empty'}
+            },
+            ai: creatai.ai,
+            abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
+            hostileList: {species: ['human', 'snake'], family: [], entity: [], group: ['undead']},
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
+        },
+
+        'ogre': {
+            display: 'O',
+            fgColor: 'lightgreen',
+            bgColor: 'transparent',
+            lookDescription: 'an ogre',
+            type: {messageDisplay: 'ogre', type: 'monster', family: 'creature', group: 'ogres', species: 'ogre', name: 'an ogre'},
+            favouredStat: 'strength',
+            HD: '4d8+12',
+            xp: 800,
+            size: 'large',
+            stats: {strength: 21, dexterity: 8, constitution: 15, intelligence: 6, wisdom: 10, charisma: 7, speed: 25, perception: 7, baseAttackBonus: 3, defense: 15},
+            equipment: {
+
+                'head': {description: 'empty'},
+                'torso': {description: 'empty'},
+                'right hand': {description: 'empty'},
+                'left hand': {description: 'empty'},
+                'legs': {description: 'empty'},
+                'feet': {description: 'empty'}
+            },
+            ai: creatai.ai,
+            abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
+            hostileList: {species: ['human'], family: [], entity: [], group: []},
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d3+3', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
+        },
+
+        'minotaur': {
+            display: 'M',
+            fgColor: '#af111c',
+            bgColor: 'transparent',
+            lookDescription: 'a minotaur',
+            type: {messageDisplay: 'minotaur', type: 'monster', family: 'creature', group: 'giants', species: 'minotaur', name: 'a minotaur'},
+            favouredStat: 'strength',
+            HD: '6d10+12',
+            xp: 1200,
+            size: 'large',
+            stats: {strength: 19, dexterity: 10, constitution: 15, intelligence: 7, wisdom: 10, charisma: 8, speed: 30, perception: 5, baseAttackBonus: 6, defense: 15},
+            equipment: {
+
+                'head': {description: 'empty'},
+                'torso': {description: 'empty'},
+                'right hand': {description: 'empty'},
+                'left hand': {description: 'empty'},
+                'legs': {description: 'empty'},
+                'feet': {description: 'empty'}
+            },
+            ai: creatai.ai,
+            abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
+            hostileList: {species: ['human', 'cyclops'], family: [], entity: [], group: []},
+            defaultWeapon: {name: 'horns', description: 'a horns', natural: true, damage: '1d6+2', critical: [20], dmgType: 'horns', criticalMultiplier: 2, criticalHit: [null]}
+        },
+
+        'cyclops': {
+            display: 'H',
+            fgColor: '#af111c',
+            bgColor: 'transparent',
+            lookDescription: 'a cyclops',
+            type: {messageDisplay: 'cyclops', type: 'monster', family: 'creature', group: 'giants', species: 'cyclops', name: 'a cyclops'},
+            favouredStat: 'strength',
+            HD: '10d8+20',
+            xp: 1600,
+            size: 'large',
+            stats: {strength: 21, dexterity: 8, constitution: 15, intelligence: 10, wisdom: 13, charisma: 8, speed: 27, perception: 4, baseAttackBonus: 7, defense: 17},
+            equipment: {
+
+                'head': {description: 'empty'},
+                'torso': {description: 'empty'},
+                'right hand': {description: 'empty'},
+                'left hand': {description: 'empty'},
+                'legs': {description: 'empty'},
+                'feet': {description: 'empty'}
+            },
+            ai: creatai.ai,
+            abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
+            hostileList: {species: ['human', 'minotaur'], family: [], entity: [], group: []},
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d8+5', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
+        },
+
+        'centaur': {
+            display: 'C',
+            fgColor: 'darkgoldenrod',
+            bgColor: 'transparent',
+            lookDescription: 'a centaur',
+            type: {messageDisplay: 'centaur', type: 'monster', family: 'creature', group: 'horses', species: 'centaur', name: 'a centaur'},
+            favouredStat: 'strength',
+            HD: '4d10+5',
+            xp: 800,
+            size: 'large',
+            stats: {strength: 15, dexterity: 14, constitution: 15, intelligence: 11, wisdom: 14, charisma: 12, speed: 50, perception: 7, baseAttackBonus: 4, defense: 11},
+            equipment: {
+
+                'head': {description: 'empty'},
+                'torso': {description: 'empty'},
+                'right hand': {description: 'empty'},
+                'left hand': {description: 'empty'},
+                'barding': {description: 'empty'}
+            },
+            ai: creatai.ai,
+            abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
+            hostileList: {species: ['human'], family: [], entity: [], group: ['reptile']},
+            defaultWeapon: {name: 'hooves', description: 'a hooves', natural: true, damage: '1d6+1', critical: [20], dmgType: 'hooves', criticalMultiplier: 2, criticalHit: ['stunned', 'prone']}
+        },
 
         'goblin': {
             display: 'g',
