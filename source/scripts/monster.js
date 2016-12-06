@@ -100,7 +100,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 				'afraid': {value: 0, activatedEveryTurn: function(){}, activateEffect: function(){}, removeEffect: function(){}, initEffect: function(){}, modifiers: {}, counter: 0},
 
-                'paralyzed': {value: 0, activatedEveryTurn: status.entityStatus.paralyzed.activatedEveryTurn, activateEffect: status.entityStatus.paralyzed.activateEffect, removeEffect: status.entityStatus.paralyzed.removeEffect, initEffect: status.entityStatus.paralyzed.initEffect, modifiers: {}, counter: 0}
+                'paralyzed': {value: 0, activatedEveryTurn: status.entityStatus.paralyzed.activatedEveryTurn, activateEffect: status.entityStatus.paralyzed.activateEffect, removeEffect: status.entityStatus.paralyzed.removeEffect, initEffect: status.entityStatus.paralyzed.initEffect, modifiers: {}, counter: 0},
+
+                'berserk': {value: 0, activatedEveryTurn: status.entityStatus.berserk.activatedEveryTurn, activateEffect: status.entityStatus.berserk.activateEffect, removeEffect: status.entityStatus.berserk.removeEffect, initEffect: status.entityStatus.berserk.initEffect, modifiers: {}, counter: 0}
 			};
 			
 			this.init();

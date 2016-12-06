@@ -60,9 +60,11 @@ define(['screen', 'map', 'combat'], function(screen, map, combat){
        var modifiedSpeed = Math.floor(entity.stats.speed * 0.5);
 
        var wearOffText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' calm down.' : ' calms down.'),
-           useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a rage potion. Suddenly ' + (screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' go berserk!' : ' goes berserk!');
+           useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' quaff' : ' quaffs') + ' a rage potion.';
 
-       entity.modifiers.push({type: [{stat: 'speed', value: modifiedSpeed}, {stat: 'baseAttackBonus', value: 6}, {stat: 'strength', value: 5}, {stat: 'defense', value: -5}], counter: 20, applied: false, useText: useText, wearOffText: wearOffText});
+       screen.placeVisibleMessage(useText, map.cells[entity.position.level][entity.position.x][entity.position.y]);
+
+       entity.status.berserk.initEffect(entity);
 
        if(entity.type.type !== 'player'){
 

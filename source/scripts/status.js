@@ -10,7 +10,8 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
         'bleeding': {activatedEveryTurn: true, activateEffect: bleedActivate, removeEffect: bleedRemove, initEffect: bleedingInit},
         'stunned': {activatedEveryTurn: true, activateEffect: stunActivate, removeEffect: stunRemove, initEffect: stunInit},
         'poisoned': {activatedEveryTurn: true, activateEffect: poisonActivate, removeEffect: poisonRemove, initEffect: poisonInit},
-        'paralyzed': {activatedEveryTurn: false, activateEffect: paralyzeActivate, removeEffect: paralyzeRemove, initEffect: paralyzeInit}
+        'paralyzed': {activatedEveryTurn: true, activateEffect: paralyzeActivate, removeEffect: paralyzeRemove, initEffect: paralyzeInit},
+        'berserk': {activatedEveryTurn: true, activateEffect: berserkActivate, removeEffect: berserkRemove, initEffect: berserkInit}
     }
 
     function proneInit(entity){
@@ -200,17 +201,97 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
     function paralyzeActivate(entity){
 
+        entity.status.paralyzed.counter--;
 
+        if(entity.status.paralyzed.counter === 0){
+
+            entity.status.paralyzed.removeEffect(entity);
+        }
     }
 
     function paralyzeInit(entity){
 
+        var defense = 5 - entity.stats.defense,
+            dexterity = 1 - entity.stats.dexterity,
+            strength = 1 - entity.stats.strength,
+            displayText = screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are paralyzed!' : ' is paralyzed!');
+
+        entity.status.paralyzed.modifiers.defense = defense;
+        entity.status.paralyzed.modifiers.dexterity = dexterity;
+        entity.status.paralyzed.modifiers.strength = strength;
+
+        for(var n in entity.status.paralyzed.modifiers){
+
+            entity.stats[n] += entity.status.paralyzed.modifiers[n];
+        }
+
+        entity.status.paralyzed.value = 1;
+        entity.status.paralyzed.counter = ROT.RNG.getUniformInt(3, 5);
+        screen.placeVisibleMessage(displayText, map.cells[entity.position.level][entity.position.x][entity.position.y]);
 
     }
 
     function paralyzeRemove(entity){
 
+        entity.status.paralyzed.value = 0;
 
+        for(var n in entity.status.paralyzed.modifiers){
+
+            entity.stats[n] -= entity.status.paralyzed.modifiers[n];
+        }
+
+        entity.status.paralyzed.modifiers = {};
+
+        screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are no longer paralyzed.' : ' is no longer paralyzed.'), map.cells[entity.position.level][entity.position.x][entity.position.y]);
+    }
+
+    function berserkInit(entity){
+
+        var modifiedSpeed = Math.floor(entity.stats.speed * 0.5),
+            strengthModifier = 5,
+            baseAttackBonusModifier = 6,
+            defenseModifier = -5;
+
+        entity.status.berserk.modifiers.defense = defenseModifier;
+        entity.status.berserk.modifiers.speed = modifiedSpeed;
+        entity.status.berserk.modifiers.baseAttackBonus = baseAttackBonusModifier;
+        entity.status.berserk.modifiers.strength = strengthModifier;
+
+        for(var n in entity.status.berserk.modifiers){
+
+            entity.stats[n] += entity.status.berserk.modifiers[n];
+        }
+
+        entity.status.berserk.value = 1;
+        entity.status.berserk.counter = ROT.RNG.getUniformInt(14, 20);
+
+        useText = screen.capitalizeString((screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' go berserk!' : ' goes berserk!'));
+
+        screen.placeVisibleMessage(useText, map.cells[entity.position.level][entity.position.x][entity.position.y]);
+    }
+
+    function berserkActivate(entity){
+
+        entity.status.berserk.counter--;
+
+        if(entity.status.berserk.counter === 0){
+
+            entity.status.berserk.removeEffect(entity);
+        }
+    }
+
+    function berserkRemove(entity){
+
+        entity.status.berserk.value = 0;
+
+        for(var n in entity.status.berserk.modifiers){
+
+            entity.stats[n] -= entity.status.berserk.modifiers[n];
+        }
+
+        entity.status.berserk.modifiers = {};
+
+        screen.placeVisibleMessage(screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' calm down.' : ' calms down.'), map.cells[entity.position.level][entity.position.x][entity.position.y]);
     }
 
     function roll(rollNumber, diceSides){

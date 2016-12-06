@@ -505,7 +505,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: true, cantDrinkPotions: true, illiterate: true, mindless: true, bloodless: true},
             hostileList: {species: ['human'], family: [], entity: [], group: ['kobolds', 'elfs']},
-            defaultWeapon: {name: 'claws', description: 'a claws', natural: true, damage: '1d6+1', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding']}
+            defaultWeapon: {name: 'claws', description: 'a claws', natural: true, damage: '1d6+1', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding', 'paralyzed']}
         },
 
         'drow': {

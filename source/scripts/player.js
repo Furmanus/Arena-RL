@@ -82,7 +82,9 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 
 				'poisoned': {value: 0, activatedEveryTurn: status.entityStatus.poisoned.activatedEveryTurn, activateEffect: status.entityStatus.poisoned.activateEffect, removeEffect: status.entityStatus.poisoned.removeEffect, initEffect: status.entityStatus.poisoned.initEffect, modifiers: {}, counter: 0},
 
-                'paralyzed': {value: 0, activatedEveryTurn: status.entityStatus.paralyzed.activatedEveryTurn, activateEffect: status.entityStatus.paralyzed.activateEffect, removeEffect: status.entityStatus.paralyzed.removeEffect, initEffect: status.entityStatus.paralyzed.initEffect, modifiers: {}, counter: 0}
+                'paralyzed': {value: 0, activatedEveryTurn: status.entityStatus.paralyzed.activatedEveryTurn, activateEffect: status.entityStatus.paralyzed.activateEffect, removeEffect: status.entityStatus.paralyzed.removeEffect, initEffect: status.entityStatus.paralyzed.initEffect, modifiers: {}, counter: 0},
+
+				'berserk': {value: 0, activatedEveryTurn: status.entityStatus.berserk.activatedEveryTurn, activateEffect: status.entityStatus.berserk.activateEffect, removeEffect: status.entityStatus.berserk.removeEffect, initEffect: status.entityStatus.berserk.initEffect, modifiers: {}, counter: 0}
 			};
 
             this.defaultWeapon = {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]};
@@ -119,13 +121,22 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 		//act() - metoda wywoływana domyślnie przez silnik czasu
 		
 		act(){
-			
-			this.terrainModifiers();
-			this.doModifiers();
-			window.addEventListener('keydown', this, true);
-			this.applyStatus();
-			this.gainLevel();
-			map.cells[this.position.level].time.engine.lock();
+
+			if(this.status.paralyzed.value !== 1) {
+
+                this.terrainModifiers();
+                this.doModifiers();
+                window.addEventListener('keydown', this, true);
+                this.applyStatus();
+                this.gainLevel();
+                map.cells[this.position.level].time.engine.lock();
+            }else{
+
+                //napisać kod odpowiedzialny za 100 ms przerwy pomiędzy kolejnymi uruchomieniami silnika
+                this.terrainModifiers();
+                this.doModifiers();
+                this.applyStatus();
+			}
 		}
 		
 		//handleEvent() - domyślna metoda przypisana metodzie addEventListener('keydown', this, true)

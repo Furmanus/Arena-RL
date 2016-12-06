@@ -49,8 +49,8 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	//new monster.Monster(0, 'wolf');
 	//new monster.Monster(0, 'snake');
 	//new monster.Monster(0, 'raven');
-	new monster.Monster(0, 'cyclops');
-    new monster.Monster(0, 'cave bear');
+	new monster.Monster(0, 'kobold');
+    //new monster.Monster(0, 'ghoul');
 	player1 = new player.Player();
 
     new items.Misc('torch', player1);
@@ -62,7 +62,7 @@ requirejs(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 
 	new items.Helmet('plate helmet', player1);
 	new items.Weapon('warhammer', player1);
 	new items.Weapon('long sword', player1);
-	new items.Potion('speed', player1);
+	new items.Potion('rage', player1);
 	map.cells[0].time.engine.start();
 	screen.setWindows();
 	
