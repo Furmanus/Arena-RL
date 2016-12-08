@@ -1,4 +1,4 @@
-define([], function(){
+define(['main'], function(main){
 
 	var experienceTable = {
 
@@ -29,6 +29,12 @@ define([], function(){
 
 		'fighter': ['strength', 'strength', 'dexterity', 'constitution']
 	};
+
+	var screenSize = {
+
+		x: 40,
+		y: 40
+	}
 	
 	var options = {
 		width: 40,
@@ -69,8 +75,45 @@ define([], function(){
 	}
 	
 	function drawVisibleCells(cells){
-		
-		var currentColor;
+
+		var currentColor,
+		 	main = require('main'),
+			x, //current x position of player
+			y, //current y position of player
+			startX, //x upper left position of camera
+			startY; //y upper left position of camera
+
+		if(main.exports.player) {
+
+            x = main.exports.player.position.x,
+			y = main.exports.player.position.y;
+        }else{
+
+			x = 0;
+			y = 0;
+		}
+
+        if(x < screenSize.x / 2){
+
+            startX = 0;
+        }else if(x > options.width - (screenSize.x / 2)){
+
+            startX = options.width - screenSize.x;
+        }else{
+
+            startX = x - (screenSize.x / 2);
+        }
+
+        if(y < screenSize.y / 2){
+
+            startY = 0;
+        }else if(y > options.height - (screenSize.y / 2)){
+
+            startY = options.height - screenSize.y;
+        }else{
+
+            startY = y - (screenSize.y / 2);
+        }
 		
 		for(var i=0; i<options.width; i++){
 			
