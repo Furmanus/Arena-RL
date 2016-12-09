@@ -11,11 +11,12 @@ Things implemented so far:
 - combat system based on D20, with special effects for critical hits and critical misses
 - special critical hits (bleeding, falling on ground, stunning your opponent)
 - experience and progression system
+- level bigger than screen, camera following player
 
 Things I'm working on right now:
 
 - more monsters, animals and items
 - complete level generation (with random monsters and items), monsters will be more difficult as player dives deeper
-- level bigger than screen, camera should follow player
 - optional tile graphics
+- rework rage in monster AI, berserkering monster should focus only on threat and ignore items
 
