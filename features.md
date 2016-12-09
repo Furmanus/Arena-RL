@@ -4,7 +4,7 @@ Things implemented so far:
 - different map tiles with different effects(chasms, shallow and deep water, bush, etc.)
 - FOV system
 - noise generation (currently not used)
-- light system(partially done, see issues)
+- light system(partially done, see issues, besides currently not used)
 - fire spreading system
 - inventory management and items
 - humanoid monsters with a little bit more complex AI (they are able to pick up, equip and use items, they will flee when hurt)
