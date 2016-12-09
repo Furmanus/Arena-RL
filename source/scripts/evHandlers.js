@@ -247,6 +247,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		var list;
 		
 		screen.display.clear();
+		screen.display.setOptions(screen.screenOptions);
 		
 		player.handleEvent = inventoryEventHandler.bind(player);
 		
@@ -282,7 +283,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 					drawnText = '%c{' + this.inventory[identifier].fgColor + '}' + this.inventory[identifier].display + ' %c{}' + this.inventory[identifier].name;
 					
 					screen.display.clear();
-					screen.display.drawText(Math.floor((screen.options.width - this.inventory[identifier].display.length - this.inventory[identifier].name.length) / 2), 1, drawnText);
+					screen.display.drawText(Math.floor((screen.displayOptions.width - this.inventory[identifier].display.length - this.inventory[identifier].name.length) / 2), 1, drawnText);
 				}
 			}
 		}
@@ -291,6 +292,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	function displayInfo(player){
 		
 		screen.display.clear();
+        screen.display.setOptions(screen.screenOptions);
 		screen.display.drawText(2, 2, '[a]About');
 		screen.display.drawText(2, 3, '[b]Keybindings');
 		
@@ -302,6 +304,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				case 27:
 				
 				screen.display.clear();
+                screen.display.setOptions(screen.displayOptions);
 				screen.drawVisibleCells(map.cells[this.position.level]);
 				this.handleEvent = defaultEventHandler;
 				
@@ -345,6 +348,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		if(ev.which == 27){
 			
 			screen.display.clear();
+            screen.display.setOptions(screen.displayOptions);
 			screen.drawVisibleCells(map.cells[this.position.level]);
 			this.handleEvent = defaultEventHandler;
 		}
@@ -425,6 +429,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				equipmentNumber = 0;
 			
 			screen.display.clear();
+            screen.display.setOptions(screen.screenOptions);
 			screen.display.drawText(Math.floor((screen.options.width - drawnText.length) / 2), 0, drawnText);
 			
 			for(var i=0; i<stats.length; i++){
@@ -655,6 +660,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			var drawnText;
 			
 			screen.display.clear();
+            screen.display.setOptions(screen.screenOptions);
 			player.handleEvent = pickUpEventHandler;
 			screen.display.drawText(8, 0, 'Select item to pick up:');
 			
@@ -690,8 +696,9 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
             currentRow = 2;
 
         screen.display.clear();
+        screen.display.setOptions(screen.screenOptions);
         player.handleEvent = equipEventHandler;
-        screen.display.drawText(Math.floor((screen.options.width - drawnText.length) / 2), 0, drawnText);
+        screen.display.drawText(Math.floor((screen.displayOptions.width - drawnText.length) / 2), 0, drawnText);
 
         for(var n in player.equipment){
 
@@ -813,6 +820,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		}else{
 			
 			screen.display.clear();
+            screen.display.setOptions(screen.screenOptions);
 			player.handleEvent = dropEventHandler;
 			screen.display.drawText(10, 0, 'Select item to drop:');
             //we draw inventory objects sorted alphabetically
@@ -887,7 +895,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				
 				itemClass = list[i].type;
 				drawnText = '----- ' + list[i].type + ' -----';
-				screen.display.drawText(Math.floor((screen.options.width - drawnText.length) / 2), currentRow, drawnText);
+				screen.display.drawText(Math.floor((screen.displayOptions.width - drawnText.length) / 2), currentRow, drawnText);
 				currentRow++;
 			}
 
@@ -943,8 +951,9 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			list;
 
         screen.display.clear();
+        screen.display.setOptions(screen.screenOptions);
         player.handleEvent = quaffEventHandler;
-        screen.display.drawText(Math.floor((screen.options.width - drawnText.length) / 2), 0, drawnText);
+        screen.display.drawText(Math.floor((screen.displayOptions.width - drawnText.length) / 2), 0, drawnText);
 		
 		list = drawObjectTypeInventory(player, 'potions');
 		
@@ -973,8 +982,9 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			list;
 
         screen.display.clear();
+        screen.display.setOptions(screen.screenOptions);
         player.handleEvent = readEventHandler;
-        screen.display.drawText(Math.floor((screen.options.width - drawnText.length) / 2), 0, drawnText);
+        screen.display.drawText(Math.floor((screen.displayOptions.width - drawnText.length) / 2), 0, drawnText);
 		
 		list = drawObjectTypeInventory(player, 'scrolls');
 		
@@ -1078,6 +1088,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	function esc(player){
 
         screen.display.clear();
+        screen.display.setOptions(screen.displayOptions);
         screen.drawVisibleCells(map.cells[player.position.level]);
         player.handleEvent = defaultEventHandler;
     }

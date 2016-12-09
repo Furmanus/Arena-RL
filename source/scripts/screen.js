@@ -34,14 +34,30 @@ define(['main'], function(main){
 
 		x: 40,
 		y: 40
-	}
-	
+	};
+	//for map building inside map and generator modules
 	var options = {
-		width: 40,
+		width: 50,
 		height: 40,
 		fontSize: 15,
 		forceSquareRatio: true
 	};
+	//for display options used inside drawVisibleCells
+	var displayOptions = {
+
+        width: 35,
+        height: 35,
+        fontSize: 17,
+        forceSquareRatio: true
+	};
+
+	var screenOptions = {
+
+        width: 40,
+        height: 40,
+        fontSize: 15,
+        forceSquareRatio: true
+	}
 	
 	/*
 	zmienna lookCount używana do komendy look z modułu evHandlers. Jeżeli większa od 0, to ostatnia wiadomość jest zamieniana na nową
@@ -52,7 +68,7 @@ define(['main'], function(main){
 	var currentMessage = null,
 		currentMessageCount = 1;
 	
-	var display = new ROT.Display(options);
+	var display = new ROT.Display(displayOptions);
 	document.getElementById('screen').appendChild(display.getContainer());
 	display.getContainer().style.border = '1px solid silver';
 	
@@ -83,9 +99,10 @@ define(['main'], function(main){
 			startX, //x upper left position of camera
 			startY; //y upper left position of camera
 
+		//we get player position from main module, if it isn't undefined (which happens right at start of the game)
 		if(main.exports.player) {
 
-            x = main.exports.player.position.x,
+            x = main.exports.player.position.x;
 			y = main.exports.player.position.y;
         }else{
 
@@ -93,59 +110,62 @@ define(['main'], function(main){
 			y = 0;
 		}
 
-        if(x < screenSize.x / 2){
+        if(x < displayOptions.width / 2){
 
             startX = 0;
-        }else if(x > options.width - (screenSize.x / 2)){
+        }else if(x > options.width - (displayOptions.width / 2)){
 
-            startX = options.width - screenSize.x;
+            startX = options.width - displayOptions.width;
         }else{
 
-            startX = x - (screenSize.x / 2);
+            startX = Math.floor(x - (displayOptions.width / 2));
         }
 
-        if(y < screenSize.y / 2){
+        if(y < displayOptions.height / 2){
 
             startY = 0;
-        }else if(y > options.height - (screenSize.y / 2)){
+        }else if(y > options.height - (displayOptions.height / 2)){
 
-            startY = options.height - screenSize.y;
+            startY = options.height - displayOptions.height;
         }else{
 
-            startY = y - (screenSize.y / 2);
+            startY = Math.floor(y - (displayOptions.height / 2));
         }
-		
-		for(var i=0; i<options.width; i++){
+        console.log(x + ' ' + y);
+		console.log(startX + ' ' + startY);
+        console.log(parseInt(startX + displayOptions.width) + ' ' + parseInt(startY + displayOptions.height));
+		for(var i=0; i<displayOptions.width; i++){
 			
-			for(var j=0; j<options.height; j++){
+			for(var j=0; j<displayOptions.height; j++){
+
 				//first we have to check whether examined cell is lit, if yes, cell background color is equal to lightcolor
-				if(cells[i][j].isVisible === true && cells[i][j].isLit === false){
+				if(cells[startX + i][startY + j].isVisible === true && cells[startX + i][startY + j].isLit === false){
 					
-					if(cells[i][j].entity != null){
+					if(cells[startX + i][startY + j].entity != null){
 					
-						display.draw(i, j, cells[i][j].entity.display, cells[i][j].entity.fgColor, cells[i][j].entity.bgColor);
-					}else if(cells[i][j].entity === null && cells[i][j].inventory.length === 0){
+						display.draw(i, j, cells[startX + i][startY + j].entity.display, cells[startX + i][startY + j].entity.fgColor, cells[startX + i][startY + j].entity.bgColor);
+					}else if(cells[startX + i][startY + j].entity === null && cells[startX + i][startY + j].inventory.length === 0){
 					
-						display.draw(i, j, cells[i][j].type.display, cells[i][j].type.fgColor, cells[i][j].type.bgColor);
-					}else if(cells[i][j].entity === null && cells[i][j].inventory.length > 0){
+						display.draw(i, j, cells[startX + i][startY + j].type.display, cells[startX + i][startY + j].type.fgColor, cells[startX + i][startY + j].type.bgColor);
+					}else if(cells[startX + i][startY + j].entity === null && cells[startX + i][startY + j].inventory.length > 0){
 						
-						display.draw(i, j, cells[i][j].inventory[0].display, cells[i][j].inventory[0].fgColor, cells[i][j].inventory[0].bgColor);
+						display.draw(i, j, cells[startX + i][startY + j].inventory[0].display, cells[startX + i][startY + j].inventory[0].fgColor, cells[startX + i][startY + j].inventory[0].bgColor);
 					}
-				}else if(cells[i][j].isVisible === true && cells[i][j].isLit === true){
+				}else if(cells[startX + i][startY + j].isVisible === true && cells[startX + i][startY + j].isLit === true){
 					
-					if(cells[i][j].entity != null){
+					if(cells[startX + i][startY + j].entity != null){
 					
-						display.draw(i, j, cells[i][j].entity.display, cells[i][j].entity.fgColor, cells[i][j].entity.bgColor);
-					}else if(cells[i][j].entity === null && cells[i][j].inventory.length === 0){
+						display.draw(i, j, cells[startX + i][startY + j].entity.display, cells[startX + i][startY + j].entity.fgColor, cells[startX + i][startY + j].entity.bgColor);
+					}else if(cells[startX + i][startY + j].entity === null && cells[startX + i][startY + j].inventory.length === 0){
 					
-						display.draw(i, j, cells[i][j].type.display, cells[i][j].type.fgColor, cells[i][j].type.lightColor);
-					}else if(cells[i][j].entity === null && cells[i][j].inventory.length > 0){
+						display.draw(i, j, cells[startX + i][startY + j].type.display, cells[startX + i][startY + j].type.fgColor, cells[startX + i][startY + j].type.lightColor);
+					}else if(cells[startX + i][startY + j].entity === null && cells[startX + i][startY + j].inventory.length > 0){
 						
-						display.draw(i, j, cells[i][j].inventory[0].display, cells[i][j].inventory[0].fgColor, cells[i][j].inventory[0].bgColor);
+						display.draw(i, j, cells[startX + i][startY + j].inventory[0].display, cells[startX + i][startY + j].inventory[0].fgColor, cells[startX + i][startY + j].inventory[0].bgColor);
 					}
-				}else if(cells[i][j].isVisible === false && cells[i][j].hasBeenDiscovered === true){
+				}else if(cells[startX + i][startY + j].isVisible === false && cells[startX + i][startY + j].hasBeenDiscovered === true){
 					
-					currentColor = ROT.Color.fromString(cells[i][j].type.fgColor);
+					currentColor = ROT.Color.fromString(cells[startX + i][startY + j].type.fgColor);
 					
 					currentColor[0] -= 120;
 					currentColor[1] -= 120;
@@ -153,7 +173,7 @@ define(['main'], function(main){
 					
 					currentColor = ROT.Color.toRGB(currentColor);
 					
-					display.draw(i, j, cells[i][j].type.display, currentColor, cells[i][j].type.bgColor);
+					display.draw(i, j, cells[startX + i][startY + j].type.display, currentColor, cells[startX + i][startY + j].type.bgColor);
 				}
 			}
 		}
@@ -312,6 +332,8 @@ define(['main'], function(main){
 		currentMessage: currentMessage,
 		placeTemporaryMessage: placeTemporaryMessage,
 		experienceTable: experienceTable,
-		statGain: statGain
+		statGain: statGain,
+		displayOptions: displayOptions,
+		screenOptions: screenOptions
 	}
 });
