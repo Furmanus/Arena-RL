@@ -19,4 +19,5 @@ Things I'm working on right now:
 
 - complete level generation (with random monsters and items), monsters will be more difficult as player dives deeper
 - optional tile graphics
+- rework combat critical chance and damage so it would work as it is supposed to
 
