@@ -107,7 +107,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
             screen.display.clear();
             screen.drawVisibleCells(map.cells[defender.position.level]);
-        }else if(defender.hp <= Math.floor(0.25 * defender.maxHp) && defender.type.type !== 'player' && defender.abilities.fearless === false){
+        }else if(defender.hp <= Math.floor(0.1 * defender.maxHp) && defender.type.type !== 'player' && defender.abilities.fearless === false){
 
 		    var action = ROT.RNG.getUniformInt(1, 5);
 		    //monster panics

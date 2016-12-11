@@ -664,7 +664,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 	}
 	
 	function doRandomWalk(level, x, y, cellFillArray, steps){
-		
+
 		var newX = x,
 			newY = y,
 			count = 0;
@@ -672,7 +672,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 		randomWalk(newX, newY);
 		
 		function randomWalk(x, y){
-			
+
 			count++;
 			
 			if(map.cells[level][x][y].type.type == 'floor'){
@@ -685,7 +685,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 			
 			if(count < steps){
 				
-				if(newX < 1 || newY < 1 || newX > screen.options.width - 2 || newY > screen.options.width - 2){
+				if(newX < 1 || newY < 1 || newX > screen.options.width - 2 || newY > screen.options.height - 2){
 					
 					randomWalk(x, y);
 				}else{
@@ -1124,23 +1124,35 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 	}
 	
 	function generateRandomLevel(){
-		
-		var currentLevel;
-		
-		var levelNamesKeys = Object.keys(levelTypes);
-		
-		map.cells.maxDungeonLevel++;
-		currentLevel = map.cells.maxDungeonLevel;
-		
-		map.initCells(currentLevel);
-		levelTypes[levelNamesKeys.random()](currentLevel);
-		
-		if(ROT.RNG.getUniformInt(1,4) != 4){
-			
-			var specialRoomsKeys = Object.keys(specialRooms);
-			
-			specialRooms[specialRoomsKeys.random()](currentLevel, map.cells[currentLevel].levelGenerated);
+
+		var currentLevel,
+			levelNamesKeys = Object.keys(levelTypes),
+			chosenLevelType = levelNamesKeys.random();
+
+		if(map.cells.maxDungeonLevel !== undefined) {
+
+            map.cells.maxDungeonLevel++;
+        }else{
+
+			map.cells.maxDungeonLevel = 0;
 		}
+		currentLevel = map.cells.maxDungeonLevel;
+
+		map.initCells(currentLevel);
+		levelTypes[chosenLevelType](currentLevel);
+		
+		if(chosenLevelType === 'arena'){
+
+			var specialRoomsKeys = Object.keys(specialRooms),
+				chosenLevelTheme = specialRoomsKeys.random();
+            console.log(chosenLevelType + ' ' + chosenLevelTheme);
+			specialRooms[chosenLevelTheme](currentLevel, map.cells[currentLevel].levelGenerated);
+		}
+	}
+
+	function fillLevelWithMonsters(levelNumber){
+
+
 	}
 	
 	

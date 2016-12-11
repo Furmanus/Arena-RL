@@ -113,7 +113,7 @@ define(['screen'], function(screen){
 		'burntGround': {display: [',', '.'], fgColor: 'rgb(70,70,70)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'burnt ground', key: 'burntGround', name: 'a burnt ground', walkMessage: 'A burnt ground.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null}
 	}
 	
-	var cells = {maxDungeonLevel: 0};
+	var cells = {maxDungeonLevel: undefined};
 	
 	function initCells(level){
 		

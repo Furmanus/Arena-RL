@@ -34,7 +34,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 			this.bgColor = monsterList.monsterType[type].bgColor;
 			this.lookDescription = monsterList.monsterType[type].lookDescription;
 			this.waitCounter = 0; //used when monster collides in corridor with other monster (with no other way around). Monster waits 3 turns and sets new goal
-			this.retreatEntity = null; //hostile wants to avoid and flee from. It is set in combat module, when monster is injured and has less than 25% hp
+			this.retreatEntity = null; //hostile wants to avoid and flee from. It is set in combat module, when monster is injured and has less than 10% hp
 			this.lastSeenTreatPosition = {}; //stores coordinates of last seen treat from which monster flees (they are used if treat is not visible)
 			
 			this.size = monsterList.monsterType[type].size;

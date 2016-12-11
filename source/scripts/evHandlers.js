@@ -360,7 +360,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	
 	function look(x, y, player){
 		
-		var level = player.position.level
+		var level = player.position.level,
+			screenDisplay = {x: screen.convertCoordinate(x, 'width'), y: screen.convertCoordinate(y, 'height')}; //x and y position converted to x and y screen display position
 			
 		screen.display.clear();
 		screen.drawVisibleCells(map.cells[player.position.level]);
@@ -369,10 +370,10 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			
 		if(map.cells[level][x][y].isVisible === true){
 				
-			screen.display.draw(x, y, ['_', getDisplayChar(x,y)] , getDisplayColor(x, y), 'cornflowerblue');
+			screen.display.draw(screenDisplay.x, screenDisplay.y, ['_', getDisplayChar(x,y)] , getDisplayColor(x, y), 'cornflowerblue');
 		}else{
 				
-			screen.display.draw(x, y, ['_'], 'silver', 'transparent');
+			screen.display.draw(screenDisplay.x, screenDisplay.y, ['_'], 'silver', 'transparent');
 				
 		}
 			
@@ -390,7 +391,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			
 			if(ev.which !== 27 && ev.which !== 32 && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100)){
 					
-				if(x + moveActions[ev.which].x >= 0 && y + moveActions[ev.which].y >= 0 && x + moveActions[ev.which].x <= screen.options.width - 1 && y + moveActions[ev.which].y <= screen.options.height - 1){	
+				if(x + moveActions[ev.which].x >= 0 && y + moveActions[ev.which].y >= 0 && x + moveActions[ev.which].x <= screen.options.width - 1 && y + moveActions[ev.which].y <= screen.options.height - 1){
 					
 					look(x + moveActions[ev.which].x, y + moveActions[ev.which].y, this);
 						

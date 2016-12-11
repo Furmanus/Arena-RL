@@ -30,11 +30,14 @@ define(['main'], function(main){
 		'fighter': ['strength', 'strength', 'dexterity', 'constitution']
 	};
 
-	var screenSize = {
+	//current position of upper left corner of camera
 
-		x: 40,
-		y: 40
-	};
+	var cameraPosition = {
+
+		x: undefined,
+		y: undefined
+	}
+
 	//for map building inside map and generator modules
 	var options = {
 		width: 50,
@@ -45,8 +48,8 @@ define(['main'], function(main){
 	//for display options used inside drawVisibleCells
 	var displayOptions = {
 
-        width: 35,
-        height: 35,
+        width: 36,
+        height: 36,
         fontSize: 17,
         forceSquareRatio: true
 	};
@@ -88,6 +91,24 @@ define(['main'], function(main){
 				}
 			}
 		}
+	}
+
+	/*
+	function which converts coordinate of either 'width' or 'height' (second parameter) to current x and y screen coordinates. Used inside look function inside evHandlers module, because with moving camera map coordinates are not always equal to screen coordinates. Idea is very basic - we take current upper left camera position (updated every screen draw inside drawVisibleCells function) and from given value we substract appriopiate x or y camera position.
+	 */
+	function convertCoordinate(value, type){
+
+		var result;
+
+		if(type === 'width') {
+
+            result = value - cameraPosition.x;
+        }else if(type === 'height') {
+
+            result = value - cameraPosition.y;
+        }
+
+		return result;
 	}
 	
 	function drawVisibleCells(cells){
@@ -131,9 +152,11 @@ define(['main'], function(main){
 
             startY = Math.floor(y - (displayOptions.height / 2));
         }
-        console.log(x + ' ' + y);
-		console.log(startX + ' ' + startY);
-        console.log(parseInt(startX + displayOptions.width) + ' ' + parseInt(startY + displayOptions.height));
+
+        //we give information about camera position to external object, so other function will be able to use it
+        cameraPosition.x = startX;
+        cameraPosition.y = startY;
+
 		for(var i=0; i<displayOptions.width; i++){
 			
 			for(var j=0; j<displayOptions.height; j++){
@@ -334,6 +357,8 @@ define(['main'], function(main){
 		experienceTable: experienceTable,
 		statGain: statGain,
 		displayOptions: displayOptions,
-		screenOptions: screenOptions
+		screenOptions: screenOptions,
+		convertCoordinate: convertCoordinate,
+		cameraPosition: cameraPosition
 	}
 });

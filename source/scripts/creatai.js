@@ -199,7 +199,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                    setPriority(monster, cellsOfInterest[cellsOfInterest.length - 1]);
                }
 
-               if(examinedCell.inventory.length > 0){
+               if(examinedCell.inventory.length > 0 && monster.status.berserk.value === 0){
 
                    /*
                    if examined cell inventory isn't empty and there are no entities other than examining monster, we iterate through mentioned inventory, and push all the items found. Later we will filter them by removing not interesing items
@@ -364,7 +364,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
            for(var i=0; i<examinedCell.inventory.length; i++){
 
-               if(cellsOfInterest.length > 0 && examinedCell.inventory[i] === cellsOfInterest[0].target){
+               if(cellsOfInterest.length > 0 && examinedCell.inventory[i] === cellsOfInterest[0].target && monster.status.berserk.value === 0){
 
                    return {'pick_up': i, 'no_action': false};
                }
@@ -420,50 +420,63 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                enemyDistance = screen.getDistance(monster.position.x, monster.position.y, enemyInSight[0].x, enemyInSight[0].y);
 
-               if(enemyDistance >= 4){
+               if(monster.status.berserk.value === 0) {
 
-                   if(examinedItem.type === 'armours' || examinedItem.type === 'legs' || examinedItem.type === 'helmets' || examinedItem.type === 'boots'){
+                   if (enemyDistance >= 4) {
 
-                       if(monster.equipment[examinedItem.slot].description === 'empty'){
+                       if (examinedItem.type === 'armours' || examinedItem.type === 'legs' || examinedItem.type === 'helmets' || examinedItem.type === 'boots') {
 
-                           items.push({action: 'equip', index: i, slot: examinedItem.slot, priority: 2});
-                       }else{
+                           if (monster.equipment[examinedItem.slot].description === 'empty') {
 
-                           if(examinedItem.armourBonus > monster.equipment[examinedItem.slot].armourBonus){
+                               items.push({action: 'equip', index: i, slot: examinedItem.slot, priority: 2});
+                           } else {
 
-                               items.push({action: 'unequip', index: examinedItem.slot, slot: examinedItem.slot, priority: 2})
+                               if (examinedItem.armourBonus > monster.equipment[examinedItem.slot].armourBonus) {
+
+                                   items.push({
+                                       action: 'unequip',
+                                       index: examinedItem.slot,
+                                       slot: examinedItem.slot,
+                                       priority: 2
+                                   })
+                               }
                            }
                        }
                    }
-               }
 
-               if(examinedItem.type === 'weapons'){
+                   if (examinedItem.type === 'weapons') {
 
-                   if(combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)){
+                       if (combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)) {
 
-                       if(monster.weapon.natural === true){
+                           if (monster.weapon.natural === true) {
 
-                           items.push({action: 'equip', index: i, slot: 'right hand', priority: 1});
-                       }else{
+                               items.push({action: 'equip', index: i, slot: 'right hand', priority: 1});
+                           } else {
 
-                           items.push({action: 'unequip', index: 'right hand', slot: examinedItem.slot, priority: 2});
+                               items.push({
+                                   action: 'unequip',
+                                   index: 'right hand',
+                                   slot: examinedItem.slot,
+                                   priority: 2
+                               });
+                           }
                        }
+                   } else if (examinedItem.type === 'potions' && monster.hp < (0.33 * monster.maxHp) && examinedItem.group === 'healing') {
+
+                       items.push({action: 'use', index: i, priority: 1, item: examinedItem});
                    }
-               }else if(examinedItem.type === 'potions' && monster.hp < (0.33 * monster.maxHp) && examinedItem.group === 'healing'){
 
-                   items.push({action: 'use', index: i, priority: 1, item: examinedItem});
-               }
+                   if (enemyDistance < 4) {
 
-               if(enemyDistance < 4){
+                       if (examinedItem.type === 'potions' || examinedItem.type === 'scrolls') {
 
-                   if(examinedItem.type === 'potions' || examinedItem.type === 'scrolls'){
+                           if (examinedItem.group === 'boost') {
 
-                       if(examinedItem.group === 'boost'){
+                               items.push({action: 'use', index: i, priority: 1, item: examinedItem});
+                           } else if (examinedItem.group === 'escape' && monster.hp < 0.25 * monster.maxHp) {
 
-                           items.push({action: 'use', index: i, priority: 1, item: examinedItem});
-                       }else if(examinedItem.group === 'escape' && monster.hp < 0.25 * monster.maxHp){
-
-                           items.push({action: 'use', index: i, priority: 2, item: examinedItem});
+                               items.push({action: 'use', index: i, priority: 2, item: examinedItem});
+                           }
                        }
                    }
                }

@@ -3,13 +3,31 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   //hash objects with defined properties, used in class constructor
   var weapons = {
   
-    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapons', slot: 'right hand', natural: false, damage: '1d4', critical: [19,20], dmgType: 'piercing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
+    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapons', slot: 'right hand', natural: false, damage: '1d4', critical: [18,19,20], dmgType: 'piercing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
 	
     'long sword': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'long sword', description: 'a long sword', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [19,20], dmgType: 'slashing', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']},
 	
     'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d6', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 2, modifiers: null, criticalHit: ['prone']},
 	
-	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 3, modifiers: null, criticalHit: ['stunned']}
+	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 3, modifiers: null, criticalHit: ['stunned']},
+
+    'morning star': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'morning star', description: 'a morning star', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 2, modifiers: null, criticalHit: ['stunned', 'bleeding']},
+
+    'short spear': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'short spear', description: 'a short spear', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d6', critical: [19,20], dmgType: 'piercing', criticalMultiplier: 2, modifiers: null, criticalHit: [null]},
+
+    'hand axe': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'hand axe', description: 'a hand axe', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d6', critical: [20], dmgType: 'slashing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
+
+    'short sword':  {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'short sword', description: 'a short sword', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d6', critical: [19,20], dmgType: 'slashing', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']},
+
+    'battle axe':  {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'battle axe', description: 'a battle axe', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [20], dmgType: 'slashing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
+
+    'scimitar': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'scimitar', description: 'a scimitar', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d6', critical: [18,19,20], dmgType: 'slashing', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']},
+
+    'rapier': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'rapier', description: 'a rapier', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d5', critical: [18,19,20], dmgType: 'piercing', criticalMultiplier: 2, modifiers: null, criticalHit: [null]},
+
+    'trident': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'trident', description: 'a trident', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d8', critical: [20], dmgType: 'piercing', criticalMultiplier: 2, modifiers: null, criticalHit: [null]},
+
+    'dwarven war axe': {display: ')', fgColor: 'gold', bgColor: 'transparent', name: 'dwarven war axe', description: 'a dwarven war axe', type: 'weapons', slot: 'right hand', natural: false,  damage: '1d10', critical: [20], dmgType: 'slashing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']}
   };
   
   var armours = {
@@ -29,7 +47,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
       'chain choif': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain choif', description: 'a chain choif', type: 'helmets', slot: 'head', armourBonus: 2, skillPenalty: 0, modifiers: {speed: 0}},
 
-      'plate helmet': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate helmet', description: 'a plate helmet', type: 'helmets', slot: 'head', armourBonus: 3, skillPenalty: 0, modifiers: {speed: -1}},
+      'plate helmet': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate helmet', description: 'a plate helmet', type: 'helmets', slot: 'head', armourBonus: 3, skillPenalty: 0, modifiers: {speed: -1}}
   };
 
   var legs = {
@@ -38,7 +56,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
       'chain leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain leggings', description: 'a chain leggings', type: 'legs', slot: 'legs', armourBonus: 2, skillPenalty: -1, modifiers: {speed: -2}},
 
-      'plate leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate leggings', description: 'a plate leggings', type: 'legs', slot: 'legs', armourBonus: 4, skillPenalty: -3, modifiers: {speed: -5}},
+      'plate leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate leggings', description: 'a plate leggings', type: 'legs', slot: 'legs', armourBonus: 4, skillPenalty: -3, modifiers: {speed: -5}}
   };
 
   var boots = {
@@ -47,7 +65,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
       'chain boots': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain boots', description: 'a chain boots', type: 'boots', slot: 'feet', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
 
-      'plate boots': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate boots', description: 'a plate boots', type: 'boots', slot: 'feet', armourBonus: 2, skillPenalty: -2, modifiers: {speed: -2}},
+      'plate boots': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate boots', description: 'a plate boots', type: 'boots', slot: 'feet', armourBonus: 2, skillPenalty: -2, modifiers: {speed: -2}}
   };
   
   var scrolls = {
