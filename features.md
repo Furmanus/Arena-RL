@@ -19,5 +19,4 @@ Things I'm working on right now:
 
 - complete level generation (with random monsters and items), monsters will be more difficult as player dives deeper
 - optional tile graphics
-- rework rage in monster AI, berserkering monster should focus only on threat and ignore items
 
