@@ -22,6 +22,9 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 		'lake and forest': generateLakeAndForest,
 	};
 	
+	var monster = requirejs(['monster']);
+	var monsterList = requirejs(['monsterList']);
+	
 	function createUniformLevel(level){
 		
 		var callback = function(x,y,value){
@@ -1145,7 +1148,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 
 			var specialRoomsKeys = Object.keys(specialRooms),
 				chosenLevelTheme = specialRoomsKeys.random();
-            console.log(chosenLevelType + ' ' + chosenLevelTheme);
+            
 			specialRooms[chosenLevelTheme](currentLevel, map.cells[currentLevel].levelGenerated);
 		}
 	}
