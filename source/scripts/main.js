@@ -6,7 +6,7 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
 
         //map.initCells(0);
         generator.generateRandomLevel();
-		generator.fillLevelWithMonsters(0);
+		monster.fillLevelWithMonsters(0);
         /*new items.Weapon('long sword', map.cells[0][13][10]);
         new items.Weapon('warhammer', map.cells[0][22][10]);
 

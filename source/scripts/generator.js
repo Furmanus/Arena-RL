@@ -22,9 +22,6 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 		'lake and forest': generateLakeAndForest,
 	};
 	
-	var monster = requirejs(['monster']);
-	var monsterList = requirejs(['monsterList']);
-	
 	function createUniformLevel(level){
 		
 		var callback = function(x,y,value){
@@ -1151,13 +1148,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
             
 			specialRooms[chosenLevelTheme](currentLevel, map.cells[currentLevel].levelGenerated);
 		}
-	}
-
-	function fillLevelWithMonsters(level){
-
-		
-	}
-	
+	}	
 	
 	return {
 		
@@ -1171,7 +1162,6 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 		findDiagonalPath: findDiagonalPath,
 		fillRectangle: fillRectangle,
 		surroundWithCircle: surroundWithCircle,
-		generateRandomLevel: generateRandomLevel,
-		fillLevelWithMonsters: fillLevelWithMonsters
+		generateRandomLevel: generateRandomLevel
 	}
 });
