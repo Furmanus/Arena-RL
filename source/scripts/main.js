@@ -36,6 +36,7 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
     function startTest(){
 
         map.initCells(0);
+        map.cells.maxDungeonLevel = 0;
         generator.createArenaLevel(0);
         //monster.fillLevelWithMonsters(0);
 
