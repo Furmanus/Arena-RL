@@ -4,5 +4,6 @@
 
 requirejs(['main'], function(main){
 
-   main.start();
+   //main.start();
+   main.startTest();
 });

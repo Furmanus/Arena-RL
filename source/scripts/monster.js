@@ -12,39 +12,6 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
         100: {x: -1, y: 0},
         101: {x: 0, y: 0}
     };
-	
-	function fillLevelWithMonsters(level){
-
-		var levelNumber = level, //level number from which we will choose monster
-			chosenMonster,
-			chosenLevel,
-			levelArray = []; //array of numbers representing levels. We will choose random level from array, and random monster from array
-			
-		for(var i=0; i<3; i++){
-			
-			levelArray.push(levelNumber);
-		}
-		
-		if(level > 0){
-			
-			levelNumber--;
-			levelArray.push(levelNumber);
-			levelArray.push(levelNumber);
-		}
-		
-		if(level > 1){
-			
-			levelNumber--;
-			levelArray.push(levelNumber);
-		}
-		
-		for(var i=0; i<ROT.RNG.getUniformInt(6,8); i++){
-			
-			chosenLevel = levelArray.random();
-			chosenMonster = monsterList.monsterList[chosenLevel].random().key;
-			new Monster(level, chosenMonster);
-		}
-	}
 		
 	class Monster{
 		
@@ -595,6 +562,39 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
             }
         }
 	}
+
+    function fillLevelWithMonsters(level){
+
+        var levelNumber = level, //level number from which we will choose monster
+            chosenMonster,
+            chosenLevel,
+            levelArray = []; //array of numbers representing levels. We will choose random level from array, and random monster from array
+
+        for(var i=0; i<3; i++){
+
+            levelArray.push(levelNumber);
+        }
+
+        if(level > 0){
+
+            levelNumber--;
+            levelArray.push(levelNumber);
+            levelArray.push(levelNumber);
+        }
+
+        if(level > 1){
+
+            levelNumber--;
+            levelArray.push(levelNumber);
+        }
+
+        for(var i=0; i<ROT.RNG.getUniformInt(6,8); i++){
+
+            chosenLevel = levelArray.random();
+            chosenMonster = monsterList.monsterList[chosenLevel].random().key;
+            new Monster(level, chosenMonster);
+        }
+    }
 	
 	return{
 		
