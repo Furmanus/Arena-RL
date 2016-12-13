@@ -1150,9 +1150,9 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 		}
 	}
 
-	function fillLevelWithMonsters(levelNumber){
+	function fillLevelWithMonsters(level){
 
-
+		
 	}
 	
 	
@@ -1168,6 +1168,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 		findDiagonalPath: findDiagonalPath,
 		fillRectangle: fillRectangle,
 		surroundWithCircle: surroundWithCircle,
-		generateRandomLevel: generateRandomLevel
+		generateRandomLevel: generateRandomLevel,
+		fillLevelWithMonsters: fillLevelWithMonsters
 	}
 });

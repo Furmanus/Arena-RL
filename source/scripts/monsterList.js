@@ -3,10 +3,10 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 	//monster list by their danger level (numbers equals to level depth on which monster can appear
 	var monsterList = {
 
-		1: [{key: 'rat'}, {key: 'raven'}, {key: 'bettle'}, {key: 'giant centipide'}],
-		2: [{key: 'kobold'}, {key: 'skeleton'}, {key: 'ghoul'}, {key: 'gnoll'}, {key: 'goblin'}, {key: 'heyna'}, {key: 'horse'}, {key: 'hobgoblin'}],
-		3: [{key: 'snake'}, {key: 'wolf'}, {key: 'bugbear'}, {key: 'giant lizard'}, {key: 'lion'}, {key: 'centaur'}, {key: 'ogre'}],
-		4: [{key: 'minotaur'}, {key: 'cyclops'}, {key: 'cave bear'}]
+		0: [{key: 'rat'}, {key: 'raven'}, {key: 'beetle'}, {key: 'giant centipide'}],
+		1: [{key: 'kobold'}, {key: 'skeleton'}, {key: 'ghoul'}, {key: 'gnoll'}, {key: 'goblin'}, {key: 'heyna'}, {key: 'horse'}, {key: 'hobgoblin'}],
+		2: [{key: 'snake'}, {key: 'wolf'}, {key: 'bugbear'}, {key: 'giant lizard'}, {key: 'lion'}, {key: 'centaur'}, {key: 'ogre'}],
+		3: [{key: 'minotaur'}, {key: 'cyclops'}, {key: 'cave bear'}]
 	};
 	
 	var monsterType = {

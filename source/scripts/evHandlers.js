@@ -130,6 +130,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			
 			//generujemy nowy poziom, jeżeli gracz znajduje się na najniższym obecnie wygenerowanym poziomie
 			generator.generateRandomLevel();
+			generator.fillLevelWithMonsters(map.cells.maxDungeonLevel);
 		}
 			
 		//aktualizujemy współrzędne gracza na nowy poziom i współrzędne schodów w górę
