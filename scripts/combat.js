@@ -47,9 +47,14 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
      		
             screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical miss', 0), attackerPosition);
             criticalMissEffect[Object.keys(criticalMissEffect).random()](attacker);
-        } else if (attackerScore === 20) {
+        } else if (isHitCritical(attackerScore, attacker.weapon) === true) {
 
-            var damageDealt = calc(attacker.weapon.damage) + calc(attacker.weapon.damage);
+            var damageDealt = 0;
+
+            for(var i=0; i<attacker.weapon.criticalMultiplier; i++){
+
+                damageDealt += calc(attacker.weapon.damage);
+            }
 
             if(damageDealt < 1){
 
@@ -276,6 +281,18 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
             return (x*y)+z;
         }
 	}
+
+	//function to verify whether hit is critical
+	function isHitCritical(roll, weapon){
+
+        for(var i=0; i<weapon.critical.length; i++){
+
+            if(roll === weapon.critical[i]){
+
+                return true;
+            }
+        }
+    }
 
 	return{
 		

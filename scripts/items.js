@@ -322,6 +322,11 @@ define(['screen', 'map', 'use'], function(screen, map, use){
             }
         }
     }
+
+    function fillLevelWithItems(level){
+
+        //todo
+    }
   
   return {
     
@@ -333,7 +338,8 @@ define(['screen', 'map', 'use'], function(screen, map, use){
     Legs: Legs,
     Boots: Boots,
     Misc: Misc,
-    Corpse: Corpse
+    Corpse: Corpse,
+    fillLevelWithItems: fillLevelWithItems
   }
 });
 

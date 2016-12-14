@@ -160,15 +160,21 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 		
 		move(x, y, random){
 			
-			var tmpX = this.position.x + x,
-				tmpY = this.position.y + y;
+			var tmpX,
+				tmpY,
+				randomX = [-1, 0, 1].random(),
+				randomY = [-1, 0, 1].random();
 
 			if(random === true){
 
-				tmpX = this.position.x + [-1, 0, 1].random();
-				tmpY = this.position.y + [-1, 0, 1].random();
+				tmpX = this.position.x + randomX;
+				tmpY = this.position.y + randomY;
+			}else{
+
+                tmpX = this.position.x + x;
+				tmpY = this.position.y + y;
 			}
-			
+
 			if(map.cells[this.position.level][tmpX][tmpY].entity != null && map.cells[this.position.level][tmpX][tmpY].entity != this){
 				
 				combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity);
