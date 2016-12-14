@@ -113,7 +113,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
       'drow': {display: '%', fgColor: 'silver', bgColor: 'transparent', name: 'drow corpse', description: 'a drow corpse', type: 'corpse'},
       'ghoul': {display: '%', fgColor: 'silver', bgColor: 'transparent', name: 'ghoul corpse', description: 'a ghoul corpse', type: 'corpse'},
       'horse': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'horse corpse', description: 'a horse corpse', type: 'corpse'},
-      'beetle': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'giant beetle corpse', description: 'a giant beetle corpse', type: 'corpse'},
+      'giant beetle': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'giant beetle corpse', description: 'a giant beetle corpse', type: 'corpse'},
       'giant centipide': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'giant centipide corpse', description: 'a giant centipide corpse', type: 'corpse'},
       'skeleton': {display: '%', fgColor: 'white', bgColor: 'transparent', name: 'pile of bones', description: 'a pile of bones', type: 'bones'}
   }

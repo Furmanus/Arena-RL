@@ -16,7 +16,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 	class Monster{
 		
 		constructor(onLevel, type){
-			
+
 			//object with array determining whether certain creature (or whole species/family) is hostile
 			this.hostileList = {
 				
