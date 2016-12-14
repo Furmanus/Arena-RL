@@ -9,7 +9,7 @@ Things implemented so far:
 - inventory management and items
 - monsters infighting
 - animal monsters with basic AI
-- humanoid monsters with a little bit more complex AI (they are able to pick up, equip and use items, they will flee when hurt)
+- humanoid monsters with a little bit more complex AI (they are able to pick up, equip and use items, they flee when badly hurt)
 - combat system based on D20, with special effects for critical hits and critical misses
 - special critical hits (bleeding, falling on ground, stunning your opponent)
 - experience and progression system
