@@ -17,7 +17,7 @@ Things implemented so far:
 
 Things I'm working on right now:
 
-- complete level generation (with random monsters and items), monsters will be more difficult as player dives deeper
+- complete level generation (with random items)
 - optional tile graphics
 - humanoid monsters should be generated with some basic equipment
 
