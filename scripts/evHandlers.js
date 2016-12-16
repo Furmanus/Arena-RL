@@ -415,6 +415,7 @@ define(['screen', 'map', 'generator', 'items'], function(screen, map, generator,
 					this.handleEvent = function(ev){
 						
 						screen.display.clear();
+                        screen.display.setOptions(screen.displayOptions);
 						screen.drawVisibleCells(map.cells[this.position.level]);
 						this.handleEvent = defaultEventHandler;
 						screen.lookCount = 0;
