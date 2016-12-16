@@ -7,6 +7,7 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         //map.initCells(0);
         generator.generateRandomLevel();
 		monster.fillLevelWithMonsters(0);
+		items.fillLevelWithItems(0);
         /*new items.Weapon('long sword', map.cells[0][13][10]);
         new items.Weapon('warhammer', map.cells[0][22][10]);
 
@@ -39,6 +40,7 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         map.cells.maxDungeonLevel = 0;
         generator.createArenaLevel(0);
         //monster.fillLevelWithMonsters(0);
+        items.fillLevelWithItems(0);
 
         new items.Weapon('warhammer', map.cells[0][22][10]);
 

@@ -117,7 +117,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
       'giant centipide': {display: '%', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'giant centipide corpse', description: 'a giant centipide corpse', type: 'corpse'},
       'skeleton': {display: '%', fgColor: 'white', bgColor: 'transparent', name: 'pile of bones', description: 'a pile of bones', type: 'bones'}
   }
-  
+
   class Weapon{
     
     constructor(type, object){
@@ -217,7 +217,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
       }
   }
 
-    class Helmet{
+  class Helmet{
 
         constructor(type, object){
 
@@ -237,7 +237,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
         }
     }
 
-    class Legs{
+  class Legs{
 
         constructor(type, object){
 
@@ -257,7 +257,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
         }
     }
 
-    class Boots{
+  class Boots{
 
         constructor(type, object){
 
@@ -277,7 +277,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
         }
     }
 
-    class Corpse{
+  class Corpse{
 
         constructor(type, object){
 
@@ -323,10 +323,68 @@ define(['screen', 'map', 'use'], function(screen, map, use){
         }
     }
 
-    function fillLevelWithItems(level){
+  function fillLevelWithItems(level){
 
-        //todo
-    }
+      var probabilityTable = {
+          weapon: [2, 2, 2, 2, 3, 3],
+          armour: [2, 2, 2, 3, 3, 4, 1, 1],
+          helmet: [1, 1, 1, 1, 2, 2, 3],
+          legs: [1,1,1,2,2,3],
+          boots: [1,1,1,2],
+          scrolls: [3,3,4,3,],
+          potions: [5,5,5,5,4,4,3]
+      };
+
+      var randomCell,
+          coordinates = Object.keys(map.cells[level].floorTiles);
+
+      for(var n in probabilityTable){
+
+          for(var i=0; i<probabilityTable[n].random(); i++){
+
+              placeItem(n);
+          }
+      }
+
+      function placeItem(n){
+
+          var attemptCount = 0;
+
+          do{
+
+              coordinates = getCoordinates(Object.keys(map.cells[level].floorTiles).random());
+              randomCell = map.cells[level][coordinates.x][coordinates.y];
+
+              if(randomCell.type.type === 'floor'){
+
+                  new itemList[n].construct(itemList[n].items.random(), randomCell);
+                  break;
+              }
+              attemptCount++;
+          }
+          while(attemptCount < 10);
+      }
+  }
+
+  function getCoordinates(key){
+
+        var comaIndex = key.search(','),
+            x = parseInt(key.substring(0, comaIndex)),
+            y = parseInt(key.substring(comaIndex + 1));
+
+        return {x: x, y: y};
+  }
+
+  var itemList = {
+
+        'weapon': {'construct': Weapon, 'items': Object.keys(weapons)},
+        'armour': {'construct': Armour, 'items': Object.keys(armours)},
+        'helmet': {'construct': Helmet, 'items': Object.keys(headwear)},
+        'legs': {'construct': Legs, 'items': Object.keys(legs)},
+        'boots': {'construct': Boots, 'items': Object.keys(boots)},
+        'scrolls': {'construct': Scroll, 'items': Object.keys(scrolls)},
+        'potions': {'construct': Potion, 'items': Object.keys(potions)}
+  };
   
   return {
     
