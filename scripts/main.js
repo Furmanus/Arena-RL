@@ -49,7 +49,8 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         //new items.Weapon('dwarven war axe', map.cells[0][5][5]);
         //new items.Scroll('armour', map.cells[0][16][15]);
         //new items.Potion('rage', map.cells[0][44][15]);
-        new monster.Monster(0, 'kobold');
+        new monster.Monster(0, 'minotaur');
+        new monster.Monster(0, 'cyclops');
         exports.player = new player.Player();
 
         new items.Misc('torch', exports.player);
