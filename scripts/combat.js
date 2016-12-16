@@ -43,6 +43,11 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
             defenderPosition = map.cells[defender.position.level][defender.position.x][defender.position.y],
             attackerPosition = map.cells[attacker.position.level][attacker.position.x][attacker.position.y];
 
+		if(defender.checkIfHostile(attacker) !== true){
+
+		    defender.hostileList.entity.push(attacker);
+        }
+
         if (attackerScore === 1) {
      		
             screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical miss', 0), attackerPosition);
