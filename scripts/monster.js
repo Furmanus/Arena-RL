@@ -572,6 +572,11 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
             chosenLevel,
             levelArray = []; //array of numbers representing levels. We will choose random level from array, and random monster from array
 
+		if(levelNumber > 3){
+
+			levelNumber = 3;
+		}
+
         for(var i=0; i<3; i++){
 
             levelArray.push(levelNumber);

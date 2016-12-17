@@ -109,6 +109,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 			screen.drawVisibleCells(map.cells[this.position.level]);
 			
 			this.updateScreenStats();
+            document.getElementById('domDungeonLevel').innerHTML = this.position.level;
 		}
 		
 		//getSpeed() - zwraca prędkość na potrzeby schedulera
