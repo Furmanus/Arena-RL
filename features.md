@@ -17,7 +17,6 @@ Things implemented so far:
 
 Things I'm working on right now:
 
-- complete level generation (with random items)
 - optional tile graphics
 - humanoid monsters should be generated with some basic equipment
 
