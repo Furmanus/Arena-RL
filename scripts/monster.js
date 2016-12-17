@@ -118,9 +118,11 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				start = startPosition.bind(this);
 			
 			start();
+
+			this.terrainModifiers();
 			
 			//this.position.level = 0;
-			//this.position.x = 7;
+			//this.position.x = 5;
 			//this.position.y = 5;
 			
 			function startPosition(){

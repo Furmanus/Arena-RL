@@ -42,6 +42,8 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         //monster.fillLevelWithMonsters(0);
         items.fillLevelWithItems(0);
 
+        map.setTerrain(0,5,5,'sand');
+
         new items.Weapon('warhammer', map.cells[0][22][10]);
 
         //new items.Armour('chain mail', map.cells[0][16][13]);
