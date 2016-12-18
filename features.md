@@ -20,6 +20,8 @@ Things I'm working on right now (before 0.1):
 - humanoid monsters should be generated with some basic equipment
 - chasms working correctly
 - set intro and start screen
+- rework of monster AI (if hostile gets out of monsters FOV, it should follow its last known position)
+- fix bug with healing potion
 
 Things to do later (after 0.1)
 
