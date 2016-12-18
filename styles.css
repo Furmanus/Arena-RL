@@ -13,7 +13,6 @@ body {
 	padding-left: 0px;
 	padding-right: 30px;
 	padding-top: 0px;
-	border: 1px solid silver;
 	font-family: Monospace;
 	font-size: 1.2em;
 	height: 95vh;
@@ -21,8 +20,9 @@ body {
 	overflow-x: hidden;
 }
 #info {
+	position: absolute;
+	bottom: 2vh;
 	font-family: Monospace;
-	margin-bottom: 5vh;
 	color: silver !important;
 	font-size: 1em !important;
 }
@@ -30,7 +30,6 @@ body {
 	margin-right: 0px;
 	margin-top: auto;
 	margin-bottom: auto;
-	border: 1px solid silver;
 	padding-left: 2em;
 	font-family: Monospace;
 	height: 95vh;
@@ -49,4 +48,7 @@ li {
 ul {
 	margin-top: 0px;
 	padding-left: 0px;
+}
+.status span {
+	color: darkred !important;
 }
