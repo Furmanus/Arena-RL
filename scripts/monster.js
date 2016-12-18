@@ -138,7 +138,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 					start();
 				}
 				*/
-				if(map.cells[level][x][y].type.type != 'floor' && map.cells[level][x][y].type.type != 'grass' && map.cells[level][x][y].type.type != 'dead grass' && map.cells[level][x][y].type.type != 'sand'){
+				if(map.cells[level][x][y].type.type != 'floor' && map.cells[level][x][y].type.type != 'grass' && map.cells[level][x][y].type.type != 'dead grass'){
 					start();
 				}
 				
@@ -164,8 +164,19 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				tmpY = this.position.y + y;
 			
 			if(map.cells[this.position.level][tmpX][tmpY].type.blockMovement === true){
-				
-				return 'wall';
+
+				if(map.cells[this.position.level][tmpX][tmpY].type.type === 'closed doors'){
+
+					map.setTerrain(this.position.level, tmpX, tmpY, 'openDoors');
+
+					if(map.cells[this.position.level][this.position.x][this.position.y].isVisible === true && map.cells[this.position.level][tmpX][tmpY].isVisible === true){
+
+						screen.placeMessage(screen.capitalizeString(this.type.messageDisplay) + ' open doors');
+					}
+				}else {
+
+                    return 'wall';
+                }
 			}else if(map.cells[this.position.level][tmpX][tmpY].entity !== null){
 
 				combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity);
@@ -572,9 +583,12 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
             chosenLevel,
             levelArray = []; //array of numbers representing levels. We will choose random level from array, and random monster from array
 
-		if(levelNumber > 3){
+		if(levelNumber > 6){
 
 			levelNumber = 3;
+		}else{
+
+			levelNumber = (levelNumber % 2 === 0) ? levelNumber / 2 : (levelNumber - 1) / 2;
 		}
 
         for(var i=0; i<3; i++){
@@ -582,14 +596,14 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
             levelArray.push(levelNumber);
         }
 
-        if(level > 0){
+        if(levelNumber > 0){
 
             levelNumber--;
             levelArray.push(levelNumber);
             levelArray.push(levelNumber);
         }
 
-        if(level > 1){
+        if(levelNumber > 1){
 
             levelNumber--;
             levelArray.push(levelNumber);

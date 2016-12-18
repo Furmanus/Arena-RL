@@ -393,14 +393,22 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                if(examinedItem.type === 'armours' || examinedItem.type === 'legs' || examinedItem.type === 'helmets' || examinedItem.type === 'boots'){
 
-                   if(monster.equipment[examinedItem.slot].description === 'empty'){
+                   if(monster.equipment[examinedItem.slot]) {
 
-                       items.push({action: 'equip', index: i, slot: examinedItem.slot, priority: 2});
-                   }else{
+                       if (monster.equipment[examinedItem.slot].description === 'empty') {
 
-                       if(examinedItem.armourBonus > monster.equipment[examinedItem.slot].armourBonus){
+                           items.push({action: 'equip', index: i, slot: examinedItem.slot, priority: 2});
+                       } else {
 
-                           items.push({action: 'unequip', index: examinedItem.slot, slot: examinedItem.slot, priority: 2});
+                           if (examinedItem.armourBonus > monster.equipment[examinedItem.slot].armourBonus) {
+
+                               items.push({
+                                   action: 'unequip',
+                                   index: examinedItem.slot,
+                                   slot: examinedItem.slot,
+                                   priority: 2
+                               });
+                           }
                        }
                    }
                }else if(examinedItem.type === 'weapons'){
@@ -424,21 +432,24 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                    if (enemyDistance >= 4) {
 
-                       if (examinedItem.type === 'armours' || examinedItem.type === 'legs' || examinedItem.type === 'helmets' || examinedItem.type === 'boots') {
+                       if(monster.equipment[examinedItem.slot]) {
 
-                           if (monster.equipment[examinedItem.slot].description === 'empty') {
+                           if (examinedItem.type === 'armours' || examinedItem.type === 'legs' || examinedItem.type === 'helmets' || examinedItem.type === 'boots') {
 
-                               items.push({action: 'equip', index: i, slot: examinedItem.slot, priority: 2});
-                           } else {
+                               if (monster.equipment[examinedItem.slot].description === 'empty') {
 
-                               if (examinedItem.armourBonus > monster.equipment[examinedItem.slot].armourBonus) {
+                                   items.push({action: 'equip', index: i, slot: examinedItem.slot, priority: 2});
+                               } else {
 
-                                   items.push({
-                                       action: 'unequip',
-                                       index: examinedItem.slot,
-                                       slot: examinedItem.slot,
-                                       priority: 2
-                                   })
+                                   if (examinedItem.armourBonus > monster.equipment[examinedItem.slot].armourBonus) {
+
+                                       items.push({
+                                           action: 'unequip',
+                                           index: examinedItem.slot,
+                                           slot: examinedItem.slot,
+                                           priority: 2
+                                       })
+                                   }
                                }
                            }
                        }

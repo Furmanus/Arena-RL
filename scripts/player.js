@@ -56,6 +56,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 			this.experience = 0;
 			this.experienceLevel = 1;
 			this.class = 'fighter';
+			this.name = 'Furman';
             this.maxHp = this.hp;
 			this.lookDescription = 'anonymous brave adventurer';
 			this.type = {messageDisplay: 'you', type: 'player', species: 'human', family: 'player', name: 'you'};
@@ -138,6 +139,8 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
                 this.doModifiers();
                 this.applyStatus();
 			}
+
+			this.updateScreenStats();
 		}
 		
 		//handleEvent() - domyślna metoda przypisana metodzie addEventListener('keydown', this, true)
@@ -153,6 +156,26 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 			document.getElementById('domSpeed').innerHTML = this.stats.speed;
             document.getElementById('domHp').innerHTML = this.hp;
             document.getElementById('domMaxHp').innerHTML = this.maxHp;
+            document.getElementById('domStrength').innerHTML = this.stats.strength;
+            document.getElementById('domDexterity').innerHTML = this.stats.dexterity;
+            document.getElementById('domConstitution').innerHTML = this.stats.constitution;
+            document.getElementById('domIntelligence').innerHTML = this.stats.intelligence;
+            document.getElementById('domWisdom').innerHTML = this.stats.wisdom;
+            document.getElementById('domCharisma').innerHTML = this.stats.charisma;
+            document.getElementById('domPlayerName').innerHTML = this.name;
+            document.getElementById('domPlayerLevel').innerHTML = this.experienceLevel + ' ';
+            document.getElementById('domPlayerClass').innerHTML = this.class;
+
+			for(var n in this.status){
+
+				if(this.status[n].value === 1){
+
+					document.getElementById(n).innerHTML = n;
+				}else{
+
+					document.getElementById(n).innerHTML = ' ';
+				}
+			}
 		}
 		
 		/*
@@ -225,6 +248,11 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 						}else if(map.cells[this.position.level][this.position.x][this.position.y].inventory.length > 1){
 							
 							screen.placeMessage('Several items are lying here.');
+						}
+
+						if(this.status.prone.value === 1){
+
+							screen.placeMessage('You crawl.');
 						}
 				
 						this.doFov(this);
