@@ -15,8 +15,13 @@ Things implemented so far:
 - experience and progression system
 - level bigger than screen, camera following player
 
-Things I'm working on right now:
+Things I'm working on right now (before 0.1):
+
+- humanoid monsters should be generated with some basic equipment
+- chasms working correctly
+- set intro and start screen
+
+Things to do later (after 0.1)
 
 - optional tile graphics
-- humanoid monsters should be generated with some basic equipment
 
