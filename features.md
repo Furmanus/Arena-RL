@@ -17,12 +17,13 @@ Things implemented so far:
 
 Things I'm working on right now (before 0.1):
 
-- chasms working correctly
-- rework of monster AI (if hostile gets out of monsters FOV, monster should go to its last known position)
-- bug with stun status (evHandlers is undefined status.js 172:13, most likely circular dependency somewhere)
+- bug with display right at start (doesn't always center on player)
 
 Things to do later (after 0.1)
 
 - optional tile graphics
 - humanoid monsters should be generated with some basic equipment
+- chasms
+- rework of monster AI (if hostile gets out of monsters FOV, monster should go to its last known position)
+- rework of monster AI (monsters neutral to each other seems to block themself in corridors, instead of picking new target after certain number of turns passed)
 
