@@ -19,7 +19,6 @@ Things I'm working on right now (before 0.1):
 
 - chasms working correctly
 - rework of monster AI (if hostile gets out of monsters FOV, monster should go to its last known position)
-- fix bug with healing potion
 
 Things to do later (after 0.1)
 
