@@ -350,7 +350,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
             hostileList: {species: ['human', 'minotaur'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d8+5', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d8+5', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: ['stunned']}
         },
 
         'centaur': {

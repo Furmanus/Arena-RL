@@ -1,5 +1,11 @@
 define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'messages'], function(screen, map, noise, light, evHandlers, combat, status, messages){
-	
+
+	var playerOptions = {
+
+		name: undefined,
+		class: undefined
+	};
+
 	class Player{
 		
 		constructor(){
@@ -44,19 +50,19 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 				charisma: 15,
 				
 				speed: 30,
-				perception: 60,
+				perception: 5,
 				
 				baseAttackBonus: 1,
-				defense: 30
+				defense: 10
 			};
 			
 			this.HD = '1d8';
-			this.hp = 8 + Math.floor(this.stats.constitution / 2 - 5) + 50;
+			this.hp = 8 + Math.floor(this.stats.constitution / 2 - 5) + 8;
 			this.xp = 0;
 			this.experience = 0;
 			this.experienceLevel = 1;
-			this.class = 'fighter';
-			this.name = 'Furman';
+			this.class = playerOptions.class;
+			this.name = playerOptions.name;
             this.maxHp = this.hp;
 			this.lookDescription = 'anonymous brave adventurer';
 			this.type = {messageDisplay: 'you', type: 'player', species: 'human', family: 'player', name: 'you'};
@@ -521,6 +527,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 	
 	return{
 		
-		Player: Player
+		Player: Player,
+		playerOptions: playerOptions
 	}
 });

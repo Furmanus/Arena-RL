@@ -69,9 +69,62 @@ define(['screen'], function(screen){
 				
 				if(entity.type.type == 'player'){
 					
-					screen.placeMessage('You are losing health!');
+					screen.placeMessage('You are suffocating!');
+					entity.receiveDamage(ROT.RNG.getUniformInt(1,3) * entity.experienceLevel);
 				}
 			}
+		},
+
+		chasmEffect: function(entity, x, y){
+
+            screen.display.clear();
+            cells[entity.position.level][entity.position.x][entity.position.y].entity = null;
+
+            if(entity.type.type === 'player') {
+
+                cells[entity.position.level].time.engine.lock();
+            }
+            cells[entity.position.level].time.scheduler.remove(entity);
+
+            if(entity.position.level == cells.maxDungeonLevel){
+
+                var monster = require('monster');
+                var generator = require('generator');
+                var items = require('items');
+                //generujemy nowy poziom, jeżeli gracz znajduje się na najniższym obecnie wygenerowanym poziomie
+                generator.generateRandomLevel();
+                monster.fillLevelWithMonsters(cells.maxDungeonLevel);
+                items.fillLevelWithItems(cells.maxDungeonLevel);
+            }
+
+            //aktualizujemy współrzędne gracza na nowy poziom i współrzędne schodów w górę
+            entity.position.level++;
+            entity.position.x = cells[entity.position.level].stairsUp.x;
+            entity.position.y = cells[entity.position.level].stairsUp.y;
+
+            cells[entity.position.level][entity.position.x][entity.position.y].entity = player;
+
+            entity.doFov(entity);
+
+            if(entity.type.type === 'player') {
+
+                screen.drawVisibleCells(cells[entity.position.level]);
+            }
+
+            //dodajemy gracza do silnika czasu na nowym poziomie i uruchamiamy silnik
+            cells[entity.position.level].time.scheduler.add(entity, true);
+
+            if(entity.type.type === 'player') {
+
+                cells[entity.position.level].time.engine.start();
+            }
+
+            screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' fall' : ' falls') + ' down into chasm!');
+
+            if(entity.type.type === 'player') {
+
+                document.getElementById('domDungeonLevel').innerHTML = player.position.level;
+            }
 		}
 	};
 	
@@ -102,7 +155,7 @@ define(['screen'], function(screen){
 		
 		'sand': {display: ['.'], fgColor: 'darkgoldenrod', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'sand', key: 'sand', name: 'a sand', walkMessage: 'You walk through sand. Your movements are a little slowed.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: {speed: -5}},
 		
-		'chasm': {display: ['#'], fgColor: 'rgb(50,50,50)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'chasm', key: 'chasm', name: 'a chasm', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
+		'chasm': {display: ['#'], fgColor: 'rgb(50,50,50)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'chasm', key: 'chasm', name: 'a chasm', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.chasmEffect, modifiers: null},
 		
 		'woodenBridge': {display: ['#'], fgColor: 'darkgoldenrod', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: true, type: 'wooden bridge', key: 'woodenBridge', name: 'a wooden bridge', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		

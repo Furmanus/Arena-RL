@@ -2,7 +2,7 @@
 moduł funkcji odpowiedzialnych za zmiany na ekranie(wyświetlanie ekwipunku, komenda "look", itp.)
 */
 
-define(['screen', 'map', 'generator', 'items'], function(screen, map, generator, items){
+define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 	/*
 	obiekt odpowiedzialny za kierunki poruszania się postaci. Klucze to keycodesy przycisków na klawiaturze numerycznej
@@ -131,6 +131,7 @@ define(['screen', 'map', 'generator', 'items'], function(screen, map, generator,
 		if(player.position.level == map.cells.maxDungeonLevel){
 
 			var monster = require('monster');
+			var items = require('items');
 			//generujemy nowy poziom, jeżeli gracz znajduje się na najniższym obecnie wygenerowanym poziomie
 			generator.generateRandomLevel();
 			monster.fillLevelWithMonsters(map.cells.maxDungeonLevel);

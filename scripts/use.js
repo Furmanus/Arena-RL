@@ -113,23 +113,32 @@ define(['screen', 'map', 'combat'], function(screen, map, combat){
 
    function healingPotion(item, entity){
 
-	   entity.hp += combat.calc('1d8');
+	   if(entity.hp === entity.maxHp){
 
-	   if(entity.hp >=  entity.maxHp){
-
-		   entity.hp = entity.maxHp;
-
-		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' drink ' : ' drinks ') + item.description + '. ' + screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel better.' : ' looks better.');
+           useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' drink ' : ' drinks ') + item.description + '. Nothing seems to happen.';
 	   }else {
 
-		   useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' drink ' : ' drinks ') + item.description + '. Nothing seems to happen.';
-	   }
+           entity.hp += combat.calc('1d8');
+
+           if (entity.hp >= entity.maxHp) {
+
+               entity.hp = entity.maxHp;
+
+               useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' drink ' : ' drinks ') + item.description + '. ' + screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel better.' : ' looks better.');
+           } else {
+
+               useText = screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' drink ' : ' drinks ') + item.description + '. ' + screen.capitalizeString(screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' feel better.' : ' looks better.');
+           }
+       }
 
 	   screen.placeVisibleMessage(useText, map.cells[entity.position.level][entity.position.x][entity.position.y]);
 
 	   if(entity.type.type !== 'player'){
 
 		   entity.inventory.splice(entity.inventory.indexOf(item), 1);
+	   }else{
+
+		   entity.updateScreenStats();
 	   }
    }
 
