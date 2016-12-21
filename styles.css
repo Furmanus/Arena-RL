@@ -1,6 +1,6 @@
 body {
 	background: black;
-	display: flex;
+	/*display: flex;*/
 	color: silver;
 }
 #screen {
@@ -51,4 +51,19 @@ ul {
 }
 .status span {
 	color: darkred !important;
+}
+
+#title{
+	color: darkgoldenrod;
+	margin: auto;
+	font-size: 2em;
+}
+select, label, option{
+	margin: 5px;
+}
+input {
+	margin-top: 5px;
+}
+#nameWarning{
+	color: red;
 }
