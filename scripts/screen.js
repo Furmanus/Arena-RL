@@ -1,5 +1,7 @@
 define(['main'], function(main){
 
+	var displayMode = 'ASCII'; //can be ASCII(avaible), tiles(not yet) or unicode tiles(not yet). Set in main module, setStartScreen function
+
 	var experienceTable = {
 
 		1: {required: 0},
@@ -54,6 +56,7 @@ define(['main'], function(main){
         forceSquareRatio: true
 	};
 
+	//for display options used inside evHandlers module for non game screen like inventory, equip, etc.
 	var screenOptions = {
 
         width: 40,
@@ -70,10 +73,13 @@ define(['main'], function(main){
 	
 	var currentMessage = null,
 		currentMessageCount = 1;
-	
+
+
+
 	var display = new ROT.Display(displayOptions);
-	document.getElementById('screen').appendChild(display.getContainer());
-	display.getContainer().style.border = '1px solid silver';
+	//document.getElementById('screen').appendChild(display.getContainer());
+	//display.getContainer().style.border = '1px solid silver';
+
 	
 	function drawCells(cells){
 		
@@ -359,6 +365,7 @@ define(['main'], function(main){
 		displayOptions: displayOptions,
 		screenOptions: screenOptions,
 		convertCoordinate: convertCoordinate,
-		cameraPosition: cameraPosition
+		cameraPosition: cameraPosition,
+		displayMode: displayMode
 	}
 });

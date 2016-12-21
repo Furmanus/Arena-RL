@@ -17,7 +17,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 	var specialRooms = {
 			
 		'forest': createForestRoom,
-		'chasm': createChasmRoom,
+		//'chasm': createChasmRoom,
 		'lake': generateLake,
 		'lake and forest': generateLakeAndForest,
 	};
