@@ -19,7 +19,7 @@ Things I'm working on right now (before 0.1):
 
 - chasms working correctly
 - rework of monster AI (if hostile gets out of monsters FOV, monster should go to its last known position)
-- bug with stun status (evHandlers is undefined status.js 172:13)
+- bug with stun status (evHandlers is undefined status.js 172:13, most likely circular dependency somewhere)
 
 Things to do later (after 0.1)
 
