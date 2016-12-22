@@ -17,7 +17,7 @@ Things implemented so far:
 
 Things I'm working on right now (before 0.1):
 
-- bug with display right at start (doesn't always center on player)
+- all done
 
 Things to do later (after 0.1)
 
