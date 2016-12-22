@@ -13,6 +13,8 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         exports.player = new player.Player();
 
         new items.Weapon('dagger', exports.player);
+        new items.Armour('leather armour', exports.player);
+        new items.Potion('healing', exports.player);
 
         map.cells[0].time.engine.start();
         screen.setWindows();
