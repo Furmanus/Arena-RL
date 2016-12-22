@@ -16,10 +16,13 @@ requirejs(['main', 'player', 'screen'], function(main, player, screen){
         clearBody();
 
         var xhr= new XMLHttpRequest();
-        xhr.open('GET', 'startScreen.html', false);
+        xhr.open('GET', 'https://github.com/Furmanus/Arena-RL/blob/master/startScreen.html', false);
         xhr.onreadystatechange= function() {
 
-            document.body.innerHTML= this.responseText;
+            //if(xhr.readyState === 4 && xhr.status === 200) {
+
+                document.body.innerHTML = this.responseText;
+            //}
         };
         xhr.send();
 
@@ -42,10 +45,13 @@ requirejs(['main', 'player', 'screen'], function(main, player, screen){
                 clearBody();
 
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', 'gameScreen.html', false);
+                xhr.open('GET', 'https://github.com/Furmanus/Arena-RL/blob/master/gameScreen.html', false);
                 xhr.onreadystatechange = function () {
 
-                    document.body.innerHTML = this.responseText;
+                    //if(xhr.readyState === 4 && xhr.status === 200) {
+
+                        document.body.innerHTML = this.responseText;
+                    //}
                 };
                 xhr.send();
 
