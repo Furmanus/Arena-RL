@@ -8,25 +8,18 @@
 		<link rel="stylesheet" href="styles.css">
 	</head>
 	<body>
-		<div id="player">
-			<p style="color: silver"><span id="domPlayerName"></span> level <span id="domPlayerLevel"></span><span id="domPlayerClass"></span></p>
-			<p>Hp: <span id="domHp"></span>/<span id="domMaxHp"></span></p>
-			<p>Strength: <span id="domStrength"></span></p>
-			<p>Dexterity: <span id="domDexterity"></span></p>
-			<p>Constitution: <span id="domConstitution"></span></p>
-			<p>Intelligence: <span id="domIntelligence"></span></p>
-			<p>Wisdom: <span id="domWisdom"></span></p>
-			<p>Charisma: <span id="domCharisma"></span></p>
-			<p>Speed: <span id="domSpeed"></span></p>
-			<p>Dungeon Level: <span id="domDungeonLevel"></span></p>
-			<p class="status"><span id="prone"></span> <span id="bleeding"></span> <span id="stunned"></span></p>
-			<p class="status"><span id="poisoned"></span> <span id="paralyzed"></span> <span id="berserk"></span></p>
-			<p id="info">Press '?' to display info screen</p>
-		</div>
-		<div id="screen">
-		</div>
-		<div id="messages">
-			<ul id="messageBox"></ul>
-		</div>
+		<p style="color: darkgoldenrod; font-size: 2em; text-align: center; margin: 3px">ArenaRL</p>
+		<p style="color: silver; font-size: 1em; text-align: center; margin: 3px">Welcome to ArenaRL! Deep dungeon, dangerous creatures and great treaures awaits you!</p>
+		<span style="white-space: nowrap"><p>Name: <input type="text" placeholder="enter your name..." id="domName"><span id="nameWarning"></span></p></span>
+		<label for="domClass">Class: <select id="domClass">
+			<option value="fighter">Fighter</option>
+		</select>
+		</label>
+		<br>
+		<label for="domDisplay">Display: <select id="domDisplay">
+			<option>ASCII</option>
+		</select></label>
+		<br>
+		<input type="button" value="Journey Onward!" id="domStart">
 	</body>
 </html>
