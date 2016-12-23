@@ -13,6 +13,8 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         exports.player = new player.Player();
 
         new items.Weapon('dagger', exports.player);
+        new items.Armour('leather armour', exports.player);
+        new items.Potion('healing', exports.player);
 
         map.cells[0].time.engine.start();
         screen.setWindows();
@@ -38,7 +40,7 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         //new items.Scroll('armour', map.cells[0][16][15]);
         //new items.Potion('rage', map.cells[0][44][15]);
         //new monster.Monster(0, 'minotaur');
-        new monster.Monster(0, 'cyclops');
+        new monster.Monster(0, 'kobold');
         exports.player = new player.Player();
 
         new items.Misc('torch', exports.player);

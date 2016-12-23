@@ -465,7 +465,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 
 			if(this.equipment['right hand'].description !== 'empty'){
 
-				screen.placeMessage('You drop your ' + this.equipment['right hand'].name + '(' + this.equipment['right hand'].damage + ').');
+				screen.placeMessage('You drop your ' + this.equipment['right hand'].name + '(' + this.equipment['right hand'].damage + ').', 'red');
 				map.cells[this.position.level][this.position.x][this.position.y].inventory.push(this.equipment['right hand']);
 				this.equipment['right hand'].owner = this;
 				this.equipment['right hand'] = {description: 'empty'};
@@ -515,9 +515,9 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 				var gainedStat = screen.statGain[this.class].random();
 
 				this.experienceLevel++;
-				screen.placeMessage('You have gained a level!');
+				screen.placeMessage('You have gained a level!', 'blue');
 				this.stats[gainedStat]++; //increase one random stat from class stats
-				screen.placeMessage(messages.statGainMessages[gainedStat]);
+				screen.placeMessage(messages.statGainMessages[gainedStat], 'blue');
 				this.stats.baseAttackBonus++;
 				this.maxHp += combat.calc(this.HD);
 				this.hp = this.maxHp;

@@ -461,10 +461,10 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 			if(this.hp < 1){
 
+                screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' dies.', map.cells[this.position.level][this.position.x][this.position.y]);
+
 				map.cells[this.position.level].time.scheduler.remove(this);
 				map.cells[this.position.level][this.position.x][this.position.y].entity = null;
-
-				screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + ' dies.');
 			}
 
 			screen.display.clear();
@@ -509,6 +509,18 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
         equip(index, slot){
 
 			screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' equips ' + this.inventory[index].description + '.', map.cells[this.position.level][this.position.x][this.position.y]);
+
+			if(this.inventory[index].modifiers){
+
+				for(var n in this.inventory[index].modifiers){
+
+					if(this.stats[n] + this.inventory[index].modifiers[n] > 0) {
+
+                        this.stats[n] += this.inventory[index].modifiers[n];
+                    }
+				}
+			}
+
 			this.equipment[slot] = this.inventory.splice(index, 1)[0];
 
 			if(slot === 'right hand'){
@@ -520,6 +532,14 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 		unequip(slot){
 
 			screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' removes ' + this.equipment[slot].description + '.', map.cells[this.position.level][this.position.x][this.position.y]);
+
+			if(this.equipment[slot].modifiers) {
+
+                for (var n in this.equipment[slot].modifiers) {
+
+                    this.stats[n] -= this.equipment[slot].modifiers[n];
+                }
+            }
 
 			this.inventory.push(this.equipment[slot]);
 			this.equipment[slot] = {description: 'empty'};
@@ -542,7 +562,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 						
 						this.stats[this.modifiers[i].type[j].stat] += this.modifiers[i].type[j].value;
 					}
-					screen.placeVisibleMessage(this.modifiers[i].useText, map.cells[this.position.level][this.position.x][this.position.y]);
+					screen.placeVisibleMessage(this.modifiers[i].useText, map.cells[this.position.level][this.position.x][this.position.y], 'red');
 				}
 
 				if(this.modifiers[i].counter === 0){
@@ -566,9 +586,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
             if(this.experience >= screen.experienceTable[this.experienceLevel + 1].required){
 
                 this.experienceLevel++;
-                screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' looks more experienced!', map.cells[this.position.level][this.position.x][this.position.y]);
+                screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' looks more experienced!', map.cells[this.position.level][this.position.x][this.position.y], 'red');
                 this.stats[this.favouredStat]++; //increase one random stat from class stats
-                screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + messages.statGainMonsterMessages[this.favouredStat], map.cells[this.position.level][this.position.x][this.position.y]);
+                screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + messages.statGainMonsterMessages[this.favouredStat], map.cells[this.position.level][this.position.x][this.position.y], 'red');
                 this.stats.baseAttackBonus++;
                 this.maxHp += combat.calc(this.HD);
                 this.hp = this.maxHp;

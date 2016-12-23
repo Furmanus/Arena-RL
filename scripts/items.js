@@ -32,40 +32,40 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   
   var armours = {
 	  
-	'leather armour': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather armour', description: 'a leather armour', type: 'armours', slot: 'torso', armourBonus: 2, maxDexBonus: 6, skillPenalty: 0, modifiers: {speed: 0}},
+	'leather armour': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather armour', description: 'a leather armour', type: 'armours', slot: 'torso', armourBonus: 2, maxDexBonus: 6, skillPenalty: 0, modifiers: {speed: 0, defense: 2}},
 	
-	'chain mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain mail', description: 'a chain mail', type: 'armours', slot: 'torso', armourBonus: 5, maxDexBonus: 2, skillPenalty: -5, modifiers: {speed: -8}},
+	'chain mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain mail', description: 'a chain mail', type: 'armours', slot: 'torso', armourBonus: 5, maxDexBonus: 2, skillPenalty: -5, modifiers: {speed: -8, defense: 5}},
 	
-	'ring mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'ring mail', description: 'a ring mail', type: 'armours', slot: 'torso', armourBonus: 3, maxDexBonus: 4, skillPenalty: -3, modifiers: {speed: -5}},
+	'ring mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'ring mail', description: 'a ring mail', type: 'armours', slot: 'torso', armourBonus: 3, maxDexBonus: 4, skillPenalty: -3, modifiers: {speed: -5, defense: 3}},
 	
-	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armours', slot: 'torso', armourBonus: 8, maxDexBonus: 0, skillPenalty: -7, modifiers: {speed: -12}}
+	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armours', slot: 'torso', armourBonus: 8, maxDexBonus: 0, skillPenalty: -7, modifiers: {speed: -12, defense: 8}}
   };
 
   var headwear = {
 
-      'leather helm': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather helm', description: 'a leather helm', type: 'helmets', slot: 'head', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
+      'leather helm': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather helm', description: 'a leather helm', type: 'helmets', slot: 'head', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0, defense: 1}},
 
-      'chain choif': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain choif', description: 'a chain choif', type: 'helmets', slot: 'head', armourBonus: 2, skillPenalty: 0, modifiers: {speed: 0}},
+      'chain choif': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain choif', description: 'a chain choif', type: 'helmets', slot: 'head', armourBonus: 2, skillPenalty: 0, modifiers: {speed: 0, defense: 2}},
 
-      'plate helmet': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate helmet', description: 'a plate helmet', type: 'helmets', slot: 'head', armourBonus: 3, skillPenalty: 0, modifiers: {speed: -1}}
+      'plate helmet': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate helmet', description: 'a plate helmet', type: 'helmets', slot: 'head', armourBonus: 3, skillPenalty: 0, modifiers: {speed: -1, defense: 3}}
   };
 
   var legs = {
 
-      'leather leggings': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather leggings', description: 'a leather leggings', type: 'legs', slot: 'legs', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
+      'leather leggings': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather leggings', description: 'a leather leggings', type: 'legs', slot: 'legs', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0, defense: 1}},
 
-      'chain leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain leggings', description: 'a chain leggings', type: 'legs', slot: 'legs', armourBonus: 2, skillPenalty: -1, modifiers: {speed: -2}},
+      'chain leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain leggings', description: 'a chain leggings', type: 'legs', slot: 'legs', armourBonus: 2, skillPenalty: -1, modifiers: {speed: -2, defense: 2}},
 
-      'plate leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate leggings', description: 'a plate leggings', type: 'legs', slot: 'legs', armourBonus: 4, skillPenalty: -3, modifiers: {speed: -5}}
+      'plate leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate leggings', description: 'a plate leggings', type: 'legs', slot: 'legs', armourBonus: 4, skillPenalty: -3, modifiers: {speed: -5, defense: 4}}
   };
 
   var boots = {
 
-      'leather boots': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather boots', description: 'a leather boots', type: 'boots', slot: 'feet', armourBonus: 0, skillPenalty: 0, modifiers: {speed: 0}},
+      'leather boots': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather boots', description: 'a leather boots', type: 'boots', slot: 'feet', armourBonus: 0, skillPenalty: 0, modifiers: {speed: 0, defense: 0}},
 
-      'chain boots': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain boots', description: 'a chain boots', type: 'boots', slot: 'feet', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0}},
+      'chain boots': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain boots', description: 'a chain boots', type: 'boots', slot: 'feet', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0, defense: 1}},
 
-      'plate boots': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate boots', description: 'a plate boots', type: 'boots', slot: 'feet', armourBonus: 2, skillPenalty: -2, modifiers: {speed: -2}}
+      'plate boots': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate boots', description: 'a plate boots', type: 'boots', slot: 'feet', armourBonus: 2, skillPenalty: -2, modifiers: {speed: -2, defense: 2}}
   };
   
   var scrolls = {

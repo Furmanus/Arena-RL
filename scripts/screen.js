@@ -262,7 +262,7 @@ define(['main'], function(main){
 		playerWindow.style.minHeight = playerWindowHeight;
 	}
 	
-	function placeMessage(string){
+	function placeMessage(string, color){
 		
 		if(string != currentMessage && string.length > 0){
 			var message = document.createElement('li');
@@ -277,6 +277,11 @@ define(['main'], function(main){
 			currentMessageCount++;
 			document.getElementById("messageBox").lastChild.innerHTML = currentMessage + ' x' + currentMessageCount;
 		}
+
+        if(color){
+
+            document.getElementById("messageBox").lastChild.style.color = color;
+        }
 		
 		if(document.getElementById('messageBox').childNodes.length > 120){
 			
@@ -304,7 +309,7 @@ define(['main'], function(main){
 		}
 	}
 
-	function placeVisibleMessage(string, cell){
+	function placeVisibleMessage(string, cell, color){
 
 		if(cell.isVisible === true) {
 
@@ -320,6 +325,11 @@ define(['main'], function(main){
 
 				currentMessageCount++;
 				document.getElementById("messageBox").lastChild.innerHTML = currentMessage + ' x' + currentMessageCount;
+			}
+
+			if(color){
+
+                document.getElementById("messageBox").lastChild.style.color = color;
 			}
 
 			if (document.getElementById('messageBox').childNodes.length > 120) {
