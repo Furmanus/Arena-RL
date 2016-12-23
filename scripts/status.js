@@ -22,7 +22,7 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
             entity.status.prone.value = 1;
 
-            screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' fall' : ' falls') + ' on ground.', map.cells[entity.position.level][entity.position.x][entity.position.y]);
+            screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' fall' : ' falls') + ' on ground.', map.cells[entity.position.level][entity.position.x][entity.position.y], 'red');
 
             if (entity.stats.speed - 10 < 1) {
 
@@ -86,7 +86,7 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
             entity.status.bleeding.value = 1;
             entity.status.bleeding.counter = 1;
-            screen.placeVisibleMessage('Deep wound is open in ' + (entity.type.type === 'player' ? 'your ' : (entity.type.messageDisplay + 's ')) + 'body.', position);
+            screen.placeVisibleMessage('Deep wound is open in ' + (entity.type.type === 'player' ? 'your ' : (entity.type.messageDisplay + 's ')) + 'body.', position, 'red');
             //entity.receiveDamage(damageDealt);
 
             for (var i = 0; i < 6; i++) {
@@ -110,7 +110,7 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
         entity.status.poisoned.value = 1;
         entity.status.poisoned.counter = 1;
-        screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are poisoned!' : ' is poisoned!'), position);
+        screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are poisoned!' : ' is poisoned!'), position, 'red');
 
         for(var i=0; i<6; i++){
 
@@ -151,7 +151,7 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
         //make entity stunned status active, and set counter to 1 (so entity will be stunned for at least 1 turn)
         entity.status.stunned.value = 1;
         entity.status.stunned.counter = 1;
-        screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are stunned!' : ' is stunned!'), position);
+        screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' are stunned!' : ' is stunned!'), position, 'red');
         entity.stats.defense -= 2;
 
         if(entity.type.family === 'player') {
@@ -227,7 +227,7 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
         entity.status.paralyzed.value = 1;
         entity.status.paralyzed.counter = ROT.RNG.getUniformInt(3, 5);
-        screen.placeVisibleMessage(displayText, map.cells[entity.position.level][entity.position.x][entity.position.y]);
+        screen.placeVisibleMessage(displayText, map.cells[entity.position.level][entity.position.x][entity.position.y], 'red');
 
     }
 
@@ -267,7 +267,7 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
 
         useText = screen.capitalizeString((screen.removeFirst(entity.type.name)) + (entity.type.type === 'player' ? ' go berserk!' : ' goes berserk!'));
 
-        screen.placeVisibleMessage(useText, map.cells[entity.position.level][entity.position.x][entity.position.y]);
+        screen.placeVisibleMessage(useText, map.cells[entity.position.level][entity.position.x][entity.position.y], 'red');
     }
 
     function berserkActivate(entity){

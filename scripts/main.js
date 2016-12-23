@@ -40,7 +40,7 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         //new items.Scroll('armour', map.cells[0][16][15]);
         //new items.Potion('rage', map.cells[0][44][15]);
         //new monster.Monster(0, 'minotaur');
-        new monster.Monster(0, 'cyclops');
+        new monster.Monster(0, 'kobold');
         exports.player = new player.Player();
 
         new items.Misc('torch', exports.player);

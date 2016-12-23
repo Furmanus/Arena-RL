@@ -34,11 +34,11 @@ requirejs(['main', 'player', 'screen'], function(main, player, screen){
                 createGameScreen();
 
                 document.body.style.display = 'flex';
-                //main.start();
-                main.startTest();
+                main.start();
+                //main.startTest();
             }else if(!(player.playerOptions.name) || validateName() !== true){
 
-                document.getElementById('nameWarning').innerHTML = 'Please enter your name!';
+                document.getElementById('nameWarning').innerHTML = 'Please enter your name (name has to be shorter than 9 signs)!';
             }
         }
 
@@ -59,7 +59,7 @@ requirejs(['main', 'player', 'screen'], function(main, player, screen){
 
         function validateName(){
 
-            if(player.playerOptions.name.length > 0){
+            if(player.playerOptions.name.length > 0 && player.playerOptions.name.length <= 9){
 
                 for(var i=0; i<player.playerOptions.name.length; i++){
 
@@ -71,6 +71,9 @@ requirejs(['main', 'player', 'screen'], function(main, player, screen){
                         return false;
                     }
                 }
+            }else if(player.playerOptions.name.length > 9){
+
+                return false;
             }
 
             return false;
