@@ -15,15 +15,14 @@ Things implemented so far:
 - experience and progression system
 - level bigger than screen, camera following player
 
-Things I'm working on right now (before 0.1):
-
-- all done
-
-Things to do later (after 0.1)
+Things I'm working on right now (0.2 version):
 
 - optional tile graphics
 - humanoid monsters should be generated with some basic equipment
 - chasms
 - rework of monster AI (if hostile gets out of monsters FOV, monster should go to its last known position)
 - rework of monster AI (monsters neutral to each other seems to block themself in corridors, instead of picking new target after certain number of turns passed)
+
+
+
 
