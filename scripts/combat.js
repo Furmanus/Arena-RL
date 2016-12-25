@@ -41,7 +41,8 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 		var attackerScore = roll(1, 20),
 			defenderScore,
             defenderPosition = map.cells[defender.position.level][defender.position.x][defender.position.y],
-            attackerPosition = map.cells[attacker.position.level][attacker.position.x][attacker.position.y];
+            attackerPosition = map.cells[attacker.position.level][attacker.position.x][attacker.position.y],
+            messageColor;
 
 		if(defender.type.type !== 'player' && defender.checkIfHostile(attacker) !== true){
 
@@ -67,7 +68,8 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
             }
 
             defender.hp -= damageDealt;
-            screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt), attackerPosition);
+            messageColor = (defender.type.type === 'player') ? 'purple' : null;
+            screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt), attackerPosition, messageColor);
 
             if(attacker.weapon.criticalHit[0] !== null && defender.hp > 0){
 
@@ -90,8 +92,10 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
                 }
 
                 defender.hp -= damageDealt;
-                
-				screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'hit', damageDealt), defenderPosition);
+
+                messageColor = (defender.type.type === 'player') ? 'purple' : null;
+
+				screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'hit', damageDealt), defenderPosition, messageColor);
             } else {
 					
 				screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'miss', 0), defenderPosition);

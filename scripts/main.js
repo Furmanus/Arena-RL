@@ -1,4 +1,4 @@
-define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'items', 'pathfinding', 'combat'], function(map, generator, screen, noise, light, player, monster, items, pathfinding, combat){
+define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'items', 'pathfinding', 'combat', 'evHandlers'], function(map, generator, screen, noise, light, player, monster, items, pathfinding, combat, evHandlers){
 	
 	var exports = {};
 
@@ -12,8 +12,18 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
 
         exports.player = new player.Player();
 
-        new items.Weapon('dagger', exports.player);
-        new items.Armour('leather armour', exports.player);
+        var startingWeapon = new items.Weapon('dagger', exports.player);
+        var startingArmour = new items.Armour('leather armour', exports.player);
+
+        exports.player.equipment['right hand'] = startingWeapon;
+        evHandlers.doEquipmentModifiers(exports.player, startingWeapon, 'apply');
+        exports.player.equipment['torso'] = startingArmour;
+        evHandlers.doEquipmentModifiers(exports.player, startingArmour, 'apply');
+        exports.player.weapon = startingWeapon;
+
+        exports.player.inventory.splice(0,1);
+        exports.player.inventory.splice(0,1);
+
         new items.Potion('healing', exports.player);
 
         map.cells[0].time.engine.start();
