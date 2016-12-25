@@ -121,7 +121,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			
 			screen.placeMessage('You climb up the stairs.');
 
-			document.getElementById('domDungeonLevel').innerHTML = player.position.level;
+			document.getElementById('domDungeonLevel').innerHTML = player.position.level + 1;
 		}
 	}
 	
@@ -162,7 +162,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		map.cells[player.position.level].time.engine.start();
 			
 		screen.placeMessage('You walk down the stairs.');
-        document.getElementById('domDungeonLevel').innerHTML = player.position.level;
+        document.getElementById('domDungeonLevel').innerHTML = player.position.level + 1;
 	}
 	
 	function closeDoors(x, y, player){
