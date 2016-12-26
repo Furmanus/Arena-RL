@@ -76,7 +76,7 @@ define(['screen', 'map'], function(screen, map){
 					break;
 					
 					case 'closed doors':
-					
+
 					result = (entity.abilities.canOpenDoors === true) ? 'pass' : 'block';
 					break;
 					
