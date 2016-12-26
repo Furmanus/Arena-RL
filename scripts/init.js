@@ -207,6 +207,11 @@ requirejs(['main', 'player', 'screen'], function(main, player, screen){
             var berserk = document.createElement('span');
             berserk.id = 'berserk';
             statusRow2.appendChild(berserk);
+
+            var domInfo = document.createElement('p');
+            divPlayer.appendChild(domInfo);
+            domInfo.id = 'info';
+            domInfo.innerHTML = 'Press "?" to display game help.';
         }
     }
 

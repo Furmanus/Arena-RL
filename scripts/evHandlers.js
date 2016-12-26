@@ -328,8 +328,9 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				case 65:
 				
 				screen.display.clear();
-				screen.display.drawText(16, 2, 'Arena RL');
+				screen.display.drawText(8, 2, 'Arena RL version 0.1');
 				screen.display.drawText(8, 3, 'Copyright 2016 by Furman');
+                screen.display.drawText(8, 4, 'e-mail: furmanus@gmail.com');
 				this.handleEvent = escapeEventHandler.bind(player);
 				
 				break;
