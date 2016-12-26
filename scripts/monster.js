@@ -172,6 +172,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 					if(map.cells[this.position.level][this.position.x][this.position.y].isVisible === true && map.cells[this.position.level][tmpX][tmpY].isVisible === true){
 
 						screen.placeMessage(screen.capitalizeString(this.type.messageDisplay) + ' open doors');
+					}else if(map.cells[this.position.level][this.position.x][this.position.y].isVisible === false && map.cells[this.position.level][tmpX][tmpY].isVisible === true){
+
+                        screen.placeMessage('Something unseen open doors.');
 					}
 				}else {
 
