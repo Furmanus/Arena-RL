@@ -40,7 +40,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
         69: equip,
 		81: quaff,
 		82: read,
-		//89: reveal,
+		77: reveal,
 		188: pickUp
 	};
 
@@ -73,7 +73,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		}else if(ev.shiftKey === false && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100 || ev.which === 101 || ev.which === 84 || ev.which === 89 || ev.which === 85 || ev.which === 72 || ev.which === 78 || ev.which === 66 || ev.which === 86 || ev.which === 71 || ev.which === 190)){
 
 			this.move(moveActions[ev.which].x, moveActions[ev.which].y);
-		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69 || ev.which === 81 || ev.which === 82 || ev.which === 89)){
+		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69 || ev.which === 81 || ev.which === 82 || ev.which === 89) || ev.which === 77){
 
 			if(ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68){
 
@@ -93,10 +93,10 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	
 	function ascendLevel(player){
 		
-		if(player.position.level === 0){
+		if(player.position.level === 0 && map.cells[player.position.level][player.position.x][player.position.y].type.type === 'stairs up'){
 			
 			screen.placeMessage('Stairs are blocked by pile of huge rocks. You can\'t pass that way.');
-		}else{
+		}else if(map.cells[player.position.level][player.position.x][player.position.y].type.type === 'stairs up'){
 			
 			screen.display.clear();
 			map.cells[player.position.level][player.position.x][player.position.y].entity = null;
@@ -122,47 +122,56 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			screen.placeMessage('You climb up the stairs.');
 
 			document.getElementById('domDungeonLevel').innerHTML = player.position.level + 1;
+		}else{
+
+			screen.placeMessage('You can\'t climb up here.');
 		}
 	}
 	
 	//funkcja uruchamiana w momencie zejścia przez gracza schodami w dół
 	
 	function descendLevel(player){
-			
-		//usuwamy gracza z pozycji schodów w dół aktualnego poziomu
-		screen.display.clear();
-		map.cells[player.position.level][player.position.x][player.position.y].entity = null;
-			
-		//zatrzymujemy silnik czasu na obecnym poziomie i usuwamy z niego gracza
-		map.cells[player.position.level].time.engine.lock();
-		map.cells[player.position.level].time.scheduler.remove(player);
-		
-		if(player.position.level == map.cells.maxDungeonLevel){
 
-			var monster = require('monster');
-			var items = require('items');
-			//generujemy nowy poziom, jeżeli gracz znajduje się na najniższym obecnie wygenerowanym poziomie
-			generator.generateRandomLevel();
-			monster.fillLevelWithMonsters(map.cells.maxDungeonLevel);
-			items.fillLevelWithItems(map.cells.maxDungeonLevel);
+		if(map.cells[player.position.level][player.position.x][player.position.y].type.type === 'stairs down') {
+
+            //usuwamy gracza z pozycji schodów w dół aktualnego poziomu
+            screen.display.clear();
+            map.cells[player.position.level][player.position.x][player.position.y].entity = null;
+
+            //zatrzymujemy silnik czasu na obecnym poziomie i usuwamy z niego gracza
+            map.cells[player.position.level].time.engine.lock();
+            map.cells[player.position.level].time.scheduler.remove(player);
+
+            if (player.position.level == map.cells.maxDungeonLevel) {
+
+                var monster = require('monster');
+                var items = require('items');
+                //generujemy nowy poziom, jeżeli gracz znajduje się na najniższym obecnie wygenerowanym poziomie
+                generator.generateRandomLevel();
+                monster.fillLevelWithMonsters(map.cells.maxDungeonLevel);
+                items.fillLevelWithItems(map.cells.maxDungeonLevel);
+            }
+
+            //aktualizujemy współrzędne gracza na nowy poziom i współrzędne schodów w górę
+            player.position.level++;
+            player.position.x = map.cells[player.position.level].stairsUp.x;
+            player.position.y = map.cells[player.position.level].stairsUp.y;
+
+            map.cells[player.position.level][player.position.x][player.position.y].entity = player;
+
+            player.doFov(player);
+            screen.drawVisibleCells(map.cells[player.position.level]);
+
+            //dodajemy gracza do silnika czasu na nowym poziomie i uruchamiamy silnik
+            map.cells[player.position.level].time.scheduler.add(player, true);
+            map.cells[player.position.level].time.engine.start();
+
+            screen.placeMessage('You walk down the stairs.');
+            document.getElementById('domDungeonLevel').innerHTML = player.position.level + 1;
+        }else{
+
+            screen.placeMessage('You can\'t climb down here.');
 		}
-			
-		//aktualizujemy współrzędne gracza na nowy poziom i współrzędne schodów w górę
-		player.position.level++;
-		player.position.x = map.cells[player.position.level].stairsUp.x;
-		player.position.y = map.cells[player.position.level].stairsUp.y;
-			
-		map.cells[player.position.level][player.position.x][player.position.y].entity = player;
-			
-		player.doFov(player);
-		screen.drawVisibleCells(map.cells[player.position.level]);
-			
-		//dodajemy gracza do silnika czasu na nowym poziomie i uruchamiamy silnik
-		map.cells[player.position.level].time.scheduler.add(player, true);
-		map.cells[player.position.level].time.engine.start();
-			
-		screen.placeMessage('You walk down the stairs.');
-        document.getElementById('domDungeonLevel').innerHTML = player.position.level + 1;
 	}
 	
 	function closeDoors(x, y, player){
