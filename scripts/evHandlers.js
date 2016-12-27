@@ -10,21 +10,21 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 	var moveActions = {
 		103: {x: -1, y: -1},
-        84: {x: -1, y: -1},
+        89: {x: -1, y: -1},
 		104: {x: 0,y: -1},
-        89: {x: 0,y: -1},
+        75: {x: 0,y: -1},
 		105: {x: 1, y: -1},
         85: {x: 1, y: -1},
 		102: {x: 1, y: 0},
-        72: {x: 1, y: 0},
+        76: {x: 1, y: 0},
 		99: {x: 1, y: 1},
         78: {x: 1, y: 1},
 		98: {x: 0, y: 1},
-        66: {x: 0, y: 1},
+        74: {x: 0, y: 1},
 		97: {x: -1, y: 1},
-        86: {x: -1, y: 1},
+        66: {x: -1, y: 1},
 		100: {x: -1, y: 0},
-        71: {x: -1, y: 0},
+        72: {x: -1, y: 0},
 		101: {x: 0, y: 0},
         190: {x: 0, y: 0}
 	};
@@ -34,7 +34,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	var actions = {
 
 		73: displayInventory,
-		76: look,
+		88: look,
 		67: closeDoors,
 		68: drop,
         69: equip,
@@ -70,12 +70,12 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		if(ev.which == 16){
 
 			//nic się nie dzieje, shift naciśnięty sam nie powinien dawać żadnego efektu
-		}else if(ev.shiftKey === false && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100 || ev.which === 101 || ev.which === 84 || ev.which === 89 || ev.which === 85 || ev.which === 72 || ev.which === 78 || ev.which === 66 || ev.which === 86 || ev.which === 71 || ev.which === 190)){
+		}else if(ev.shiftKey === false && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100 || ev.which === 101 || ev.which === 89 || ev.which === 75 || ev.which === 85 || ev.which === 76 || ev.which === 78 || ev.which === 74 || ev.which === 66 || ev.which === 72 || ev.which === 190)){
 
 			this.move(moveActions[ev.which].x, moveActions[ev.which].y);
-		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69 || ev.which === 81 || ev.which === 82 || ev.which === 89)){
+		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69 || ev.which === 81 || ev.which === 82 || ev.which === 88)){
 
-			if(ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68){
+			if(ev.which === 88 || ev.which === 67 || ev.which === 188 || ev.which === 68){
 
 				actions[ev.which](this.position.x, this.position.y, this);
 			}else{
@@ -349,7 +349,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				screen.display.clear();
 				screen.display.drawText(14, 2, 'Keybindings');
 				screen.display.drawText(1, 4, '[i] - inventory');
-				screen.display.drawText(1, 5, '[l] - look');
+				screen.display.drawText(1, 5, '[x] - look');
 				screen.display.drawText(1, 6, '[<] - go down');
 				screen.display.drawText(1, 7, '[>] - go up');
 				screen.display.drawText(1, 8, '[c] - close');
@@ -359,7 +359,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				screen.display.drawText(1, 12, '[q] - drink');
 				screen.display.drawText(1, 13, '[r] - read');
 				screen.display.drawText(1, 14, '[R] - rise on feet/fall on ground');
-                screen.display.drawText(1, 18, 'numpad or g,t,y,u,h,n,b,v - movement');
+                screen.display.drawText(1, 18, 'numpad or h,j,k,l,y,u,b,n - movement');
                 screen.display.drawText(1, 19, '. or numpad 5 - wait a turn');
 				this.handleEvent = escapeEventHandler.bind(player);
 				
