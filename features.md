@@ -21,7 +21,7 @@ Things I'm working on right now (0.2 version):
 - humanoid monsters should be generated with some basic equipment
 - chasms
 - rework of monster AI (if hostile gets out of monsters FOV, monster should go to its last known position)
-- rework of monster AI (monsters neutral to each other seems to block themself in corridors, instead of picking new target after certain number of turns passed) DONE
+- [DONE] rework of monster AI (monsters neutral to each other seems to block themself in corridors, instead of picking new target after certain number of turns passed)
 - ranged combat
 - detailed description of items, in separate screen 
 
