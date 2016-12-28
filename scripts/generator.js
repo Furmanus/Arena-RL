@@ -1162,6 +1162,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 		findDiagonalPath: findDiagonalPath,
 		fillRectangle: fillRectangle,
 		surroundWithCircle: surroundWithCircle,
-		generateRandomLevel: generateRandomLevel
+		generateRandomLevel: generateRandomLevel,
+		createForestRoom: createForestRoom
 	}
 });

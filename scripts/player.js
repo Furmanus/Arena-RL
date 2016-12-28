@@ -50,7 +50,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 				charisma: 15,
 				
 				speed: 30,
-				perception: 5,
+				perception: 50,
 				
 				baseAttackBonus: 1,
 				defense: 10

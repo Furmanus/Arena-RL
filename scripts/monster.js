@@ -34,6 +34,8 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 			this.bgColor = monsterList.monsterType[type].bgColor;
 			this.lookDescription = monsterList.monsterType[type].lookDescription;
 			this.waitCounter = 0; //used when monster collides in corridor with other monster (with no other way around). Monster waits 3 turns and sets new goal
+			this.swap = {ready: false, entity: null};// object used when two non hostile monsters collide in corridor. Ready is boolean meaning whether monster is ready to swap
+			// entity is monster with which monster will swap places. Used inside creatai.js module
 			this.retreatEntity = null; //hostile wants to avoid and flee from. It is set in combat module, when monster is injured and has less than 10% hp
 			this.lastSeenTreatPosition = {}; //stores coordinates of last seen treat from which monster flees (they are used if treat is not visible)
 			
@@ -597,6 +599,19 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
                 this.hp = this.maxHp;
             }
         }
+
+        swapPlaces(entity){
+
+			var examinedCell1 = map.cells[this.position.level][this.position.x][this.position.y],
+				examinedCell2 = map.cells[entity.position.level][entity.position.x][entity.position.y];
+
+			examinedCell1.entity = entity;
+			examinedCell2.entity = this;
+			entity.swap.ready = false;
+			entity.swap.entity = null;
+            this.swap.ready = false;
+            this.swap.entity = null;
+		}
 	}
 
     function fillLevelWithMonsters(level){

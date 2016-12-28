@@ -251,8 +251,8 @@ define(['main'], function(main){
 			screenHeight = document.getElementById('screen').offsetHeight,
 			windowWidth = document.body.offsetWidth,
 			windowHeight = document.body.offsetHeight,
-			messageWindowWidth = Math.floor((windowWidth - screenWidth) / 2) + 'px';
-			playerWindowWidth = Math.floor((windowWidth - screenWidth) / 2) + 'px';
+			messageWindowWidth = Math.floor((windowWidth - screenWidth) / 2 + 100) + 'px';
+			playerWindowWidth = Math.floor((windowWidth - screenWidth) / 2 - 100) + 'px';
 			messageWindowHeight = screenHeight + 'px';
 			playerWindowHeight = screenHeight + 'px';
 			

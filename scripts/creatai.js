@@ -82,6 +82,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
            }
            return;
            /*
+            IF ENTITY ISN'T PANICKED (END OF PANIC IF STATEMENT)
             we examine if monster wants to use any item from its inventory. If yes, we call proper action from examineInventoryResult and stop whole nextStep function
             */
        }else if(examineInventoryResult.length > 0){
@@ -105,15 +106,26 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
            return;
        }
 
+       //IF ENTITY IS NOT PANICKED, AND DON'T HAVE ANYTHING IN INVENTORY TO USE
        if(examineGroundResult['no_action'] === true) {
 
+           //if entity reached his current goal, we reset it
            if (monster.currentGoal !== null && monster.position.x === monster.currentGoal.x && monster.position.y === monster.currentGoal.y) {
 
                monster.currentGoal = null;
            }
 
+           //if most interesing thing in FOV is hostile, we set his coordinates as current goal (so monster would follow his last known coordinates, if track is lost at some point
+           if(examineFovResult[0] && examineFovResult[0].type === 'hostile'){
+
+               monster.currentGoal = {x: examineFovResult[0].x, y: examineFovResult[0].y};
+           }
+
            //if monster doesn't have any goal in current turn, we set one
-           setGoal(monster);
+           if(monster.currentGoal === null) {
+
+               setGoal(monster);
+           }
            //if monster has anything interesing in his current Fov, his currentGoal is changed
            if (examineFovResult.length > 0) {
 
@@ -138,15 +150,31 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                monster.waitCounter = 0; //and we reset monster wait counter, in case in previous turn it was non zero
            }else if(map.cells[monster.position.level][nextStep.x][nextStep.y].entity !== null && monster.checkIfHostile(map.cells[monster.position.level][nextStep.x][nextStep.y].entity) !== true){
 
+               var encounteredEntity = map.cells[monster.position.level][nextStep.x][nextStep.y].entity;
                //else if next step cell is occupied by friendly entity, monster waits 1 turns and if nothing changes, sets new goal
                if(monster.waitCounter > 1){
 
                    monster.waitCounter = 0;
                    setGoal(monster);
                }else{
-
+                   console.log(monster.waitCounter);
                    monster.waitCounter++;
                }
+
+               /*if(encounteredEntity.type.type !== 'player') {
+
+                   if (encounteredEntity.swap.ready === false && monster.checkIfHostile(encounteredEntity) !== true) {
+
+                       monster.swap.ready = true;
+                       monster.swap.entity = encounteredEntity;
+                   } else if (encounteredEntity.swap.ready === true && encounteredEntity.swap.entity === monster) {
+
+                       monster.swapPlaces(encounteredEntity);
+                   } else if (encounteredEntity.swap.ready === true && encounteredEntity.swap.entity !== monster) {
+
+                       setGoal(monster);
+                   }
+               }*/
            }
 
        }else if(examineGroundResult['no_action'] === false){
@@ -156,17 +184,15 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
        function setGoal(monster){
 
-           if(monster.currentGoal === null) {
-               //we choose random floor tile
-               var newGoal = getCoordinates(Object.keys(map.cells[monster.position.level].floorTiles).random());
-               //if there is no path to choosen floor tile, we call function again
-               if(pathfinding.findPath(newGoal.x, newGoal.y, monster.position.x, monster.position.y, monster, 'pass').length === 0){
+           //we choose random floor tile
+           var newGoal = getCoordinates(Object.keys(map.cells[monster.position.level].floorTiles).random());
+           //if there is no path to choosen floor tile, we call function again
+           if(pathfinding.findPath(newGoal.x, newGoal.y, monster.position.x, monster.position.y, monster, 'pass').length === 0){
 
-                   setGoal(monster);
-               }else{
+               setGoal(monster);
+           }else{
 
-                   monster.currentGoal = newGoal;
-               }
+               monster.currentGoal = newGoal;
            }
        }
 

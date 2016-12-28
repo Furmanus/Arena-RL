@@ -48,7 +48,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
         69: equip,
 		81: quaff,
 		82: read,
-		//77: reveal,
+		77: reveal,
 		188: pickUp
 	};
 
@@ -81,7 +81,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		}else if(ev.shiftKey === false && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100 || ev.which === 101 || ev.which === 89 || ev.which === 75 || ev.which === 85 || ev.which === 76 || ev.which === 78 || ev.which === 74 || ev.which === 66 || ev.which === 72 || ev.which === 190 || ev.which === 37 || ev.which === 38 || ev.which === 39 || ev.which === 40 || ev.which === 36 || ev.which === 35 || ev.which === 33 || ev.which === 34)){
 
 			this.move(moveActions[ev.which].x, moveActions[ev.which].y);
-		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69 || ev.which === 81 || ev.which === 82 || ev.which === 88)){
+		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69 || ev.which === 81 || ev.which === 82 || ev.which === 88 || ev.which === 77)){
 
 			if(ev.which === 88 || ev.which === 67 || ev.which === 188 || ev.which === 68){
 
