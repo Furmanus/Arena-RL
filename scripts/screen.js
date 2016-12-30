@@ -56,6 +56,14 @@ define(['main'], function(main){
         forceSquareRatio: true
 	};
 
+	var deathScreenOptions = {
+
+        width: 65,
+        height: 40,
+        fontSize: 15,
+        forceSquareRatio: false
+    };
+
 	//for display options used inside evHandlers module for non game screen like inventory, equip, etc.
 	var screenOptions = {
 
@@ -119,8 +127,14 @@ define(['main'], function(main){
 	
 	function drawVisibleCells(cells){
 
+		var main = require('main');
+
+		if(main.exports.player && main.exports.player.hp < 1){
+
+			return;
+		}
+
 		var currentColor,
-		 	main = require('main'),
 			x, //current x position of player
 			y, //current y position of player
 			startX, //x upper left position of camera
@@ -353,6 +367,13 @@ define(['main'], function(main){
 			return result;
 		}
 	}
+
+	//for given row draws centered text
+	function drawCenteredText(row, text){
+
+		var startText = Math.floor(displayOptions.width / 2) - Math.floor(text.length / 2);
+		display.drawText(startText, row, text, displayOptions.width);
+	}
 	
 	return{
 		display: display,
@@ -374,8 +395,10 @@ define(['main'], function(main){
 		statGain: statGain,
 		displayOptions: displayOptions,
 		screenOptions: screenOptions,
+		deathScreenOptions: deathScreenOptions,
 		convertCoordinate: convertCoordinate,
 		cameraPosition: cameraPosition,
-		displayMode: displayMode
+		displayMode: displayMode,
+		drawCenteredText: drawCenteredText
 	}
 });

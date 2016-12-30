@@ -72,7 +72,7 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
             var damageDealt = calc('1d1');
 
             screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' lose' : ' loses') + ' blood!', position);
-            entity.receiveDamage(damageDealt);
+            entity.receiveDamage(damageDealt, {type: {type: 'bleed to death'}});
             entity.status.bleeding.counter--;
         }
     }
@@ -134,7 +134,7 @@ define(['screen', 'map', 'evHandlers'], function(screen, map, evHandlers){
             var damageDealt = calc('1d1');
 
             screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' cringe' : ' cringes') + ' in pain.', position);
-            entity.receiveDamage(damageDealt);
+            entity.receiveDamage(damageDealt, {type: {type: 'died due to poison'}});
             entity.status.poisoned.counter--;
         }
     }

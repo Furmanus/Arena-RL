@@ -70,7 +70,7 @@ define(['screen'], function(screen){
 				if(entity.type.type == 'player'){
 					
 					screen.placeMessage('You are suffocating!');
-					entity.receiveDamage(ROT.RNG.getUniformInt(1,3) * entity.experienceLevel);
+					entity.receiveDamage(ROT.RNG.getUniformInt(1,3) * entity.experienceLevel, 'drowned');
 				}
 			}
 		},

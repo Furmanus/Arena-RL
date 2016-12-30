@@ -1136,12 +1136,54 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 		screen.drawCells(map.cells[player.position.level]);
 	}
+
+	function generateDeathScreen(player){
+
+    	while(document.getElementById('messageBox').firstChild){
+
+            document.getElementById('messageBox').removeChild(document.getElementById('messageBox').firstChild);
+		}
+
+    	screen.display.clear();
+    	screen.display.setOptions(screen.deathScreenOptions);
+
+    	if(!player.deathCause.type) {
+
+            screen.display.drawText(1, 1, player.name + ', human ' + player.class + ' died, killed by ' + player.deathCause.source.type.name);
+        }else{
+
+            screen.display.drawText(1, 1, player.name + ', human ' + player.class + ' has ' + (player.deathCause.type ? player.deathCause.type : 'been killed by unknown source') + '.');
+		}
+
+		if(player.killCount > 0) {
+
+            screen.display.drawText(1, 3, 'He vanquished ' + player.killCount + ' creature' + (player.killCount > 1 ? 's' : '') + '.');
+        }else{
+
+            screen.display.drawText(1, 3, 'He didn\'t killed anyone.');
+		}
+        screen.display.drawText(1, 4, 'He advanced to ' + player.experienceLevel + ' experience level.');
+
+        screen.display.drawText(1, 5, 'He ended his adventures on ' + (player.position.level + 1) + ' dungeon level.' );
+        screen.display.drawText(1, 8, 'Press space to restart.' );
+
+        player.handleEvent = deathScreenEventHandler;
+
+        function deathScreenEventHandler(ev){
+
+			if(ev.which === 32){
+
+
+			}
+		}
+	}
 	
 	return {
 		
 		displayInventory: displayInventory,
 		defaultEventHandler: defaultEventHandler,
 		doEquipmentModifiers: doEquipmentModifiers,
-		stunHandleEvent: stunHandleEvent
+		stunHandleEvent: stunHandleEvent,
+		generateDeathScreen: generateDeathScreen
 	}
 });

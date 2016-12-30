@@ -111,16 +111,28 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
             if(defender.type.type === 'player'){
 
+                var evHandlers = require('evHandlers');
+
                 defender.updateScreenStats();
                 map.cells[defender.position.level].time.engine.lock();
                 defender.handleEvent = function(){};
+                defender.deathCause.source = attacker;
+                evHandlers.generateDeathScreen(defender);
             }else{
 
                 map.cells[defender.position.level][defender.position.x][defender.position.y].entity = null;
             }
 
-            screen.display.clear();
-            screen.drawVisibleCells(map.cells[defender.position.level]);
+            if(attacker.type.type === 'player') {
+
+                attacker.killCount++;
+            }
+
+            if(defender.type.type !== 'player') {
+
+                screen.display.clear();
+                screen.drawVisibleCells(map.cells[defender.position.level]);
+            }
         }else if(defender.hp <= Math.floor(0.1 * defender.maxHp) && defender.type.type !== 'player' && defender.abilities.fearless === false){
 
 		    var action = ROT.RNG.getUniformInt(1, 5);

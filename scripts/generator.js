@@ -1163,6 +1163,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 		fillRectangle: fillRectangle,
 		surroundWithCircle: surroundWithCircle,
 		generateRandomLevel: generateRandomLevel,
-		createForestRoom: createForestRoom
+		createForestRoom: createForestRoom,
+		generateLake: generateLake
 	}
 });

@@ -96,6 +96,9 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 
             this.defaultWeapon = {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]};
             this.weapon = this.defaultWeapon;
+
+            this.killCount = 0; //count of killed monsters
+			this.deathCause = {type: undefined, source: undefined}; //either entity or object {type: {type: <cause of death>}} used in evHandlers module, generateDeathScreen method
 			
 			this.init();
 			this.handleEvent = evHandlers.defaultEventHandler;
@@ -473,7 +476,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 			}
 		}
 
-        receiveDamage(number){
+        receiveDamage(number, source){
 
 			this.hp -= number;
 
@@ -483,12 +486,14 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 				this.updateScreenStats();
 				map.cells[this.position.level].time.engine.lock();
 				this.handleEvent = function(){};
+                screen.placeMessage('You die...');
+				this.deathCause.type = source;
+				evHandlers.generateDeathScreen(this);
+			}else {
 
-				screen.placeMessage('You die...');
-			}
-
-			screen.display.clear();
-			screen.drawVisibleCells(map.cells[this.position.level]);
+                screen.display.clear();
+                screen.drawVisibleCells(map.cells[this.position.level]);
+            }
 		}
 
 		/*

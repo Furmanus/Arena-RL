@@ -34,8 +34,8 @@ requirejs(['main', 'player', 'screen'], function(main, player, screen){
                 createGameScreen();
 
                 document.body.style.display = 'flex';
-                main.start();
-                //main.startTest();
+                //main.start();
+                main.startTest();
             }else if(!(player.playerOptions.name) || validateName() !== true){
 
                 document.getElementById('nameWarning').innerHTML = 'Please enter your name (name has to be shorter than 9 signs)!';
