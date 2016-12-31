@@ -1173,7 +1173,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 			if(ev.which === 32){
 
-
+                window.location.reload(true);
 			}
 		}
 	}
