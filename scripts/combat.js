@@ -115,9 +115,15 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
                 defender.updateScreenStats();
                 map.cells[defender.position.level].time.engine.lock();
-                defender.handleEvent = function(){};
                 defender.deathCause.source = attacker;
-                evHandlers.generateDeathScreen(defender);
+
+                defender.handleEvent = function(ev){
+
+                    if(ev.which === 32){
+
+                        evHandlers.generateDeathScreen(this);
+                    }
+                }
             }else{
 
                 map.cells[defender.position.level][defender.position.x][defender.position.y].entity = null;

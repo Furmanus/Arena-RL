@@ -50,7 +50,7 @@ define(['screen', 'map'], function(screen, map){
 
     var msgDeath = {
 
-        'player': ['You die...', 'World turns black as your lifeless body falls on ground...'],
+        'player': ['You die...[Press SPACE]', 'World turns black as your lifeless body falls on ground...[Press SPACE]'],
         'monster': [' dies.', ' drops dead.', '\'s dead body falls on ground.']
     }
 

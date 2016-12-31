@@ -486,9 +486,16 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 				this.updateScreenStats();
 				map.cells[this.position.level].time.engine.lock();
 				this.handleEvent = function(){};
-                screen.placeMessage('You die...');
+                screen.placeMessage('You die...[Press SPACE]');
 				this.deathCause.type = source;
-				evHandlers.generateDeathScreen(this);
+
+				this.handleEvent = function(ev){
+
+					if(ev.which === 32){
+
+                        evHandlers.generateDeathScreen(this);
+					}
+				}
 			}else {
 
                 screen.display.clear();
