@@ -33,7 +33,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			ai: animalai.ai, 
 			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
 			hostileList: {species: ['human', 'snake'], family: [], entity: [], group: []},
-			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d3-4', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
+			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, sort: 'melee', damage: '1d3-4', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
 			},
 
 		'snake': {
@@ -55,7 +55,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			ai: animalai.ai,
 			abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
 			hostileList: {species: ['human', 'rat', 'kobold', 'wolf', 'hyena'], family: [], entity: [], group: ['horses']},
-			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d7', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['poisoned']}
+			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, sort: 'melee', damage: '1d7', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['poisoned']}
 		},
 
         'giant lizard': {
@@ -79,7 +79,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: animalai.ai,
             abilities: {breatheUnderWater: true, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d8+4', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, sort: 'melee', damage: '1d8+4', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
         },
 
         'giant centipide': {
@@ -102,7 +102,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: animalai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d6-1', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['poisoned']}
+            defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, sort: 'melee', damage: '1d6-1', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['poisoned']}
         },
 
         'lion': {
@@ -126,7 +126,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: animalai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: ['canine']},
-            defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d8+5', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, sort: 'melee', damage: '1d8+5', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
         },
 
         'cave bear': {
@@ -150,7 +150,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: animalai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'claws', description: 'a claws', natural: true, damage: '1d6+5', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding']}
+            defaultWeapon: {name: 'claws', description: 'a claws', natural: true, sort: 'melee', damage: '1d6+5', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding']}
         },
 
 		'wolf': {
@@ -174,7 +174,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			ai: animalai.ai,
 			abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
 			hostileList: {species: ['human', 'snake'], family: [], entity: [], group: ['cats']},
-			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d6+1', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['bleeding']}
+			defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, sort: 'melee', damage: '1d6+1', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['bleeding']}
 		},
 
         'horse': {
@@ -198,7 +198,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: animalai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
             hostileList: {species: ['human', 'snake'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'hooves', description: 'a hooves', natural: true, damage: '1d9+1', critical: [20], dmgType: 'hooves', criticalMultiplier: 2, criticalHit: ['stunned', 'prone']}
+            defaultWeapon: {name: 'hooves', description: 'a hooves', natural: true, sort: 'melee', damage: '1d9+1', critical: [20], dmgType: 'hooves', criticalMultiplier: 2, criticalHit: ['stunned', 'prone']}
         },
 
         'hyena': {
@@ -222,7 +222,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: animalai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
             hostileList: {species: ['human', 'snake'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d6+3', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['prone']}
+            defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, sort: 'melee', damage: '1d6+3', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: ['prone']}
         },
 
 		'raven': {
@@ -246,7 +246,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			ai: animalai.ai,
 			abilities: {breatheUnderWater: false, canFly: true, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
 			hostileList: {species: ['human'], family: [], entity: [], group: []},
-			defaultWeapon: {name: 'claws', description: 'a claws', natural: true, damage: '1d2-5', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding']}
+			defaultWeapon: {name: 'claws', description: 'a claws', natural: true, sort: 'melee', damage: '1d2-5', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding']}
 		},
 
 		'kobold': {
@@ -272,7 +272,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
             hostileList: {species: ['human', 'snake'], family: [], entity: [], group: ['undead']},
-            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, sort: 'melee', damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
         },
 
         'ogre': {
@@ -298,7 +298,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d3+3', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, sort: 'melee', damage: '1d3+3', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
         },
 
         'minotaur': {
@@ -324,7 +324,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
             hostileList: {species: ['human', 'cyclops'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'horns', description: 'a horns', natural: true, damage: '1d6+2', critical: [20], dmgType: 'horns', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'horns', description: 'a horns', natural: true, sort: 'melee', damage: '1d6+2', critical: [20], dmgType: 'horns', criticalMultiplier: 2, criticalHit: [null]}
         },
 
         'cyclops': {
@@ -350,7 +350,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
             hostileList: {species: ['human', 'minotaur'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d8+5', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: ['stunned']}
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, sort: 'melee', damage: '1d8+5', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: ['stunned']}
         },
 
         'centaur': {
@@ -375,7 +375,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: ['reptile']},
-            defaultWeapon: {name: 'hooves', description: 'a hooves', natural: true, damage: '1d6+1', critical: [20], dmgType: 'hooves', criticalMultiplier: 2, criticalHit: ['stunned', 'prone']}
+            defaultWeapon: {name: 'hooves', description: 'a hooves', natural: true, sort: 'melee', damage: '1d6+1', critical: [20], dmgType: 'hooves', criticalMultiplier: 2, criticalHit: ['stunned', 'prone']}
         },
 
         'goblin': {
@@ -401,7 +401,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: ['elfs']},
-            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, sort: 'melee', damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
         },
 
         'hobgoblin': {
@@ -427,7 +427,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: ['elfs']},
-            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, sort: 'melee', damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
         },
 
         'gnoll': {
@@ -453,7 +453,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, sort: 'melee', damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
         },
 
         'skeleton': {
@@ -479,7 +479,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: true, cantDrinkPotions: true, illiterate: true, mindless: true, bloodless: true},
             hostileList: {species: ['human'], family: [], entity: [], group: ['kobolds', 'elfs']},
-            defaultWeapon: {name: 'claws', description: 'a claws', natural: true, damage: '1d4+2', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding']}
+            defaultWeapon: {name: 'claws', description: 'a claws', natural: true, sort: 'melee', damage: '1d4+2', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding']}
         },
 
         'ghoul': {
@@ -505,7 +505,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: true, cantDrinkPotions: true, illiterate: true, mindless: true, bloodless: true},
             hostileList: {species: ['human'], family: [], entity: [], group: ['kobolds', 'elfs']},
-            defaultWeapon: {name: 'claws', description: 'a claws', natural: true, damage: '1d6+1', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding', 'paralyzed']}
+            defaultWeapon: {name: 'claws', description: 'a claws', natural: true, sort: 'melee', damage: '1d6+1', critical: [20], dmgType: 'claws', criticalMultiplier: 2, criticalHit: ['bleeding', 'paralyzed']}
         },
 
         'drow': {
@@ -531,7 +531,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: ['undead', 'orcs', 'goblinoids']},
-            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, sort: 'melee', damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
         },
 
         'bugbear': {
@@ -557,7 +557,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: creatai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: true, suffocateCounter: 0, fearless: false, cantDrinkPotions: false, illiterate: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'fist', description: 'a fist', natural: true, sort: 'melee', damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]}
         },
 
         'giant beetle': {
@@ -582,7 +582,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             ai: animalai.ai,
             abilities: {breatheUnderWater: false, canFly: false, isSuffocating: false, canOpenDoors: false, suffocateCounter: 0, fearless: false, mindless: false, bloodless: false},
             hostileList: {species: ['human'], family: [], entity: [], group: []},
-            defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, damage: '1d4', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
+            defaultWeapon: {name: 'teeths', description: 'a teeths', natural: true, sort: 'melee', damage: '1d4', critical: [20], dmgType: 'bite', criticalMultiplier: 2, criticalHit: [null]}
         }
 	};
 	

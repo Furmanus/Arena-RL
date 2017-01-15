@@ -105,10 +105,65 @@ define(['screen', 'map'], function(screen, map){
 		path.shift();
 		return path;
 	}
+
+	/*
+	draws straight line from start cell to goal cell for entity. blockingCells is an array of cell types blocking line
+	 */
+	function bresenham(startX, startY, goalX, goalY, entity, blockingCells){
+
+        var dx = Math.abs(goalX-startX),
+        	dy = Math.abs(goalY-startY),
+        	sx = (startX < goalX) ? 1 : -1,
+        	sy = (startY < goalY) ? 1 : -1,
+        	err = dx-dy,
+			result = [];
+
+        while(true){
+
+            result.push({x: startX, y: startY});
+
+			if(validateBlockingCells(map.cells[entity.position.level][startX][startY], blockingCells) === 'block'){
+
+				break;
+			}
+
+            if ((startX === goalX) && (startY === goalY)) {
+
+                break;
+            }
+
+            var e2 = 2*err;
+            if (e2 >-dy){
+
+            	err -= dy;
+            	startX  += sx;
+            }
+            if (e2 < dx){
+
+            	err += dx;
+            	startY  += sy;
+            }
+        }
+
+        return result;
+
+        function validateBlockingCells(cell, blockingCells){
+
+			for(var i=0; i<blockingCells.length; i++){
+
+				if(cell.type.type === blockingCells[i]){
+
+					return 'block';
+				}
+			}
+
+			return 'pass';
+		}
+	}
 	
 	return {
 	
-		findPath: findPath
-	
+		findPath: findPath,
+		bresenham: bresenham
 	}
 });

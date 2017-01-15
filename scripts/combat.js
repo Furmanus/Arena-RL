@@ -156,77 +156,162 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
         }
 
         defender.updateScreenStats();
-		
-		function calculateEquipmentBonus(defender){
-			
-			var armourBonus = 0;
-			
-			for(var n in defender.equipment){
-				
-				if(defender.equipment[n].armourBonus !== undefined){
-				
-					armourBonus += defender.equipment[n].armourBonus;
-				}
-			}
-			
-			return armourBonus;
-		}
+	}
 
-		function calculateDexterityBonus(defender){
+	function doRangedAttack(attacker, lineOfShot, eventHandler, escapeEventHandler){
 
-            var result;
+        var level = attacker.position.level,
+            items = require('items');
 
-            if(defender.type.family === 'animal'){
+        analysePath(1);
+
+        function analysePath(cell){
+
+            var x = lineOfShot[cell].x,
+                y = lineOfShot[cell].y, //we start from second element of array, because 0 element is attacker coordinates
+                screenX = screen.convertCoordinate(x, 'width'),
+                screenY = screen.convertCoordinate(y, 'height');
+
+            screen.display.draw(screenX, screenY, attacker.equipment['left hand'].display, attacker.equipment['left hand'].fgColor);
+
+            if(map.cells[level][x][y].entity !== null){
+
+                //NAPISAC KOD ZA WALKE WLASCIWA
+                endRangedAttack();
+            }else if(cell !== lineOfShot.length - 1){
+
+                setTimeout(function(){screen.display.draw(screenX, screenY, getDisplayChar(level, x, y), getFgColor(level, x, y));}, 25);
+                setTimeout(function(){analysePath(++cell);}, 50);
+            }else if(cell === lineOfShot.length - 1 && map.cells[level][x][y].entity === null){
+
+                endRangedAttack();
+            }
+
+            function endRangedAttack() {
+
+                var target = (map.cells[level][x][y].entity === null ? map.cells[level][x][y] : map.cells[level][x][y].entity),
+                    index = checkIfInventoryHasItem(attacker.equipment['left hand'], target);
+
+                if(index === null){
+
+                    if(attacker.equipment['left hand'].quantity === 1){
+
+                        target.inventory.push(attacker.equipment['left hand']);
+                        attacker.equipment['left hand'].owner = target;
+                        attacker.equipment['left hand'] = {description: 'empty'};
+                    }else if(attacker.equipment['left hand'].quantity > 1){
+
+                        new items.Ammo(attacker.equipment['left hand'].name, target, 1);
+                        attacker.equipment['left hand'].quantity--;
+                    }
+                }else{
+
+                    if(attacker.equipment['left hand'].quantity === 1){
+
+                        target.inventory[index].quantity++;
+                        attacker.equipment['left hand'] = {description: 'empty'};
+                    }else if(attacker.equipment['left hand'].quantity > 1){
+
+                        target.inventory[index].quantity++;
+                        attacker.equipment['left hand'].quantity--;
+                    }
+                }
+
+                if (attacker.type.type === 'player') {
+
+                    escapeEventHandler(attacker);
+                    map.cells[level].time.engine.unlock();
+                    attacker.eventHandler = eventHandler;
+                }
+
+                screen.display.clear();
+                screen.drawVisibleCells(map.cells[attacker.position.level]);
+            }
+
+            function checkIfInventoryHasItem(item, object){
+
+                for(var i=0; i<object.inventory.length; i++){
+
+                    if(item.name === object.inventory[i].name){
+
+                        return i;
+                    }
+                }
+
+                return null;
+            }
+        }
+    }
+
+    function calculateEquipmentBonus(defender){
+
+        var armourBonus = 0;
+
+        for(var n in defender.equipment){
+
+            if(defender.equipment[n].armourBonus !== undefined){
+
+                armourBonus += defender.equipment[n].armourBonus;
+            }
+        }
+
+        return armourBonus;
+    }
+
+    function calculateDexterityBonus(defender){
+
+        var result;
+
+        if(defender.type.family === 'animal'){
+
+            result = Math.floor(defender.stats.dexterity / 2 - 5);
+        }else{
+
+            if(defender.equipment.torso.description === 'empty'){
 
                 result = Math.floor(defender.stats.dexterity / 2 - 5);
             }else{
 
-                if(defender.equipment.torso.description === 'empty'){
+                result = Math.floor(defender.stats.dexterity / 2 - 5);
 
-                    result = Math.floor(defender.stats.dexterity / 2 - 5);
-                }else{
+                if(result > defender.equipment.torso.maxDexBonus){
 
-                    result = Math.floor(defender.stats.dexterity / 2 - 5);
-
-                    if(result > defender.equipment.torso.maxDexBonus){
-
-                        result = defender.equipment.torso.maxDexBonus;
-                    }
+                    result = defender.equipment.torso.maxDexBonus;
                 }
             }
-
-            if(result > 0 && defender.status.stunned.value === 1){
-
-                result = 0;
-            }
-
-            return result;
         }
 
-        function calculateBaseAttackBonus(attacker){
+        if(result > 0 && defender.status.stunned.value === 1){
 
-            var result = attacker.stats.baseAttackBonus + Math.floor(attacker.stats.strength / 2 - 5);
-
-            if(attacker.status.prone.value === 1){
-
-                result -= 4;
-            }
-
-            return result;
+            result = 0;
         }
 
-        function calculateBaseDefenseBonus(defender){
+        return result;
+    }
 
-            var result = defender.stats.defense;
+    function calculateBaseAttackBonus(attacker){
 
-            if(defender.status.prone.value === 1){
+        var result = attacker.stats.baseAttackBonus + Math.floor(attacker.stats.strength / 2 - 5);
 
-                result -= 4;
-            }
+        if(attacker.status.prone.value === 1){
 
-            return result;
+            result -= 4;
         }
-	}
+
+        return result;
+    }
+
+    function calculateBaseDefenseBonus(defender){
+
+        var result = defender.stats.defense;
+
+        if(defender.status.prone.value === 1){
+
+            result -= 4;
+        }
+
+        return result;
+    }
 	
 	function roll(rollNumber, diceSides){
 		
@@ -321,11 +406,46 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
         }
     }
 
+    function getDisplayChar(level, x, y){
+
+	    var examinedCell = map.cells[level][x][y];
+
+	    if(examinedCell.entity !== null){
+
+	        return examinedCell.entity.display;
+        }else if(examinedCell.inventory.length !== 0){
+
+	        return examinedCell.inventory[0].display;
+        }else{
+
+            return examinedCell.type.display;
+        }
+    }
+
+    function getFgColor(level, x, y){
+
+        var examinedCell = map.cells[level][x][y];
+
+        if(examinedCell.entity !== null){
+
+            return examinedCell.entity.fgColor;
+        }else if(examinedCell.inventory.length !== 0){
+
+            return examinedCell.inventory[0].fgColor;
+        }else{
+
+            return examinedCell.type.fgColor;
+        }
+    }
+
 	return{
 		
 		roll: roll,
 		doCombatMelee: doCombatMelee,
 		calc: calc,
-        calcMax: calcMax
+        calcMax: calcMax,
+        doRangedAttack: doRangedAttack,
+        getDisplayChar: getDisplayChar,
+        getFgColor: getFgColor
 	}
 });

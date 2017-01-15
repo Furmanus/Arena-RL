@@ -64,7 +64,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 			this.class = playerOptions.class;
 			this.name = playerOptions.name;
             this.maxHp = this.hp;
-			this.lookDescription = 'anonymous brave adventurer';
+			this.lookDescription = screen.capitalizeString(playerOptions.name) + ', the brave adventurer.';
 			this.type = {messageDisplay: 'you', type: 'player', species: 'human', family: 'player', name: 'you'};
 			
 			this.inventory = [];
@@ -94,7 +94,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 				'berserk': {value: 0, activatedEveryTurn: status.entityStatus.berserk.activatedEveryTurn, activateEffect: status.entityStatus.berserk.activateEffect, removeEffect: status.entityStatus.berserk.removeEffect, initEffect: status.entityStatus.berserk.initEffect, modifiers: {}, counter: 0}
 			};
 
-            this.defaultWeapon = {name: 'fist', description: 'a fist', natural: true, damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]};
+            this.defaultWeapon = {name: 'fist', description: 'a fist', natural: true, sort: 'melee', damage: '1d2', critical: [20], dmgType: 'unarmed', criticalMultiplier: 2, criticalHit: [null]};
             this.weapon = this.defaultWeapon;
 
             this.killCount = 0; //count of killed monsters
@@ -209,19 +209,25 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 			}
 
 			if(map.cells[this.position.level][tmpX][tmpY].entity != null && map.cells[this.position.level][tmpX][tmpY].entity != this){
-				
-				combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity);
-				
-				map.clearVisibility(map.cells[this.position.level]);
-				screen.display.clear();
-				this.currentFov = [];
-				
-				this.doFov(this);
-				screen.drawVisibleCells(map.cells[this.position.level]);
-				//screen.drawCells(map.cells[this.position.level]);
-				
-				map.cells[this.position.level].time.engine.unlock();
-				
+
+				//we check if player is wielding a melee weapon
+				if(this.weapon.sort === 'melee') {
+
+                    combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity);
+
+                    map.clearVisibility(map.cells[this.position.level]);
+                    screen.display.clear();
+                    this.currentFov = [];
+
+                    this.doFov(this);
+                    screen.drawVisibleCells(map.cells[this.position.level]);
+                    //screen.drawCells(map.cells[this.position.level]);
+
+                    map.cells[this.position.level].time.engine.unlock();
+                }else{
+
+					screen.placeMessage('You won\'t bash ' + map.cells[this.position.level][tmpX][tmpY].entity.type.messageDisplay + ' with your ' + this.weapon.name);
+				}
 			}else{
 			
 				var	walkAttempt = map.cells[this.position.level][tmpX][tmpY].type.walkAttempt(this, tmpX, tmpY);
@@ -252,8 +258,10 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 							//KOD ODPOWIEDZIALNY ZA OBRAŻENIA OD OGNIA, po zaimplementowaniu hp
 							screen.placeMessage('There are roaring flames here! You are on fire!');
 						}else if(map.cells[this.position.level][this.position.x][this.position.y].inventory.length === 1){
+
+							var examinedItem = map.cells[this.position.level][this.position.x][this.position.y].inventory[0];
 							
-							screen.placeMessage('There is ' + map.cells[this.position.level][this.position.x][this.position.y].inventory[0].description + ' lying here.');
+							screen.placeMessage('There is ' + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('bundle of ' + examinedItem.quantity + ' ' ) : '') : '') + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? screen.removeFirst(examinedItem.description) : examinedItem.description) : examinedItem.description) + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('s' + ' ' ) : '') : '') + ' lying here.');
 						}else if(map.cells[this.position.level][this.position.x][this.position.y].inventory.length > 1){
 							
 							screen.placeMessage('Several items are lying here.');
@@ -470,7 +478,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 
 				screen.placeMessage('You drop your ' + this.equipment['right hand'].name + '(' + this.equipment['right hand'].damage + ').', 'red');
 				map.cells[this.position.level][this.position.x][this.position.y].inventory.push(this.equipment['right hand']);
-				this.equipment['right hand'].owner = this;
+				this.equipment['right hand'].owner = map.cells[this.position.level][this.position.x][this.position.y];
 				this.equipment['right hand'] = {description: 'empty'};
 				this.weapon = this.defaultWeapon;
 			}

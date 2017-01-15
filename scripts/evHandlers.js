@@ -5,6 +5,35 @@ moduł funkcji odpowiedzialnych za zmiany na ekranie(wyświetlanie ekwipunku, ko
 define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 	/*
+	 boolean variable used inside aim function, responsible for determining whether text has been added to message box in last iteration
+	 */
+	var textPlaced = false;
+
+	var numberKeysMap = {
+
+		49: '1',
+		97: '1',
+        50: '2',
+        98: '2',
+        51: '3',
+        99: '3',
+        52: '4',
+        100: '4',
+        53: '5',
+        101: '5',
+        54: '6',
+        102: '6',
+        55: '7',
+        103: '7',
+        56: '8',
+        104: '8',
+        57: '1',
+        105: '1',
+        48: '0',
+        96: '0'
+	};
+
+	/*
 	obiekt odpowiedzialny za kierunki poruszania się postaci. Klucze to keycodesy przycisków na klawiaturze numerycznej
 	*/
 
@@ -49,6 +78,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		81: quaff,
 		82: read,
 		77: reveal,
+		70: aim,
 		188: pickUp
 	};
 
@@ -66,7 +96,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 	var equip = {
 		
-		65: ['head', 'helmets'], 66: ['torso', 'armours'], 67: ['right hand', 'weapons'], 68: ['left hand', 'miscellaneous'], 69: ['legs', 'legs'], 70: ['feet', 'boots']
+		65: ['head', 'helmets'], 66: ['torso', 'armours'], 67: ['right hand', 'weapons'], 68: ['left hand', 'ammunition'], 69: ['legs', 'legs'], 70: ['feet', 'boots']
 	};
 
 	/*
@@ -81,9 +111,9 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		}else if(ev.shiftKey === false && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100 || ev.which === 101 || ev.which === 89 || ev.which === 75 || ev.which === 85 || ev.which === 76 || ev.which === 78 || ev.which === 74 || ev.which === 66 || ev.which === 72 || ev.which === 190 || ev.which === 37 || ev.which === 38 || ev.which === 39 || ev.which === 40 || ev.which === 36 || ev.which === 35 || ev.which === 33 || ev.which === 34)){
 
 			this.move(moveActions[ev.which].x, moveActions[ev.which].y);
-		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69 || ev.which === 81 || ev.which === 82 || ev.which === 88 || ev.which === 77)){
+		}else if(ev.shiftKey === false && (ev.which === 73 || ev.which === 76 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 69 || ev.which === 81 || ev.which === 82 || ev.which === 88 || ev.which === 77 || ev.which === 70)){
 
-			if(ev.which === 88 || ev.which === 67 || ev.which === 188 || ev.which === 68){
+			if(ev.which === 88 || ev.which === 67 || ev.which === 188 || ev.which === 68 || ev.which === 70){
 
 				actions[ev.which](this.position.x, this.position.y, this);
 			}else{
@@ -527,40 +557,40 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				return result;
 			}
 		}
-			
+
 		function getDisplayChar(x,y){
-				
+
 			if(map.cells[level][x][y].entity != null){
-					
+
 				return map.cells[level][x][y].entity.display;
 			}else {
-					
+
 				return map.cells[level][x][y].type.display;
 			}
 		}
-		
+
 		function getDisplayColor(x,y){
-			
+
 			if(map.cells[level][x][y].entity != null){
-				
+
 				return map.cells[level][x][y].entity.fgColor;
 			}else {
-				
+
 				return map.cells[level][x][y].type.fgColor;
 			}
 		}
-		
+
 		function getDisplayBgColor(x,y){
-		
+
 			return map.cells[level][x][y].type.bgColor;
 		}
-		
+
 		function returnLookText(x,y){
-			
+
 			var displayText;
-			
+
 			if(map.cells[level][x][y].isVisible === true){
-				
+
 				if(map.cells[level][x][y].entity != null){
 
 					displayText = 'You see ' + map.cells[level][x][y].entity.lookDescription;
@@ -588,46 +618,48 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 					displayText += '. [M]ore...';
 
 					if(map.cells[level][x][y].isOnFire === true){
-						
+
 						displayText += ' Wild flames of fire are roaring here.';
 					}
-			
+
 					return displayText;
 				}else if(map.cells[level][x][y].entity === null && map.cells[level][x][y].inventory.length === 0){
-				
+
 					displayText = 'You see ' + map.cells[level][x][y].type.name + '.';
-					
+
 					if(map.cells[level][x][y].isOnFire === true){
-						
+
 						displayText += ' Wild flames of fire are roaring here.';
 					}
-				
+
 					return displayText;
 				}else if(map.cells[level][x][y].entity === null && map.cells[level][x][y].inventory.length === 1){
-					
-					displayText = 'You see ' + map.cells[level][x][y].inventory[0].description + '.';
-					
+
+                    var examinedItem = map.cells[level][x][y].inventory[0];
+
+					displayText = 'You see ' + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('bundle of ' + examinedItem.quantity + ' ' ) : '') : '') + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? screen.removeFirst(examinedItem.description) : examinedItem.description) : examinedItem.description) + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('s' + ' ' ) : '') : '') + ' lying here.';
+
 					if(map.cells[level][x][y].isOnFire === true){
-						
+
 						displayText += ' Wild flames of fire are roaring here.';
 					}
-				
+
 					return displayText;
 				}else if(map.cells[level][x][y].entity === null && map.cells[level][x][y].inventory.length > 1){
-					
+
 					displayText = 'Several items are lying here.';
-					
+
 					if(map.cells[level][x][y].isOnFire === true){
-						
+
 						displayText += ' Wild flames of fire are roaring here.';
 					}
-				
+
 					return displayText;
 				}
 			}else{
-				
+
 				displayText = 'You can\'t see that place.';
-				
+
 				return displayText;
 			}
 			/*
@@ -644,6 +676,204 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				}
 			}
 		}
+	}
+
+	function aim(x, y, player){
+
+		if(player.weapon.sort === 'ranged') {
+
+			if(player.equipment['left hand'].name !== player.weapon.ammoType){
+
+				screen.placeMessage('You need to equip proper ammunition.');
+			}else {
+
+                var level = player.position.level,
+                    newX = x,
+                    newY = y,
+                    pathfinding = require('pathfinding'),
+                    returnedAimText = returnLookText(x, y),
+                    blockingCells = ['wall', 'bush', 'tree', 'deadTree', 'closedDoors'],
+                    bresenhamLine = pathfinding.bresenham(player.position.x, player.position.y, x, y, player, blockingCells),
+                    convertedCoordinateX, //map coordinates converted to current screen coordinates
+                    convertedCoordinateY,
+                    combat = require('combat');
+
+                screen.display.clear();
+                screen.drawVisibleCells(map.cells[player.position.level]);
+
+                //we draw bresenham line to current x and y coordinates, first converting them into screen coordinates
+                for (var i = 0; i < bresenhamLine.length; i++) {
+
+                    convertedCoordinateX = screen.convertCoordinate(bresenhamLine[i].x, 'width');
+                    convertedCoordinateY = screen.convertCoordinate(bresenhamLine[i].y, 'height');
+
+                    screen.display.draw(convertedCoordinateX, convertedCoordinateY, getDisplayChar(bresenhamLine[i].x, bresenhamLine[i].y), getDisplayColor(bresenhamLine[i].x, bresenhamLine[i].y), 'rgb(128, 0, 0)');
+                }
+                //if we encounter entity of current cell, we display message
+                if (returnedAimText) {
+
+                    screen.placeTemporaryMessage(returnedAimText);
+                    textPlaced = true;
+                } else {
+
+                    if (textPlaced === true) {
+                        //otherwise we remove last displayed message
+                        document.getElementById('messageBox').removeChild(document.getElementById('messageBox').lastChild);
+                        textPlaced = false;
+                    }
+                }
+
+                player.handleEvent = aimEventHandler.bind(player);
+            }
+        }else{
+
+			screen.placeMessage('You are not wielding any ranged weapon.');
+		}
+
+        function aimEventHandler(ev){
+
+            if(ev.which !== 27 && ev.which !== 32 && (ev.which === 103 || ev.which === 104 || ev.which === 105 || ev.which === 102 || ev.which === 99 || ev.which === 98 || ev.which === 97 || ev.which === 100)){
+
+            	/*
+            	for pressed direction movement key, we calculate if there exists not blocked bresenham line to new coords. If it exists, we call aim function again for new coordinates
+            	 */
+            	var newBresenhamLine = pathfinding.bresenham(player.position.x, player.position.y, x + moveActions[ev.which].x, y + moveActions[ev.which].y, player, blockingCells);
+
+                if(x + moveActions[ev.which].x >=0 && y + moveActions[ev.which].y >= 0 && x + moveActions[ev.which].x < screen.options.width && y + moveActions[ev.which].y < screen.options.height && validateBresenhamLine(newBresenhamLine) && screen.getDistance(player.position.x, player.position.y, x + moveActions[ev.which].x, y + moveActions[ev.which].y) < player.weapon.range) {
+
+                    var examinedCell = map.cells[player.position.level][newX][newY];
+
+                    newX += moveActions[ev.which].x;
+                    newY += moveActions[ev.which].y;
+
+                    if (examinedCell.isVisible === true) {
+
+                        aim(newX, newY, player);
+                    }
+                }
+			}else if(ev.which === 27 || ev.which === 32){
+
+				esc(player);
+			}else if(ev.which === 70){
+
+				combat.doRangedAttack(player, bresenhamLine, defaultEventHandler, esc);
+			}
+
+			function validateBresenhamLine(line){
+
+				for(var i=0; i<line.length; i++){
+
+					if(map.cells[level][line[i].x][line[i].y].isVisible === false){
+
+						return false;
+					}else if(validateCell(map.cells[level][line[i].x][line[i].y]) === false){
+
+						return false;
+					}
+
+					if(i !== line.length - 1 && i !== 0 && map.cells[level][line[i].x][line[i].y].entity !== null){
+
+						return false;
+					}
+				}
+
+				return true;
+
+				function validateCell(cell){
+
+					for(var i=0; i<blockingCells.length; i++){
+
+						if(cell.type.type === blockingCells[i]){
+
+							return false;
+						}
+					}
+
+					return true;
+				}
+			}
+		}
+
+        function getDisplayChar(x,y){
+
+            if(map.cells[level][x][y].entity != null){
+
+                return map.cells[level][x][y].entity.display;
+            }else if(map.cells[level][x][y].inventory.length !== 0) {
+
+            	return map.cells[level][x][y].inventory[0].display;
+            }else{
+
+                return map.cells[level][x][y].type.display;
+            }
+        }
+
+        function getDisplayColor(x,y){
+
+            if(map.cells[level][x][y].entity != null){
+
+                return map.cells[level][x][y].entity.fgColor;
+            }else if(map.cells[level][x][y].inventory.length !== 0) {
+
+                return map.cells[level][x][y].inventory[0].fgColor;
+            }else {
+
+                return map.cells[level][x][y].type.fgColor;
+            }
+        }
+
+        function returnLookText(x,y){
+
+            var displayText;
+
+            if(map.cells[level][x][y].isVisible === true){
+
+                if(map.cells[level][x][y].entity != null){
+
+                    displayText = screen.capitalizeString(map.cells[level][x][y].entity.lookDescription);
+
+                    if(verifySpecialStatus(map.cells[level][x][y].entity) === true){
+
+                        var stateList = [];
+
+                        statusList = Object.keys(map.cells[level][x][y].entity.status);
+
+                        displayText += ' (';
+
+                        for(var i=0; i<statusList.length; i++){
+
+                            if(map.cells[level][x][y].entity.status[statusList[i]].value === 1) {
+
+                                stateList.push(statusList[i]);
+                            }
+                        }
+
+                        displayText += stateList.join(', ');
+                        displayText += ')';
+                    }
+
+                    if(map.cells[level][x][y].isOnFire === true){
+
+                        displayText += ' Wild flames of fire are roaring here.';
+                    }
+
+                    return displayText;
+                }
+            }
+			/*
+			 function used to verify whether entity has any special status (confusion, bleeding, prone, etc.) active
+			 */
+            function verifySpecialStatus(entity){
+
+                for(var n in entity.status){
+
+                    if(entity.status[n].value === 1){
+
+                        return true;
+                    }
+                }
+            }
+        }
 	}
 	
 	function verifyNeighbour(level, x, y, cellType){
@@ -674,18 +904,17 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			
 			screen.placeMessage('There isn\'t anything to pick up here.');
 		}else if(map.cells[level][x][y].inventory.length === 1 && player.inventory.length <= 12){
-			
-			screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[0].description + '.');
-            map.cells[level][x][y].inventory[0].owner = player;
-			player.inventory.push(map.cells[level][x][y].inventory.splice(0,1)[0]);
-			
-			screen.display.clear();
-			map.clearVisibility(map.cells[level]);
-			player.currentFov = [];
-			player.doFov(player);
-			screen.drawVisibleCells(map.cells[level]);
-			
-			map.cells[level].time.engine.unlock();
+
+			if(map.cells[level][x][y].inventory[0].stackable === true && map.cells[level][x][y].inventory[0].quantity > 1){
+
+                screen.placeMessage('How many ' + map.cells[level][x][y].inventory[0].name + 's you want to pick up? [0]');
+			}else {
+
+                screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[0].description + '.');
+            }
+
+            transferItem(map.cells[level][x][y].inventory[0], map.cells[level][x][y], player, 'pick up');
+
 		}else if(map.cells[level][x][y].inventory.length > 1 && player.inventory.length <= 12){
 			
 			displayGroundItems(level, x, y);
@@ -717,14 +946,19 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                  */
                 var identifier = list[ev.which - 65].identifier;
 
-				screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[identifier].description + '.');
-                map.cells[level][x][y].inventory[identifier].owner = player;
-                //remove item from cell inventory list and push it into player inventory
-				this.inventory.push(map.cells[level][x][y].inventory.splice(identifier, 1)[0]);
+                if(map.cells[level][x][y].inventory[identifier].stackable === true && map.cells[level][x][y].inventory[identifier].quantity > 1){
+
+                    screen.placeMessage('How many ' + map.cells[level][x][y].inventory[identifier].name + 's you want to pick up? [0]');
+                }else {
+
+                    screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[identifier].description + '.');
+                }
+
+                transferItem(map.cells[level][x][y].inventory[identifier], map.cells[level][x][y], player, 'pick up');
 				
-				esc(player);
+				//esc(player);
 				
-				map.cells[level].time.engine.unlock();		
+				//map.cells[level].time.engine.unlock();
 			}
 		}
 	}
@@ -741,7 +975,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
         for(var n in player.equipment){
 
-            drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(96 + (currentRow / 2)) + ']' + n + '%c{}: ' + screen.removeFirst(player.equipment[n].description);
+            drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(96 + (currentRow / 2)) + ']' + n + '%c{}: ' + ((player.equipment[n].stackable && player.equipment[n].quantity > 1) ? ('bundle of ' + player.equipment[n].quantity + ' ' + screen.removeFirst(player.equipment[n].description) + 's') : screen.removeFirst(player.equipment[n].description));
             screen.display.drawText(0, currentRow, drawnText);
 
             currentRow += 2;
@@ -780,7 +1014,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                     this.weapon = this.defaultWeapon;
                 }
 
-                screen.placeMessage('You remove ' + this.equipment[equipmentType].description + '.');
+                screen.placeMessage('You remove ' + ((this.equipment[equipmentType].stackable && this.equipment[equipmentType].quantity > 1) ? (' bundle of ' + this.equipment[equipmentType].quantity + ' ' + screen.removeFirst(this.equipment[equipmentType].description) + 's.') : (this.equipment[equipmentType].description + '.')));
 				doEquipmentModifiers(this, this.equipment[equipmentType], 'remove');
                 this.inventory.push(this.equipment[equipmentType]);
                 this.equipment[equipmentType] = {description: 'empty'};
@@ -803,7 +1037,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                         this.weapon = this.inventory[identifier];
                     }
 
-                    screen.placeMessage('You equip ' + this.inventory[identifier].description + '.');
+                    screen.placeMessage('You equip ' + ((this.inventory[identifier].stackable && this.inventory[identifier].quantity > 1) ? ('bundle of ' + this.inventory[identifier].quantity + ' ' + screen.removeFirst(this.inventory[identifier].description) + 's.') : (this.inventory[identifier].description + '.')));
                     this.equipment[equipmentType] = this.inventory.splice(identifier, 1)[0];
 					doEquipmentModifiers(this, this.equipment[equipmentType], 'apply');
 
@@ -875,14 +1109,23 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			    /*
 			    we look for item identifier in list array. Because list is sorted alphabetically, item position in screen display is not the same as position in player inventory
 			     */
-				var identifier = list[ev.which - 65].identifier;
+				var identifier = list[ev.which - 65].identifier,
+					stackable = !!player.inventory[identifier].stackable;
 
-				screen.placeMessage('You drop ' + player.inventory[identifier].description + '.');
+				if(stackable && player.inventory[identifier].quantity > 1){
+
+					screen.placeMessage('How many ' + player.inventory[identifier].name + 's you want to drop? [0]');
+					esc(player);
+				}else{
+
+                    screen.placeMessage('You drop ' + (stackable ? (player.inventory[identifier].quantity > 1 ? ('bundle of ' + player.inventory[identifier].quantity + ' ') : '') : '') + (stackable ? (player.inventory[identifier].quantity > 1 ? screen.removeFirst(player.inventory[identifier].description) : player.inventory[identifier].description) : player.inventory[identifier].description) + (stackable ? (player.inventory[identifier].quantity > 1 ? 's' : '') : '') + '.');
+				}
 				
 				if(map.cells[player.position.level][player.position.x][player.position.y].inventory.length <= 12){
 
-                    player.inventory[identifier].owner = map.cells[player.position.level][player.position.x][player.position.y];
-					map.cells[player.position.level][player.position.x][player.position.y].inventory.push(player.inventory.splice(identifier, 1)[0]);
+                    //player.inventory[identifier].owner = map.cells[player.position.level][player.position.x][player.position.y];
+					//map.cells[player.position.level][player.position.x][player.position.y].inventory.push(player.inventory.splice(identifier, 1)[0]);
+					transferItem(player.inventory[identifier], player, map.cells[player.position.level][player.position.x][player.position.y], 'drop');
 				}else{
 					/*
 					if map cell inventory is full(has 12 items), we iterate through all neighbour cells. If examined cell doesn't block movement and doesn't have full inventory, item is dropped there
@@ -895,16 +1138,17 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 						
 						if(examinedCell.type.blockMovement == false && examinedCell.inventory.length <= 12){
 
-                            player.inventory[identifier].owner = examinedCell;
-							examinedCell.inventory.push(player.inventory.splice(identifier, 1)[0]);
+                            //player.inventory[identifier].owner = examinedCell;
+							//examinedCell.inventory.push(player.inventory.splice(identifier, 1)[0]);
+                            transferItem(player.inventory[identifier], player, map.cells[player.position.level][player.position.x][player.position.y], 'drop');
 							break;
 						}
 					}
 				}
 				
-				esc(player);
+				//esc(player);
 				
-				map.cells[player.position.level].time.engine.unlock();
+				//map.cells[player.position.level].time.engine.unlock();
 			}
 		}
 	}
@@ -916,7 +1160,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	    var list = [],
 			itemClass = null,
 			drawnText,
-			currentRow = 2;
+			currentRow = 2,
+			stackable;
 
         for(var i=0; i<object.inventory.length; i++){
 
@@ -938,7 +1183,9 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				currentRow++;
 			}
 
-            drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(97+i) + ']%c{}' + screen.removeFirst(list[i].item.description);
+			stackable = !!(list[i].item.stackable);
+
+            drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(97+i) + ']%c{}' + ((stackable && list[i].item.quantity > 1) ? (' ' + list[i].item.quantity) : '') + ' ' +  screen.removeFirst(list[i].item.description) + (stackable ? (list[i].item.quantity > 1 ? 's' : '') : '');
             screen.display.drawText(1, currentRow, drawnText);
 			
 			currentRow++;
@@ -953,7 +1200,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
         var list = [],
             itemClass = null,
             drawnText,
-            currentRow = 2;
+            currentRow = 2,
+			stackable;
 
         for(var i=0; i<object.inventory.length; i++){
 
@@ -969,7 +1217,9 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
             if(list[i].item.type === type) {
 
-                drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(97 + i) + ']%c{}' + screen.removeFirst(list[i].item.description);
+            	stackable = !!(list[i].item.stackable);
+
+                drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(97+i) + ']%c{}' + ((stackable && list[i].item.quantity > 1) ? (' ' + list[i].item.quantity) : '') + ' ' +  screen.removeFirst(list[i].item.description) + (stackable ? (list[i].item.quantity > 1 ? 's' : '') : '');
                 screen.display.drawText(1, currentRow, drawnText);
 
                 currentRow++;
@@ -1176,6 +1426,168 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 window.location.reload(true);
 			}
 		}
+	}
+
+	/*
+	function responsible for transfering items between objects(player or map cells) inventory. actionType is string: either 'pick up', 'drop'
+	 */
+	function transferItem(item, fromObject, goalObject, actionType){
+
+		var index = returnInventoryIndex(item, fromObject),// we find index in inventory of chosen item
+			chosenQuantity = null,
+			items = require('items');
+
+		if(item.stackable && item.quantity > 1){
+
+			if(actionType === 'pick up') {
+
+                goalObject.handleEvent = pickUpManyEventHandler;
+            }else if(actionType === 'drop'){
+
+                fromObject.handleEvent = pickUpManyEventHandler;
+            }
+		}else{
+
+			var goalObjectInvIndex = checkIfInventoryHasItem(item, goalObject);
+
+			if(goalObjectInvIndex === null) {
+
+                goalObject.inventory.push(fromObject.inventory.splice(index, 1)[0]);
+                item.owner = goalObject;
+            }else{
+
+				goalObject.inventory[goalObjectInvIndex].quantity++;
+                fromObject.inventory.splice(index, 1);
+			}
+
+            if(actionType === 'pick up') {
+
+
+                map.clearVisibility(map.cells[goalObject.position.level]);
+                goalObject.currentFov = [];
+                goalObject.doFov(goalObject);
+                esc(goalObject);
+            }else if(actionType === 'drop'){
+
+
+                map.clearVisibility(map.cells[fromObject.position.level]);
+                fromObject.currentFov = [];
+                fromObject.doFov(fromObject);
+                esc(fromObject);
+            }
+		}
+
+		function returnInventoryIndex(item, object){
+
+			for(var i=0; i<object.inventory.length; i++){
+
+				if(item === object.inventory[i]){
+
+					return i;
+				}
+			}
+		}
+
+		function pickUpManyEventHandler(ev){
+
+			var message = document.getElementById('messageBox').lastChild.innerHTML;
+			message = message.split('').splice(0, message.indexOf('[') + 1).join('');
+
+			if(numberKeysMap[ev.which] !== undefined || ev.which === 8) {
+
+                if (chosenQuantity === null && numberKeysMap[ev.which]) {
+
+                    chosenQuantity = numberKeysMap[ev.which];
+                } else if (chosenQuantity !== null && chosenQuantity.length < 2 && ev.which !== 8) {
+
+                    chosenQuantity += numberKeysMap[ev.which];
+                }else if (chosenQuantity !== null && ev.which === 8) {
+
+                    if (chosenQuantity.length === 2 || chosenQuantity.length === 1) {
+
+                        chosenQuantity = chosenQuantity.substring(0, chosenQuantity.length - 1);
+                    }
+
+                    if(chosenQuantity.length === 0){
+
+                        chosenQuantity = null;
+                    }
+                }
+
+            }
+			message += (chosenQuantity ? chosenQuantity : '0') + ']';
+            document.getElementById('messageBox').lastChild.innerHTML = message;
+
+            if(ev.which === 13){
+
+            	var chosenNumber = parseInt(chosenQuantity),
+                	goalObjectInvIndex = checkIfInventoryHasItem(item, goalObject),
+                    quantityLeft = item.quantity - chosenNumber;
+
+				if(chosenNumber >= item.quantity){
+
+					chosenNumber = item.quantity;
+
+					if(goalObjectInvIndex === null) {
+
+                        goalObject.inventory.push(fromObject.inventory.splice(index, 1)[0]);
+                        item.owner = goalObject;
+                    }else{
+
+						goalObject.inventory[goalObjectInvIndex].quantity += chosenNumber;
+                        fromObject.inventory.splice(index, 1)
+					}
+                    screen.placeMessage((actionType === 'pick up' ? 'You pick up bundle of ' : 'You drop bundle of ') + item.quantity + ' ' + screen.removeFirst(item.description) + 's.');
+
+				}else if(chosenNumber < item.quantity && chosenNumber > 0){
+
+					//if item isn't present, we just transfer chosen quantity, by creating new object
+					if(goalObjectInvIndex === null){
+
+						new items.Ammo(item.name, goalObject, chosenNumber);
+						item.quantity = quantityLeft;
+					}else{
+
+						goalObject.inventory[goalObjectInvIndex].quantity += chosenNumber;
+						item.quantity -= chosenNumber;
+					}
+
+					screen.placeMessage((actionType === 'pick up' ? 'You pick up ' : 'You drop ') + (chosenNumber > 1 ? ('bundle of ' + chosenNumber + ' ' + screen.removeFirst(item.description) + 's') : item.description) + '.' );
+				}
+
+				if(actionType === 'pick up') {
+
+
+                    map.clearVisibility(map.cells[goalObject.position.level]);
+                    goalObject.currentFov = [];
+                    goalObject.doFov(goalObject);
+                    esc(goalObject);
+                }else if(actionType === 'drop'){
+
+
+                    map.clearVisibility(map.cells[fromObject.position.level]);
+                    fromObject.currentFov = [];
+                    fromObject.doFov(fromObject);
+                    esc(fromObject);
+				}
+			}
+		}
+
+		/*
+		 function which checks if certain item is already in object inventory. Used for dealing with splitting stack of items. Returns object inventory index if item is present, returns null otherwise
+		 */
+        function checkIfInventoryHasItem(item, object){
+
+            for(var i=0; i<object.inventory.length; i++){
+
+                if(item.name === object.inventory[i].name){
+
+                    return i;
+                }
+            }
+
+            return null;
+        }
 	}
 	
 	return {
