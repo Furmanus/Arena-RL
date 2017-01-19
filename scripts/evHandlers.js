@@ -4,10 +4,9 @@ moduł funkcji odpowiedzialnych za zmiany na ekranie(wyświetlanie ekwipunku, ko
 
 define(['screen', 'map', 'generator'], function(screen, map, generator){
 
-	/*
-	 boolean variable used inside aim function, responsible for determining whether text has been added to message box in last iteration
-	 */
-	var textPlaced = false;
+	var textPlaced = 0;
+
+	var aimInitiated = false;
 
 	var numberKeysMap = {
 
@@ -376,7 +375,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				
 				screen.display.clear();
 				screen.display.drawText(8, 2, 'Arena RL version 0.1');
-				screen.display.drawText(8, 3, 'Copyright 2016 by Furman');
+				screen.display.drawText(8, 3, 'Copyright 2016 - 2017 by Furman');
                 screen.display.drawText(8, 4, 'e-mail: furmanus@gmail.com');
 				this.handleEvent = escapeEventHandler.bind(player);
 				
@@ -395,8 +394,9 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				screen.display.drawText(1, 10, '[,] - pick up');
                 screen.display.drawText(1, 11, '[e] - equip/unequip items');
 				screen.display.drawText(1, 12, '[q] - drink');
-				screen.display.drawText(1, 13, '[r] - read');
-				screen.display.drawText(1, 14, '[R] - rise on feet/fall on ground');
+                screen.display.drawText(1, 13, '[f] - shoot with ranged weapon');
+				screen.display.drawText(1, 14, '[r] - read');
+				screen.display.drawText(1, 15, '[R] - rise on feet/fall on ground');
                 screen.display.drawText(1, 16, 'numpad 1,4,7,8,9,6,3,2 - movement');
 				screen.display.drawText(1, 17, 'h,j,k,l,y,u,b,n - movement');
 				screen.display.drawText(1, 18, 'home,end,pgUp,pgDown - diagonal move');
@@ -688,7 +688,20 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			}else {
 
                 var level = player.position.level,
-                    newX = x,
+					hostileCoords = returnHostileCoords(player);
+
+                if(x === player.position.x && y === player.position.y && aimInitiated === false) {
+
+                	if(hostileCoords && screen.getDistance(x, y, hostileCoords.x, hostileCoords.y) < player.weapon.range * 1.5) {
+
+                        x = (hostileCoords ? hostileCoords.x : x);
+                        y = hostileCoords ? hostileCoords.y : y;
+                    }
+
+                    aimInitiated = true;
+                }
+
+                var newX = x,
                     newY = y,
                     pathfinding = require('pathfinding'),
                     returnedAimText = returnLookText(x, y),
@@ -697,6 +710,16 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                     convertedCoordinateX, //map coordinates converted to current screen coordinates
                     convertedCoordinateY,
                     combat = require('combat');
+
+                if (textPlaced) {
+                    //if in last iteration text was placed inside message box, we remove it
+					for(var i=0; i<textPlaced; i++) {
+
+                        document.getElementById('messageBox').removeChild(document.getElementById('messageBox').lastChild);
+                    }
+
+                    textPlaced = 0;
+                }
 
                 screen.display.clear();
                 screen.drawVisibleCells(map.cells[player.position.level]);
@@ -713,14 +736,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 if (returnedAimText) {
 
                     screen.placeTemporaryMessage(returnedAimText);
-                    textPlaced = true;
-                } else {
-
-                    if (textPlaced === true) {
-                        //otherwise we remove last displayed message
-                        document.getElementById('messageBox').removeChild(document.getElementById('messageBox').lastChild);
-                        textPlaced = false;
-                    }
+                    textPlaced ++;
                 }
 
                 player.handleEvent = aimEventHandler.bind(player);
@@ -739,7 +755,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
             	 */
             	var newBresenhamLine = pathfinding.bresenham(player.position.x, player.position.y, x + moveActions[ev.which].x, y + moveActions[ev.which].y, player, blockingCells);
 
-                if(x + moveActions[ev.which].x >=0 && y + moveActions[ev.which].y >= 0 && x + moveActions[ev.which].x < screen.options.width && y + moveActions[ev.which].y < screen.options.height && validateBresenhamLine(newBresenhamLine) && screen.getDistance(player.position.x, player.position.y, x + moveActions[ev.which].x, y + moveActions[ev.which].y) < player.weapon.range) {
+                if(x + moveActions[ev.which].x >=0 && y + moveActions[ev.which].y >= 0 && x + moveActions[ev.which].x < screen.options.width && y + moveActions[ev.which].y < screen.options.height && validateBresenhamLine(newBresenhamLine) && screen.getDistance(player.position.x, player.position.y, x + moveActions[ev.which].x, y + moveActions[ev.which].y) < 1.5 * player.weapon.range) {
 
                     var examinedCell = map.cells[player.position.level][newX][newY];
 
@@ -753,10 +769,42 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 }
 			}else if(ev.which === 27 || ev.which === 32){
 
+            	aimInitiated = false;
+
+                if (textPlaced) {
+
+                    for(var i=0; i<textPlaced; i++) {
+
+                        document.getElementById('messageBox').removeChild(document.getElementById('messageBox').lastChild);
+                    }
+
+                    textPlaced = 0;
+                }
+
 				esc(player);
 			}else if(ev.which === 70){
 
-				combat.doRangedAttack(player, bresenhamLine, defaultEventHandler, esc);
+				if(x === player.position.x && y === player.position.y){
+
+					screen.placeMessage('You won\'t shoot yourself!');
+					textPlaced ++;
+				}else {
+
+                    if (textPlaced) {
+
+                        for(var i=0; i<textPlaced; i++) {
+
+                            document.getElementById('messageBox').removeChild(document.getElementById('messageBox').lastChild);
+                        }
+
+                        textPlaced = 0;
+                    }
+
+                    player.handleEvent = function(){};
+
+                    aimInitiated = false;
+                    combat.doRangedAttack(player, bresenhamLine, defaultEventHandler, esc);
+                }
 			}
 
 			function validateBresenhamLine(line){
@@ -907,7 +955,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 			if(map.cells[level][x][y].inventory[0].stackable === true && map.cells[level][x][y].inventory[0].quantity > 1){
 
-                screen.placeMessage('How many ' + map.cells[level][x][y].inventory[0].name + 's you want to pick up? [0]');
+                screen.placeMessage('How many ' + map.cells[level][x][y].inventory[0].name + 's you want to pick up? [' + map.cells[level][x][y].inventory[0].quantity + ']');
 			}else {
 
                 screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[0].description + '.');
@@ -948,17 +996,13 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
                 if(map.cells[level][x][y].inventory[identifier].stackable === true && map.cells[level][x][y].inventory[identifier].quantity > 1){
 
-                    screen.placeMessage('How many ' + map.cells[level][x][y].inventory[identifier].name + 's you want to pick up? [0]');
+                    screen.placeMessage('How many ' + map.cells[level][x][y].inventory[identifier].name + 's you want to pick up? [' +  map.cells[level][x][y].inventory[identifier].quantity + ']');
                 }else {
 
                     screen.placeMessage('You pick up ' + map.cells[level][x][y].inventory[identifier].description + '.');
                 }
 
                 transferItem(map.cells[level][x][y].inventory[identifier], map.cells[level][x][y], player, 'pick up');
-				
-				//esc(player);
-				
-				//map.cells[level].time.engine.unlock();
 			}
 		}
 	}
@@ -996,7 +1040,9 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
         function equipItem(equipmentType, itemType){
 
-            var list;
+            var list,
+				stackable,
+				index;
 
             screen.display.clear();
 
@@ -1016,8 +1062,27 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
                 screen.placeMessage('You remove ' + ((this.equipment[equipmentType].stackable && this.equipment[equipmentType].quantity > 1) ? (' bundle of ' + this.equipment[equipmentType].quantity + ' ' + screen.removeFirst(this.equipment[equipmentType].description) + 's.') : (this.equipment[equipmentType].description + '.')));
 				doEquipmentModifiers(this, this.equipment[equipmentType], 'remove');
-                this.inventory.push(this.equipment[equipmentType]);
-                this.equipment[equipmentType] = {description: 'empty'};
+
+
+				stackable = !!this.equipment[equipmentType].stackable;
+				index = checkIfInventoryHasItem(this.equipment[equipmentType], this);
+
+				if(stackable){
+
+					if(index === null){
+
+                        this.inventory.push(this.equipment[equipmentType]);
+                        this.equipment[equipmentType] = {description: 'empty'};
+					}else{
+
+						this.inventory[index].quantity += this.equipment[equipmentType].quantity;
+                        this.equipment[equipmentType] = {description: 'empty'};
+					}
+				}else{
+
+                    this.inventory.push(this.equipment[equipmentType]);
+                    this.equipment[equipmentType] = {description: 'empty'};
+				}
 
                 esc(this);
                 map.cells[this.position.level].time.engine.unlock();
@@ -1114,7 +1179,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 				if(stackable && player.inventory[identifier].quantity > 1){
 
-					screen.placeMessage('How many ' + player.inventory[identifier].name + 's you want to drop? [0]');
+					screen.placeMessage('How many ' + player.inventory[identifier].name + 's you want to drop? [' + player.inventory[identifier].quantity + ']');
 					esc(player);
 				}else{
 
@@ -1123,8 +1188,6 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 				
 				if(map.cells[player.position.level][player.position.x][player.position.y].inventory.length <= 12){
 
-                    //player.inventory[identifier].owner = map.cells[player.position.level][player.position.x][player.position.y];
-					//map.cells[player.position.level][player.position.x][player.position.y].inventory.push(player.inventory.splice(identifier, 1)[0]);
 					transferItem(player.inventory[identifier], player, map.cells[player.position.level][player.position.x][player.position.y], 'drop');
 				}else{
 					/*
@@ -1434,7 +1497,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 	function transferItem(item, fromObject, goalObject, actionType){
 
 		var index = returnInventoryIndex(item, fromObject),// we find index in inventory of chosen item
-			chosenQuantity = null,
+			chosenQuantity = item.quantity,
+			wasQuantityPicked = false, //boolean indicating whether user pressed on quantity
 			items = require('items');
 
 		if(item.stackable && item.quantity > 1){
@@ -1450,15 +1514,28 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 			var goalObjectInvIndex = checkIfInventoryHasItem(item, goalObject);
 
-			if(goalObjectInvIndex === null) {
+			if(item.stackable && actionType === 'pick up' && item.type === 'ammunition' && goalObject.equipment['right hand'].ammoType === item.name){
 
-                goalObject.inventory.push(fromObject.inventory.splice(index, 1)[0]);
-                item.owner = goalObject;
-            }else{
+				if(goalObject.equipment['left hand'].description === 'empty'){
 
-				goalObject.inventory[goalObjectInvIndex].quantity++;
-                fromObject.inventory.splice(index, 1);
-			}
+                    goalObject.equipment['left hand'] = fromObject.inventory.splice(index, 1)[0];
+				}else if(goalObject.equipment['left hand'].name === item.name){
+
+                    goalObject.equipment['left hand'].quantity++;
+                    fromObject.inventory.splice(index, 1);
+				}
+			}else {
+
+                if (goalObjectInvIndex === null) {
+
+                    goalObject.inventory.push(fromObject.inventory.splice(index, 1)[0]);
+                    item.owner = goalObject;
+                } else {
+
+                    goalObject.inventory[goalObjectInvIndex].quantity++;
+                    fromObject.inventory.splice(index, 1);
+                }
+            }
 
             if(actionType === 'pick up') {
 
@@ -1467,6 +1544,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 goalObject.currentFov = [];
                 goalObject.doFov(goalObject);
                 esc(goalObject);
+                map.cells[goalObject.position.level].time.engine.unlock();
             }else if(actionType === 'drop'){
 
 
@@ -1474,18 +1552,8 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 fromObject.currentFov = [];
                 fromObject.doFov(fromObject);
                 esc(fromObject);
+                map.cells[fromObject.position.level].time.engine.unlock();
             }
-		}
-
-		function returnInventoryIndex(item, object){
-
-			for(var i=0; i<object.inventory.length; i++){
-
-				if(item === object.inventory[i]){
-
-					return i;
-				}
-			}
 		}
 
 		function pickUpManyEventHandler(ev){
@@ -1493,7 +1561,14 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			var message = document.getElementById('messageBox').lastChild.innerHTML;
 			message = message.split('').splice(0, message.indexOf('[') + 1).join('');
 
-			if(numberKeysMap[ev.which] !== undefined || ev.which === 8) {
+			if(wasQuantityPicked === false){
+
+				if(numberKeysMap[ev.which]){
+
+                    chosenQuantity = numberKeysMap[ev.which];
+                    wasQuantityPicked = true;
+				}
+			}else if(numberKeysMap[ev.which] !== undefined || ev.which === 8) {
 
                 if (chosenQuantity === null && numberKeysMap[ev.which]) {
 
@@ -1518,6 +1593,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			message += (chosenQuantity ? chosenQuantity : '0') + ']';
             document.getElementById('messageBox').lastChild.innerHTML = message;
 
+            //if enter key was pressed
             if(ev.which === 13){
 
             	var chosenNumber = parseInt(chosenQuantity),
@@ -1528,29 +1604,60 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 					chosenNumber = item.quantity;
 
-					if(goalObjectInvIndex === null) {
+                    if(actionType === 'pick up' && item.type === 'ammunition' && goalObject.equipment['right hand'].ammoType === item.name){
 
-                        goalObject.inventory.push(fromObject.inventory.splice(index, 1)[0]);
-                        item.owner = goalObject;
-                    }else{
+                        if(goalObject.equipment['left hand'].description === 'empty'){
 
-						goalObject.inventory[goalObjectInvIndex].quantity += chosenNumber;
-                        fromObject.inventory.splice(index, 1)
-					}
+                            goalObject.equipment['left hand'] = fromObject.inventory.splice(index, 1)[0];
+                        }else if(goalObject.equipment['left hand'].name === item.name){
+
+                            goalObject.equipment['left hand'].quantity += chosenNumber;
+                            fromObject.inventory.splice(index, 1);
+                        }
+                    }else {
+
+                        if (goalObjectInvIndex === null) {
+
+                            goalObject.inventory.push(fromObject.inventory.splice(index, 1)[0]);
+                            item.owner = goalObject;
+                        } else {
+
+                            goalObject.inventory[goalObjectInvIndex].quantity += chosenNumber;
+                            fromObject.inventory.splice(index, 1);
+                        }
+                    }
                     screen.placeMessage((actionType === 'pick up' ? 'You pick up bundle of ' : 'You drop bundle of ') + item.quantity + ' ' + screen.removeFirst(item.description) + 's.');
 
 				}else if(chosenNumber < item.quantity && chosenNumber > 0){
 
-					//if item isn't present, we just transfer chosen quantity, by creating new object
-					if(goalObjectInvIndex === null){
+					/*
+					if action is 'pick up', we check if player isn't wielding weapon using picked up ammunition - if yes, ammunition is transfered to left hand instead of inventory
+					 */
+                    if(actionType === 'pick up' && item.type === 'ammunition' && goalObject.equipment['right hand'].ammoType === item.name){
 
-						new items.Ammo(item.name, goalObject, chosenNumber);
-						item.quantity = quantityLeft;
-					}else{
+                        if(goalObject.equipment['left hand'].description === 'empty'){
 
-						goalObject.inventory[goalObjectInvIndex].quantity += chosenNumber;
-						item.quantity -= chosenNumber;
-					}
+                            goalObject.equipment['left hand'] = fromObject.inventory.slice(index, index + 1)[0];
+                            goalObject.equipment['left hand'].quantity = chosenNumber;
+                            fromObject.inventory[index].quantity = quantityLeft;
+                        }else if(goalObject.equipment['left hand'].name === item.name){
+
+                            goalObject.equipment['left hand'].quantity += chosenNumber;
+                            fromObject.inventory[index].quantity = quantityLeft;
+                        }
+                    }else {
+
+                        //if item isn't present, we just transfer chosen quantity, by creating new object
+                        if (goalObjectInvIndex === null) {
+
+                            new items.Ammo(item.name, goalObject, chosenNumber);
+                            item.quantity = quantityLeft;
+                        } else {
+
+                            goalObject.inventory[goalObjectInvIndex].quantity += chosenNumber;
+                            item.quantity -= chosenNumber;
+                        }
+                    }
 
 					screen.placeMessage((actionType === 'pick up' ? 'You pick up ' : 'You drop ') + (chosenNumber > 1 ? ('bundle of ' + chosenNumber + ' ' + screen.removeFirst(item.description) + 's') : item.description) + '.' );
 				}
@@ -1562,6 +1669,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                     goalObject.currentFov = [];
                     goalObject.doFov(goalObject);
                     esc(goalObject);
+                    map.cells[goalObject.position.level].time.engine.unlock();
                 }else if(actionType === 'drop'){
 
 
@@ -1569,25 +1677,105 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                     fromObject.currentFov = [];
                     fromObject.doFov(fromObject);
                     esc(fromObject);
+                    map.cells[fromObject.position.level].time.engine.unlock();
 				}
 			}
 		}
+	}
 
-		/*
-		 function which checks if certain item is already in object inventory. Used for dealing with splitting stack of items. Returns object inventory index if item is present, returns null otherwise
-		 */
-        function checkIfInventoryHasItem(item, object){
+	/*
+	 function which checks if certain item is already in object inventory. Used for dealing with splitting stack of items. Returns object inventory index if item is present, returns null otherwise
+	 */
+    function checkIfInventoryHasItem(item, object){
 
-            for(var i=0; i<object.inventory.length; i++){
+        for(var i=0; i<object.inventory.length; i++){
 
-                if(item.name === object.inventory[i].name){
+            if(item.name === object.inventory[i].name){
 
-                    return i;
-                }
+                return i;
             }
+        }
+
+        return null;
+    }
+
+	/*
+	 function which returns index of certain item in object inventory (index of inventory array). If item isn't present in inventory, null is returned
+	 */
+    function returnInventoryIndex(item, object){
+
+        for(var i=0; i<object.inventory.length; i++){
+
+            if(item === object.inventory[i]){
+
+                return i;
+            }
+        }
+
+        return null;
+    }
+
+    /*
+    function which returns coordinates of nearest hostile. If no hostile is present, null is returned
+     */
+    function returnHostileCoords(player){
+
+    	var hostileList = [],
+			examinedCell;
+
+    	for(var i=0; i<player.currentFov.length; i++){
+
+			examinedCell = map.cells[player.position.level][player.currentFov[i].x][player.currentFov[i].y];
+
+			if(examinedCell.entity !== null && examinedCell.entity !== player && checkIfIsHostile(player, examinedCell.entity)){
+
+				hostileList.push({x: examinedCell.x, y: examinedCell.y, distance: screen.getDistance(player.position.x, player.position.y, player.currentFov[i].x, player.currentFov[i].y)});
+			}
+		}
+
+		if(hostileList.length > 0){
+
+            screen.bubbleSort(hostileList, 'distance');
+            return hostileList[0];
+		}else {
 
             return null;
         }
+
+		function checkIfIsHostile(player, entity){
+
+            for(var i=0; i<entity.hostileList.species.length; i++){
+
+                if(player.type.species === entity.hostileList.species[i]){
+
+                    return true;
+                }
+            }
+
+            for(var i=0; i<entity.hostileList.family.length; i++){
+
+                if(player.type.family === entity.hostileList.family[i]){
+
+                    return true;
+                }
+            }
+
+            for(var i=0; i<entity.hostileList.group.length; i++){
+
+                if(player.type.group === entity.hostileList.group[i]){
+
+                    return true;
+                }
+            }
+
+            for(var i=0; i<entity.hostileList.entity.length; i++){
+
+                if(this === entity.hostileList.entity[i]){
+
+                    return true;
+                }
+            }
+		}
 	}
 	
 	return {

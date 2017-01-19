@@ -374,6 +374,23 @@ define(['main'], function(main){
 		var startText = Math.floor(displayOptions.width / 2) - Math.floor(text.length / 2);
 		display.drawText(startText, row, text, displayOptions.width);
 	}
+
+    function isVowel(char)
+    {
+
+		var vowels = ['a','e','i','o','u'];
+		var isVowel = false;
+
+		for(e in vowels) {
+
+			if(vowels[e] === char) {
+
+				isVowel = true;
+			}
+		}
+
+		return isVowel;
+    }
 	
 	return{
 		display: display,
@@ -399,6 +416,7 @@ define(['main'], function(main){
 		convertCoordinate: convertCoordinate,
 		cameraPosition: cameraPosition,
 		displayMode: displayMode,
-		drawCenteredText: drawCenteredText
+		drawCenteredText: drawCenteredText,
+		isVowel: isVowel
 	}
 });

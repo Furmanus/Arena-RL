@@ -184,7 +184,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
                 }
 			}else if(map.cells[this.position.level][tmpX][tmpY].entity !== null){
 
-				combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity);
+				combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity, 'melee');
 				return 'entity';
 			}else if(map.cells[this.position.level][tmpX][tmpY].entity === null){
 				
@@ -218,7 +218,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				return 'wall';
 			}else if(map.cells[this.position.level][tmpX][tmpY].entity !== null && map.cells[this.position.level][tmpX][tmpY].entity !== this){
 
-				combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity);
+				combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity, 'melee');
 				return 'entity';
 			}else if(map.cells[this.position.level][tmpX][tmpY].entity === null){
 
@@ -503,12 +503,43 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 		 */
 		pickUp(index){
 
-            var examinedCell = map.cells[this.position.level][this.position.x][this.position.y];
+            var examinedCell = map.cells[this.position.level][this.position.x][this.position.y],
+				hasMonsterItem = checkIfMonsterHasItem.bind(this)(examinedCell.inventory[index]),
+				stackable = (examinedCell.inventory[index].stackable && examinedCell.inventory[index].quantity > 1);
 
-            screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' picks up ' + examinedCell.inventory[index].description + '.', examinedCell);
-            this.inventory.push(examinedCell.inventory[index]);
-            examinedCell.inventory[index].owner = this;
-            examinedCell.inventory.splice(index, 1);
+            screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' picks up ' + (stackable ? ('bundle of ' + examinedCell.inventory[index].quantity + ' ' + screen.removeFirst(examinedCell.inventory[index].description) + 's') : examinedCell.inventory[index].description) + '.', examinedCell);
+
+            if(examinedCell.inventory[index].stackable){
+
+				if(hasMonsterItem === null){
+
+                    this.inventory.push(examinedCell.inventory[index]);
+                    examinedCell.inventory[index].owner = this;
+                    examinedCell.inventory.splice(index, 1);
+				}else{
+
+					this.inventory[hasMonsterItem].quantity += examinedCell.inventory[index].quantity;
+                    examinedCell.inventory.splice(index, 1);
+				}
+			}else {
+
+                this.inventory.push(examinedCell.inventory[index]);
+                examinedCell.inventory[index].owner = this;
+                examinedCell.inventory.splice(index, 1);
+            }
+
+            function checkIfMonsterHasItem(item){
+
+                for(var i=0; i<this.inventory.length; i++){
+
+                    if(item.name === this.inventory[i].name){
+
+                        return i;
+                    }
+                }
+
+                return null;
+            }
         }
 
         equip(index, slot){

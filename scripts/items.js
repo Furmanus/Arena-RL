@@ -29,9 +29,9 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
     'dwarven war axe': {display: ')', fgColor: 'gold', bgColor: 'transparent', name: 'dwarven war axe', description: 'a dwarven war axe', sort: 'melee', type: 'weapons', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d10', critical: [20], dmgType: 'slashing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
 
-    'shortbow': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'shortbow', description: 'a shortbow', type: 'weapons', sort: 'ranged', ammoType: 'arrow', slot: 'right hand', natural: false,  damage: '1d6', range: 6, critical: [20], dmgType: 'piercing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
+    'shortbow': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'shortbow', description: 'a shortbow', type: 'weapons', sort: 'ranged', ammoType: 'arrow', slot: 'right hand', natural: false,  damage: '1d6', range: 6, critical: [20], dmgType: 'ranged bow', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
 
-    'longbow': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'longbow', description: 'a longbow', type: 'weapons', sort: 'ranged', ammoType: 'arrow', slot: 'right hand', natural: false,  damage: '1d8', range: 10, critical: [20], dmgType: 'piercing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']}
+    'longbow': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'longbow', description: 'a longbow', type: 'weapons', sort: 'ranged', ammoType: 'arrow', slot: 'right hand', natural: false,  damage: '1d8', range: 10, critical: [20], dmgType: 'ranged bow', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']}
   };
 
   var ammunition = {

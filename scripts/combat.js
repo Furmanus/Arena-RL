@@ -36,13 +36,15 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 		'tiny': 2
 	};
 	
-	function doCombatMelee(attacker, defender){
+	function doCombatMelee(attacker, defender, type){
 
 		var attackerScore = roll(1, 20),
 			defenderScore,
             defenderPosition = map.cells[defender.position.level][defender.position.x][defender.position.y],
             attackerPosition = map.cells[attacker.position.level][attacker.position.x][attacker.position.y],
-            messageColor;
+            messageColor,
+            distance = screen.getDistance(attacker.position.x, attacker.position.y, defender.position.x, defender.position.y),
+            result;
 
 		if(defender.type.type !== 'player' && defender.checkIfHostile(attacker) !== true){
 
@@ -51,8 +53,10 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
         if (attackerScore === 1) {
      		
-            screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical miss', 0), attackerPosition);
+            screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical miss', 0, type), attackerPosition);
             criticalMissEffect[Object.keys(criticalMissEffect).random()](attacker);
+
+            result = 'miss';
         } else if (isHitCritical(attackerScore, attacker.weapon) === true) {
 
             var damageDealt = 0;
@@ -69,18 +73,20 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
             defender.hp -= damageDealt;
             messageColor = (defender.type.type === 'player') ? 'purple' : null;
-            screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt), attackerPosition, messageColor);
+            screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt, type), attackerPosition, messageColor);
 
             if(attacker.weapon.criticalHit[0] !== null && defender.hp > 0){
 
                 status.entityStatus[attacker.weapon.criticalHit.random()].initEffect(defender);
             }
 
+            result = 'hit'
+
         } else {
 
-            attackerScore += calculateBaseAttackBonus(attacker) + sizeModifiers[attacker.size];
+            attackerScore += calculateBaseAttackBonus(attacker, type, distance) + sizeModifiers[attacker.size];
 
-            defenderScore = calculateBaseDefenseBonus(defender) + calculateDexterityBonus(defender) + sizeModifiers[defender.size] + calculateEquipmentBonus(defender);
+            defenderScore = calculateBaseDefenseBonus(defender, type, distance) + calculateDexterityBonus(defender) + sizeModifiers[defender.size] + calculateEquipmentBonus(defender);
 
             if (attackerScore >= defenderScore) {
 
@@ -95,19 +101,28 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
                 messageColor = (defender.type.type === 'player') ? 'purple' : null;
 
-				screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'hit', damageDealt), defenderPosition, messageColor);
+				screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'hit', damageDealt, type), defenderPosition, messageColor);
+
+				result = 'hit';
             } else {
 					
-				screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'miss', 0), defenderPosition);
+				screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'miss', 0, type), defenderPosition);
+				result = 'miss';
             }
         }
 
 		if(defender.hp < 1){
 
-            screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'dead', 0), defenderPosition);
+            screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'dead', 0, type), defenderPosition);
             map.cells[defender.position.level].time.scheduler.remove(defender);
             defender.dropCorpse();
             attacker.experience += defender.xp;
+
+            /*
+             we set result variable to 'miss', just to pass that value to endRangedAttack function (in case of ranged attack), so arrow would be added to floor inventory
+             */
+
+            result = 'miss';
 
             if(defender.type.type === 'player'){
 
@@ -123,7 +138,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
                         evHandlers.generateDeathScreen(this);
                     }
-                }
+                };
             }else{
 
                 map.cells[defender.position.level][defender.position.x][defender.position.y].entity = null;
@@ -147,6 +162,12 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
                 defender.retreatEntity = attacker;
 
+                /*
+                in case if panic source is out of monster FOV (monster was wounded by ranged attack), we set his lastSeenTreatPosition (because in creatai.js module ai scans for panic source in FOV and throws error otherwise
+                 */
+                defender.lastSeenTreatPosition.x = attacker.position.x;
+                defender.lastSeenTreatPosition.y = attacker.position.y;
+
                 if(defender.retreatEntity === attacker && defender.status.afraid.value === 0){
 
                     screen.placeVisibleMessage(screen.capitalizeString(defender.type.messageDisplay) + ' suddenly seems to panic!', map.cells[defender.position.level][defender.position.x][defender.position.y]);
@@ -156,6 +177,8 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
         }
 
         defender.updateScreenStats();
+
+        return result;
 	}
 
 	function doRangedAttack(attacker, lineOfShot, eventHandler, escapeEventHandler){
@@ -176,20 +199,22 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
             if(map.cells[level][x][y].entity !== null){
 
-                //NAPISAC KOD ZA WALKE WLASCIWA
-                endRangedAttack();
+                var result = doCombatMelee(attacker, map.cells[level][x][y].entity, 'ranged');
+
+                endRangedAttack(result);
             }else if(cell !== lineOfShot.length - 1){
 
                 setTimeout(function(){screen.display.draw(screenX, screenY, getDisplayChar(level, x, y), getFgColor(level, x, y));}, 25);
                 setTimeout(function(){analysePath(++cell);}, 50);
             }else if(cell === lineOfShot.length - 1 && map.cells[level][x][y].entity === null){
 
-                endRangedAttack();
+                endRangedAttack('miss');
             }
 
-            function endRangedAttack() {
+            //type is either string 'hit' or 'miss'. In former case arrow lands on floor, in latter in target inventory
+            function endRangedAttack(type) {
 
-                var target = (map.cells[level][x][y].entity === null ? map.cells[level][x][y] : map.cells[level][x][y].entity),
+                var target = (type === 'miss' ? map.cells[level][x][y] : map.cells[level][x][y].entity),
                     index = checkIfInventoryHasItem(attacker.equipment['left hand'], target);
 
                 if(index === null){
@@ -289,9 +314,11 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
         return result;
     }
 
-    function calculateBaseAttackBonus(attacker){
+    function calculateBaseAttackBonus(attacker, type, distance){
 
-        var result = attacker.stats.baseAttackBonus + Math.floor(attacker.stats.strength / 2 - 5);
+        var rangePenalty = (type === 'ranged' && distance > attacker.weapon.range) ? Math.floor(distance - attacker.weapon.range) : 0,
+            result = attacker.stats.baseAttackBonus + Math.floor((type === 'melee' ? attacker.stats.strength : attacker.stats.dexterity) / 2 - 5) + rangePenalty;
+
 
         if(attacker.status.prone.value === 1){
 
@@ -301,7 +328,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
         return result;
     }
 
-    function calculateBaseDefenseBonus(defender){
+    function calculateBaseDefenseBonus(defender, type, distance){
 
         var result = defender.stats.defense;
 

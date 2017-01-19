@@ -213,7 +213,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 				//we check if player is wielding a melee weapon
 				if(this.weapon.sort === 'melee') {
 
-                    combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity);
+                    combat.doCombatMelee(this, map.cells[this.position.level][tmpX][tmpY].entity, 'melee');
 
                     map.clearVisibility(map.cells[this.position.level]);
                     screen.display.clear();
