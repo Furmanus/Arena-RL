@@ -38,6 +38,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 			// entity is monster with which monster will swap places. Used inside creatai.js module
 			this.retreatEntity = null; //hostile wants to avoid and flee from. It is set in combat module, when monster is injured and has less than 10% hp
 			this.lastSeenTreatPosition = {}; //stores coordinates of last seen treat from which monster flees (they are used if treat is not visible)
+			this.lookingForHostile = false;
 			
 			this.size = monsterList.monsterType[type].size;
 			this.favouredStat = monsterList.monsterType[type].favouredStat;
@@ -67,6 +68,7 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 			this.experience = 0;
 			this.hp = combat.calcMax(this.HD) + Math.floor(this.stats.constitution / 2 - 5);
 			this.maxHp = this.hp;
+            this.favouredWeaponType = monsterList.monsterType[type].favouredWeaponType;
 			
 			this.abilities = {
 				breatheUnderWater: monsterList.monsterType[type].abilities.breatheUnderWater, 

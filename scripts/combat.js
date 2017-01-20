@@ -72,6 +72,12 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
             }
 
             defender.hp -= damageDealt;
+            if(defender.type.type !== 'player') {
+
+                defender.currentGoal.x = attacker.position.x; //in case attacker is outside defender's fov, defender will look after him
+                defender.currentGoal.y = attacker.position.y;
+                defender.lookingForHostile = true;
+            }
             messageColor = (defender.type.type === 'player') ? 'purple' : null;
             screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt, type), attackerPosition, messageColor);
 
@@ -163,7 +169,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
                 defender.retreatEntity = attacker;
 
                 /*
-                in case if panic source is out of monster FOV (monster was wounded by ranged attack), we set his lastSeenTreatPosition (because in creatai.js module ai scans for panic source in FOV and throws error otherwise
+                in case if panic source is out of monster FOV (monster was wounded by ranged attack), we set his lastSeenTreatPosition (because in creatai.js module ai scans for panic source in FOV and throws error if panic source is not found)
                  */
                 defender.lastSeenTreatPosition.x = attacker.position.x;
                 defender.lastSeenTreatPosition.y = attacker.position.y;
@@ -214,31 +220,45 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
             //type is either string 'hit' or 'miss'. In former case arrow lands on floor, in latter in target inventory
             function endRangedAttack(type) {
 
-                var target = (type === 'miss' ? map.cells[level][x][y] : map.cells[level][x][y].entity),
-                    index = checkIfInventoryHasItem(attacker.equipment['left hand'], target);
+                if(Math.random() < attacker.equipment['left hand'].hardiness){
 
-                if(index === null){
+                    screen.placeVisibleMessage(screen.capitalizeString(attacker.equipment['left hand'].name) + ' breaks!', map.cells[level][x][y]);
 
-                    if(attacker.equipment['left hand'].quantity === 1){
+                    if (attacker.equipment['left hand'].quantity === 1){
 
-                        target.inventory.push(attacker.equipment['left hand']);
-                        attacker.equipment['left hand'].owner = target;
                         attacker.equipment['left hand'] = {description: 'empty'};
-                    }else if(attacker.equipment['left hand'].quantity > 1){
+                    }else{
 
-                        new items.Ammo(attacker.equipment['left hand'].name, target, 1);
                         attacker.equipment['left hand'].quantity--;
                     }
-                }else{
+                }else {
 
-                    if(attacker.equipment['left hand'].quantity === 1){
+                    var target = (type === 'miss' ? map.cells[level][x][y] : map.cells[level][x][y].entity),
+                        index = checkIfInventoryHasItem(attacker.equipment['left hand'], target);
 
-                        target.inventory[index].quantity++;
-                        attacker.equipment['left hand'] = {description: 'empty'};
-                    }else if(attacker.equipment['left hand'].quantity > 1){
+                    if (index === null) {
 
-                        target.inventory[index].quantity++;
-                        attacker.equipment['left hand'].quantity--;
+                        if (attacker.equipment['left hand'].quantity === 1) {
+
+                            target.inventory.push(attacker.equipment['left hand']);
+                            attacker.equipment['left hand'].owner = target;
+                            attacker.equipment['left hand'] = {description: 'empty'};
+                        } else if (attacker.equipment['left hand'].quantity > 1) {
+
+                            new items.Ammo(attacker.equipment['left hand'].name, target, 1);
+                            attacker.equipment['left hand'].quantity--;
+                        }
+                    } else {
+
+                        if (attacker.equipment['left hand'].quantity === 1) {
+
+                            target.inventory[index].quantity++;
+                            attacker.equipment['left hand'] = {description: 'empty'};
+                        } else if (attacker.equipment['left hand'].quantity > 1) {
+
+                            target.inventory[index].quantity++;
+                            attacker.equipment['left hand'].quantity--;
+                        }
                     }
                 }
 
@@ -316,9 +336,8 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
     function calculateBaseAttackBonus(attacker, type, distance){
 
-        var rangePenalty = (type === 'ranged' && distance > attacker.weapon.range) ? Math.floor(distance - attacker.weapon.range) : 0,
+        var rangePenalty = (type === 'ranged' && distance > attacker.weapon.range) ? Math.floor(attacker.weapon.range - distance) : 0,
             result = attacker.stats.baseAttackBonus + Math.floor((type === 'melee' ? attacker.stats.strength : attacker.stats.dexterity) / 2 - 5) + rangePenalty;
-
 
         if(attacker.status.prone.value === 1){
 

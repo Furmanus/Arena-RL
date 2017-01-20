@@ -20,7 +20,8 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			favouredStat: 'dexterity',
 			HD: '0.25d8',
 			xp: 135,
-			size: 'tiny', 
+			size: 'tiny',
+            favouredWeaponType: null,
 			stats: {strength: 2, dexterity: 15, constitution: 10, intelligence: 2, wisdom: 12, charisma: 2, speed: 20, perception: 8, baseAttackBonus: 0, defense: 10},
 			equipment: {
 				
@@ -46,6 +47,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			HD: '3d8+6',
 			xp: 600,
 			size: 'medium',
+            favouredWeaponType: null,
 			stats: {strength: 17, dexterity: 17, constitution: 13, intelligence: 1, wisdom: 12, charisma: 2, speed: 20, perception: 4, baseAttackBonus: 2, defense: 12},
 			equipment: {
 
@@ -68,6 +70,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '3d8+9',
             xp: 600,
             size: 'medium',
+            favouredWeaponType: null,
             stats: {strength: 17, dexterity: 15, constitution: 17, intelligence: 2, wisdom: 12, charisma: 6, speed: 18, perception: 8, baseAttackBonus: 2, defense: 13},
             equipment: {
 
@@ -92,6 +95,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '1d8+1',
             xp: 200,
             size: 'medium',
+            favouredWeaponType: null,
             stats: {strength: 9, dexterity: 15, constitution: 12, intelligence: 1, wisdom: 10, charisma: 2, speed: 40, perception: 5, baseAttackBonus: 0, defense: 12},
             equipment: {
 
@@ -115,6 +119,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '5d8+10',
             xp: 800,
             size: 'large',
+            favouredWeaponType: null,
             stats: {strength: 21, dexterity: 17, constitution: 15, intelligence: 2, wisdom: 12, charisma: 6, speed: 40, perception: 9, baseAttackBonus: 3, defense: 13},
             equipment: {
 
@@ -139,6 +144,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '5d8+20',
             xp: 1200,
             size: 'large',
+            favouredWeaponType: null,
             stats: {strength: 21, dexterity: 13, constitution: 19, intelligence: 2, wisdom: 12, charisma: 6, speed: 40, perception: 6, baseAttackBonus: 3, defense: 16},
             equipment: {
 
@@ -163,6 +169,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			HD: '2d8+4',
 			xp: 400,
 			size: 'medium',
+            favouredWeaponType: null,
 			stats: {strength: 13, dexterity: 15, constitution: 15, intelligence: 2, wisdom: 12, charisma: 6, speed: 50, perception: 5, baseAttackBonus: 1, defense: 12},
 			equipment: {
 
@@ -187,6 +194,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '2d8+6',
             xp: 400,
             size: 'large',
+            favouredWeaponType: null,
             stats: {strength: 16, dexterity: 14, constitution: 17, intelligence: 2, wisdom: 13, charisma: 7, speed: 50, perception: 6, baseAttackBonus: 1, defense: 10},
             equipment: {
 
@@ -211,6 +219,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '2d8+4',
             xp: 400,
             size: 'medium',
+            favouredWeaponType: null,
             stats: {strength: 14, dexterity: 15, constitution: 15, intelligence: 2, wisdom: 13, charisma: 6, speed: 50, perception: 8, baseAttackBonus: 1, defense: 12},
             equipment: {
 
@@ -235,6 +244,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
 			HD: '0.25d8',
 			xp: 65,
 			size: 'tiny',
+            favouredWeaponType: null,
 			stats: {strength: 1, dexterity: 15, constitution: 10, intelligence: 2, wisdom: 14, charisma: 6, speed: 40, perception: 7, baseAttackBonus: 0, defense: 10},
 			equipment: {
 
@@ -259,6 +269,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '1d8',
             xp: 100,
             size: 'small',
+            favouredWeaponType: 'ranged',
             stats: {strength: 9, dexterity: 13, constitution: 10, intelligence: 10, wisdom: 9, charisma: 8, speed: 30, perception: 8, baseAttackBonus: 1, defense: 11},
             equipment: {
 
@@ -285,6 +296,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '4d8+12',
             xp: 800,
             size: 'large',
+            favouredWeaponType: 'melee',
             stats: {strength: 21, dexterity: 8, constitution: 15, intelligence: 6, wisdom: 10, charisma: 7, speed: 25, perception: 7, baseAttackBonus: 3, defense: 15},
             equipment: {
 
@@ -311,6 +323,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '6d10+12',
             xp: 1200,
             size: 'large',
+            favouredWeaponType: 'melee',
             stats: {strength: 19, dexterity: 10, constitution: 15, intelligence: 7, wisdom: 10, charisma: 8, speed: 30, perception: 5, baseAttackBonus: 6, defense: 15},
             equipment: {
 
@@ -337,6 +350,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '10d8+20',
             xp: 1600,
             size: 'large',
+            favouredWeaponType: 'ranged',
             stats: {strength: 21, dexterity: 8, constitution: 15, intelligence: 10, wisdom: 13, charisma: 8, speed: 27, perception: 4, baseAttackBonus: 7, defense: 17},
             equipment: {
 
@@ -363,6 +377,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '4d10+5',
             xp: 800,
             size: 'large',
+            favouredWeaponType: 'ranged',
             stats: {strength: 15, dexterity: 14, constitution: 15, intelligence: 11, wisdom: 14, charisma: 12, speed: 50, perception: 7, baseAttackBonus: 4, defense: 11},
             equipment: {
 
@@ -388,6 +403,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '1d10+1',
             xp: 135,
             size: 'small',
+            favouredWeaponType: 'ranged',
             stats: {strength: 11, dexterity: 15, constitution: 12, intelligence: 10, wisdom: 9, charisma: 6, speed: 30, perception: 6, baseAttackBonus: 1, defense: 10},
             equipment: {
 
@@ -414,6 +430,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '1d10+7',
             xp: 200,
             size: 'medium',
+            favouredWeaponType: 'melee',
             stats: {strength: 15, dexterity: 15, constitution: 16, intelligence: 10, wisdom: 12, charisma: 8, speed: 30, perception: 6, baseAttackBonus: 1, defense: 10},
             equipment: {
 
@@ -440,6 +457,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '2d8+2',
             xp: 400,
             size: 'medium',
+            favouredWeaponType: 'melee',
             stats: {strength: 15, dexterity: 10, constitution: 13, intelligence: 8, wisdom: 9, charisma: 11, speed: 30, perception: 7, baseAttackBonus: 1, defense: 11},
             equipment: {
 
@@ -466,6 +484,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '1d12',
             xp: 135,
             size: 'medium',
+            favouredWeaponType: 'melee',
             stats: {strength: 15, dexterity: 14, constitution: 1, intelligence: 1, wisdom: 10, charisma: 10, speed: 30, perception: 7, baseAttackBonus: 1, defense: 12},
             equipment: {
 
@@ -492,6 +511,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '2d8+3',
             xp: 400,
             size: 'medium',
+            favouredWeaponType: 'melee',
             stats: {strength: 13, dexterity: 15, constitution: 1, intelligence: 13, wisdom: 14, charisma: 14, speed: 30, perception: 5, baseAttackBonus: 1, defense: 12},
             equipment: {
 
@@ -518,6 +538,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '1d10',
             xp: 135,
             size: 'medium',
+            favouredWeaponType: 'ranged',
             stats: {strength: 11, dexterity: 15, constitution: 10, intelligence: 10, wisdom: 9, charisma: 10, speed: 30, perception: 4, baseAttackBonus: 1, defense: 10},
             equipment: {
 
@@ -544,6 +565,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '3d8+3',
             xp: 600,
             size: 'medium',
+            favouredWeaponType: 'melee',
             stats: {strength: 16, dexterity: 13, constitution: 13, intelligence: 10, wisdom: 9, charisma: 8, speed: 30, perception: 5, baseAttackBonus: 2, defense: 13},
             equipment: {
 
@@ -570,6 +592,7 @@ define(['screen', 'animalai', 'combat', 'creatai'], function(screen, animalai, c
             HD: '1d8',
             xp: 135,
             size: 'small',
+            favouredWeaponType: null,
             stats: {strength: 10, dexterity: 11, constitution: 11, intelligence: 1, wisdom: 10, charisma: 7, speed: 30, perception: 7, baseAttackBonus: 1, defense: 11},
             equipment: {
 

@@ -694,7 +694,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
                 	if(hostileCoords && screen.getDistance(x, y, hostileCoords.x, hostileCoords.y) < player.weapon.range * 1.5) {
 
-                        x = (hostileCoords ? hostileCoords.x : x);
+                        x = hostileCoords ? hostileCoords.x : x;
                         y = hostileCoords ? hostileCoords.y : y;
                     }
 
@@ -1716,12 +1716,13 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
     }
 
     /*
-    function which returns coordinates of nearest hostile. If no hostile is present, null is returned
+    function which returns coordinates of nearest hostile with clear line of shot(bresenham line). If no hostile is present, null is returned.
      */
     function returnHostileCoords(player){
 
     	var hostileList = [],
-			examinedCell;
+			examinedCell,
+			pathfinding = require('pathfinding');
 
     	for(var i=0; i<player.currentFov.length; i++){
 
@@ -1729,7 +1730,16 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 			if(examinedCell.entity !== null && examinedCell.entity !== player && checkIfIsHostile(player, examinedCell.entity)){
 
-				hostileList.push({x: examinedCell.x, y: examinedCell.y, distance: screen.getDistance(player.position.x, player.position.y, player.currentFov[i].x, player.currentFov[i].y)});
+				var bresenhamLine = pathfinding.bresenham(player.position.x, player.position.y, examinedCell.entity.position.x, examinedCell.entity.position.y, player, ['wall', 'tree', 'deadTree', 'closedDoors']);
+
+				if(examinedCell.entity.position.x === bresenhamLine[bresenhamLine.length - 1].x && examinedCell.entity.position.y === bresenhamLine[bresenhamLine.length - 1].y) {
+
+                    hostileList.push({
+                        x: examinedCell.x,
+                        y: examinedCell.y,
+                        distance: screen.getDistance(player.position.x, player.position.y, player.currentFov[i].x, player.currentFov[i].y)
+                    });
+                }
 			}
 		}
 

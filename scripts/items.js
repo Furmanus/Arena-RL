@@ -36,7 +36,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
   var ammunition = {
 
-     'arrow': {display: '/', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'arrow', description: 'an arrow', slot: 'left hand', stackable: true, type: 'ammunition'}
+     'arrow': {display: '/', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'arrow', description: 'an arrow', slot: 'left hand', stackable: true, type: 'ammunition', hardiness: 0.2}
   };
   
   var armours = {
@@ -168,6 +168,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
         this.type = ammunition[type].type;
         this.stackable = ammunition[type].stackable;
         this.quantity = quantity;
+        this.hardiness = ammunition[type].hardiness; //variable describing probability of breaking ammo when used
 
         object.inventory.push(this);
     }
