@@ -46,6 +46,16 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
             distance = screen.getDistance(attacker.position.x, attacker.position.y, defender.position.x, defender.position.y),
             result;
 
+		/*
+		in case if attacker isn't in FOV of defender, we set his current goal coords to attacker coords, so defender would go after attacker
+		 */
+        if(defender.type.type !== 'player') {
+
+            defender.currentGoal.x = attacker.position.x; //in case attacker is outside defender's fov, defender will look after him
+            defender.currentGoal.y = attacker.position.y;
+            defender.lookingForHostile = true;
+        }
+
 		if(defender.type.type !== 'player' && defender.checkIfHostile(attacker) !== true){
 
 		    defender.hostileList.entity.push(attacker);
@@ -72,12 +82,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
             }
 
             defender.hp -= damageDealt;
-            if(defender.type.type !== 'player') {
 
-                defender.currentGoal.x = attacker.position.x; //in case attacker is outside defender's fov, defender will look after him
-                defender.currentGoal.y = attacker.position.y;
-                defender.lookingForHostile = true;
-            }
             messageColor = (defender.type.type === 'player') ? 'purple' : null;
             screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'critical hit', damageDealt, type), attackerPosition, messageColor);
 

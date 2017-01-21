@@ -316,8 +316,14 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                    if(items[i].target.type === 'weapons'){
 
-                       //first we consider weapons. If examined weapon max damage is lower or equal than current weapon, ignore it
+                       //first we consider weapons. If examined weapon max damage is lower or equal to current weapon, ignore it
                        if(combat.calcMax(monster.weapon.damage) >= combat.calcMax(items[i].target.damage)){
+
+                           items[i].slatedForRemoval = true;
+                       }
+
+                       //if examined weapon is ranged, and monster doesn't like ranged weapons, ignore it
+                       if((items[i].target.sort === 'ranged') && monster.favouredWeaponType !== 'ranged'){
 
                            items[i].slatedForRemoval = true;
                        }
@@ -365,10 +371,13 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                    }else if((items[i].target.type === 'potions' && monster.abilities.cantDrinkPotions === true) || (items[i].target.type === 'scrolls' && monster.abilities.illiterate === true)){
 
                        items[i].slatedForRemoval = true;
+                   }else if(items[i].target.type === 'ammunition' && monster.favouredWeaponType !== 'ranged'){
+
+                       items[i].slatedForRemoval = true;
                    }
                }
 
-               //we remove all items from items array marked to remove
+               //we remove all items from items array which has been marked to remove
 
                for(var i=0; i<items.length; i++){
 

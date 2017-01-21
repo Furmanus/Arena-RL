@@ -54,8 +54,9 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         //new monster.Monster(0, 'minotaur');
         //new monster.Monster(0, 'goblin');
         //new monster.Monster(0, 'goblin');
-        //new monster.Monster(0, 'kobold');
-        new monster.Monster(0, 'ogre');
+        new monster.Monster(0, 'kobold');
+        //new monster.Monster(0, 'drow');
+        //new monster.Monster(0, 'hobgoblin');
 
         exports.player = new player.Player();
 
