@@ -319,7 +319,10 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                        //first we consider weapons. If examined weapon max damage is lower or equal to current weapon, ignore it
                        if(combat.calcMax(monster.weapon.damage) >= combat.calcMax(items[i].target.damage)){
 
-                           items[i].slatedForRemoval = true;
+                           if(!(monster.favouredWeaponType === 'ranged' && items[i].target.sort === 'ranged' && monster.weapon.ranged !== true)){
+
+                               items[i].slatedForRemoval = true;
+                           }
                        }
 
                        //if examined weapon is ranged, and monster doesn't like ranged weapons, ignore it
@@ -448,15 +451,50 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                    }
                }else if(examinedItem.type === 'weapons'){
 
-                   if(combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)){
+                   /*
+                   if monster's favoured weapon type is ranged, and he has proper ammunition in his inventory, monster wants to equip ranged weapon
+                    */
+                   if(examinedItem.sort === 'ranged' && monster.favouredWeaponType === 'ranged' && searchForItemName(monster, examinedItem.ammoType) === true){
 
-                       if(monster.weapon.natural === true){
+                       if(monster.weapon.sort && monster.weapon.sort === 'ranged'){
 
-                           items.push({action: 'equip', index: i, slot: 'right hand', priority: 2});
-                       }else{
+                           if(combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)){
+
+                               items.push({action: 'unequip', index: 'right hand', slot: examinedItem.slot, priority: 1});
+                           }
+                       }else if(monster.weapon.natural === false){
 
                            items.push({action: 'unequip', index: 'right hand', slot: examinedItem.slot, priority: 1});
+                       }else if(monster.weapon.natural === true){
+
+                           items.push({action: 'equip', index: i, slot: 'right hand', priority: 2});
                        }
+                   }else if(examinedItem.sort !== 'ranged'){
+
+                       if(!(monster.favouredWeaponType === 'ranged' && monster.weapon.sort && monster.weapon.sort === 'ranged')) {
+
+                           if (combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)) {
+
+                               if (monster.weapon.natural === true) {
+
+                                   items.push({action: 'equip', index: i, slot: 'right hand', priority: 2});
+                               } else {
+
+                                   items.push({
+                                       action: 'unequip',
+                                       index: 'right hand',
+                                       slot: examinedItem.slot,
+                                       priority: 1
+                                   });
+                               }
+                           }
+                       }
+                   }
+               }else if(examinedItem.type === 'ammunition'){
+
+                   if(monster.weapon.ammoType && monster.weapon.ammoType === examinedItem.name){
+
+                       items.push({action: 'equip', index: i, slot: 'left hand', priority: 1});
                    }
                }
            }else if(enemyInSight.length > 0){
@@ -582,6 +620,36 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
        }
 
        return 'status ok';
+   }
+
+   /*
+   function responsible for searching monster inventory for item with certain name. Returns true if item is found, returns false otherwise
+    */
+   function searchForItemName(monster, name){
+
+       var examinedItem;
+
+       for(var i=0; i<monster.inventory.length; i++){
+
+           examinedItem = monster.inventory[i];
+
+           if(examinedItem.name && examinedItem.name === name){
+
+               return true;
+           }
+       }
+
+       for(var n in monster.equipment){
+
+           examinedItem = monster.equipment[n];
+
+           if(examinedItem.name && examinedItem.name === name){
+
+               return true;
+           }
+       }
+
+       return false;
    }
 
    return{

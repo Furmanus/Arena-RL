@@ -546,7 +546,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
         equip(index, slot){
 
-			screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' equips ' + this.inventory[index].description + '.', map.cells[this.position.level][this.position.x][this.position.y]);
+			var stackable = (this.inventory[index].stackable && this.inventory[index].quantity > 1);
+
+			screen.placeVisibleMessage(screen.capitalizeString(this.type.messageDisplay) + ' equips ' + (stackable === true ? ('bundle of ' + this.inventory[index].quantity + ' ' + screen.removeFirst(this.inventory[index].description) + 's.') : this.inventory[index].description + '.'), map.cells[this.position.level][this.position.x][this.position.y]);
 
 			if(this.inventory[index].modifiers){
 
@@ -559,7 +561,20 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 				}
 			}
 
-			this.equipment[slot] = this.inventory.splice(index, 1)[0];
+			if(this.inventory[index].stackable === true){
+
+				if(this.equipment[slot].description === 'empty'){
+
+                    this.equipment[slot] = this.inventory.splice(index, 1)[0];
+				}else{
+
+					this.equipment[slot].quantity += this.inventory[index].quantity;
+					this.inventory.splice(index, 1);
+				}
+			}else {
+
+                this.equipment[slot] = this.inventory.splice(index, 1)[0];
+            }
 
 			if(slot === 'right hand'){
 
