@@ -47,7 +47,7 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         //new items.Weapon('warhammer', map.cells[0][22][10]);
 
         //new items.Armour('chain mail', map.cells[0][16][13]);
-        //new items.Weapon('dagger', map.cells[0][15][13]);
+        new items.Weapon('dagger', map.cells[0][15][13]);
         //new items.Weapon('dwarven war axe', map.cells[0][5][5]);
         //new items.Scroll('armour', map.cells[0][16][15]);
         //new items.Potion('rage', map.cells[0][44][15]);

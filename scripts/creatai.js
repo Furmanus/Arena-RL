@@ -284,7 +284,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                }else if(target.type === 'item' && (target.target.type === 'armours' || target.target.type === 'helmets' || target.target.type === 'legs' || target.target.type === 'boots')){
 
                    target.priority = 3;
-               }else if(target.type === 'item' && target.target.type === 'weapons' && monster.equipment['right hand'].description === 'empty'){
+               }else if(target.type === 'item' && target.target.type === 'weapons' && target.target.sort === 'melee' && monster.equipment['right hand'].description === 'empty'){
 
                    //if there are no close hostiles, and monster is bare handed and there is a weapon in his field of view
                    target.priority = 1;
@@ -458,19 +458,23 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                        if(monster.weapon.sort && monster.weapon.sort === 'ranged'){
 
+                           //if monster's currently equipped weapon is ranged, we compare damage and exchange weapon if found weapon is better
                            if(combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)){
 
                                items.push({action: 'unequip', index: 'right hand', slot: examinedItem.slot, priority: 1});
                            }
+                           //if monster's equipped weapon isn't ranged, monster wants to exchange it, regardless of damage comparision
                        }else if(monster.weapon.natural === false){
 
                            items.push({action: 'unequip', index: 'right hand', slot: examinedItem.slot, priority: 1});
+                           //if monster doesn't have any equipped weapon, he wants to wield found weapon
                        }else if(monster.weapon.natural === true){
 
                            items.push({action: 'equip', index: i, slot: 'right hand', priority: 2});
                        }
                    }else if(examinedItem.sort !== 'ranged'){
 
+                       //if examined weapon type isn't ranged, and monster's favoured weapon isn't ranged or he isn't wielding ranged weapon
                        if(!(monster.favouredWeaponType === 'ranged' && monster.weapon.sort && monster.weapon.sort === 'ranged')) {
 
                            if (combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)) {
@@ -530,19 +534,59 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                    if (examinedItem.type === 'weapons') {
 
-                       if (combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)) {
+                       if (enemyDistance >= 4) {
 
-                           if (monster.weapon.natural === true) {
+                           if (examinedItem.sort === 'ranged' && monster.favouredWeaponType === 'ranged' && searchForItemName(monster, examinedItem.ammoType) === true) {
+
+                               if(monster.weapon.sort && monster.weapon.sort === 'ranged'){
+
+                                   //if monster's currently equipped weapon is ranged, we compare damage and exchange weapon if found weapon is better
+                                   if(combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)){
+
+                                       items.push({action: 'unequip', index: 'right hand', slot: examinedItem.slot, priority: 1});
+                                   }
+                                   //if monster's equipped weapon isn't ranged, monster wants to exchange it, regardless of damage comparision
+                               }else if(monster.weapon.natural === false){
+
+                                   items.push({action: 'unequip', index: 'right hand', slot: examinedItem.slot, priority: 1});
+                                   //if monster doesn't have any equipped weapon, he wants to wield found weapon
+                               }else if(monster.weapon.natural === true){
+
+                                   items.push({action: 'equip', index: i, slot: 'right hand', priority: 2});
+                               }
+                           }else if(examinedItem.sort !== 'ranged'){
+
+                               //if examined weapon type isn't ranged, and monster's favoured weapon isn't ranged or he isn't wielding ranged weapon
+                               if(!(monster.favouredWeaponType === 'ranged' && monster.weapon.sort && monster.weapon.sort === 'ranged')) {
+
+                                   if (combat.calcMax(monster.weapon.damage) < combat.calcMax(examinedItem.damage)) {
+
+                                       if (monster.weapon.natural === true) {
+
+                                           items.push({action: 'equip', index: i, slot: 'right hand', priority: 2});
+                                       } else {
+
+                                           items.push({
+                                               action: 'unequip',
+                                               index: 'right hand',
+                                               slot: examinedItem.slot,
+                                               priority: 1
+                                           });
+                                       }
+                                   }
+                               }
+                           }else if(examinedItem.type === 'ammunition'){
+
+                               if(monster.weapon.ammoType && monster.weapon.ammoType === examinedItem.name){
+
+                                   items.push({action: 'equip', index: i, slot: 'left hand', priority: 1});
+                               }
+                           }
+                       }else if(enemyDistance < 4){
+
+                           if(examinedItem.sort === 'melee' && monster.weapon.natural === true){
 
                                items.push({action: 'equip', index: i, slot: 'right hand', priority: 1});
-                           } else {
-
-                               items.push({
-                                   action: 'unequip',
-                                   index: 'right hand',
-                                   slot: examinedItem.slot,
-                                   priority: 2
-                               });
                            }
                        }
                    } else if (examinedItem.type === 'potions' && monster.hp < (0.33 * monster.maxHp) && examinedItem.group === 'healing') {
@@ -556,13 +600,24 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                            if (examinedItem.group === 'boost') {
 
-                               items.push({action: 'use', index: i, priority: 1, item: examinedItem});
+                               items.push({action: 'use', index: i, priority: 2, item: examinedItem});
                            } else if (examinedItem.group === 'escape' && monster.hp < 0.25 * monster.maxHp) {
 
                                items.push({action: 'use', index: i, priority: 2, item: examinedItem});
                            }
                        }
                    }
+               }
+           }
+       }
+
+       if(enemyInSight.length > 0){
+
+           if(screen.getDistance(monster.position.x, monster.position.y, enemyInSight[0].x, enemyInSight[0].y) < 3){
+
+               if(monster.weapon.sort && monster.weapon.sort === 'ranged'){
+
+                   items.push({action: 'unequip', index: 'right hand', slot: 'right hand', priority: 1});
                }
            }
        }
