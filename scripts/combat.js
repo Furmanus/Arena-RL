@@ -12,7 +12,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
         'prone': function(entity){
             //we check if entity have legs and isn't prone already
-            if(status.checkIfHaveBodyPart(entity, 'legs') === true && entity.status.prone.value === 0) {
+            if(status.checkIfHaveBodyPart(entity, 'legs') === true && entity.status.prone.value === 0 && entity.weapon.sort !== 'ranged') {
 
                 //we make dexterity roll, if it fails, entity falls on ground
                 if (Math.floor(entity.stats.dexterity / 2 - 5) + roll(1, 20) < 15) {
@@ -195,7 +195,16 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 	function doRangedAttack(attacker, lineOfShot, eventHandler, escapeEventHandler){
 
         var level = attacker.position.level,
-            items = require('items');
+            items = require('items'),
+            main = require('main'),
+            evHandlers = require('evHandlers');
+
+        //we remove player's event listener, so he can't do anything until animation of flying arrow stops
+        if(attacker.type.type !== 'player'){
+
+            main.exports.player.handleEvent = function(){};
+            map.cells[level].time.engine.lock();
+        }
 
         analysePath(1);
 
@@ -215,8 +224,15 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
                 endRangedAttack(result);
             }else if(cell !== lineOfShot.length - 1){
 
-                setTimeout(function(){screen.display.draw(screenX, screenY, getDisplayChar(level, x, y), getFgColor(level, x, y));}, 25);
-                setTimeout(function(){analysePath(++cell);}, 50);
+                if(map.cells[attacker.position.level][x][y].isVisible === true){
+
+                    setTimeout(function(){screen.display.draw(screenX, screenY, getDisplayChar(level, x, y), getFgColor(level, x, y));}, 25);
+                    setTimeout(function(){analysePath(++cell);}, 50);
+                }else{
+
+                    screen.display.draw(screenX, screenY, getDisplayChar(level, x, y), getFgColor(level, x, y));
+                    analysePath(++cell);
+                }
             }else if(cell === lineOfShot.length - 1 && map.cells[level][x][y].entity === null){
 
                 endRangedAttack('miss');
@@ -267,11 +283,21 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
                     }
                 }
 
+                map.cells[level].time.engine.unlock();
+
                 if (attacker.type.type === 'player') {
 
                     escapeEventHandler(attacker);
-                    map.cells[level].time.engine.unlock();
                     attacker.eventHandler = eventHandler;
+                }else{
+
+                    if(main.exports.player.hp > 0){
+                        
+                        main.exports.player.handleEvent = evHandlers.defaultEventHandler;
+                    }else{
+
+                        map.cells[level].time.engine.lock();
+                    }
                 }
 
                 screen.display.clear();

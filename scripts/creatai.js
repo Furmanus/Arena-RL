@@ -119,6 +119,30 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
            if(examineFovResult[0] && examineFovResult[0].type === 'hostile'){
 
                monster.currentGoal = {x: examineFovResult[0].x, y: examineFovResult[0].y};
+
+               //if monster should take certain action from distance, we do it here and break function
+
+               if(examineFovResult[0].action !== null){
+
+                  var distance = screen.getDistance(monster.position.x, monster.position.y, examineFovResult[0].x, examineFovResult[0].y);
+
+                  switch(examineFovResult[0].action){
+
+                    case 'shoot':
+
+                    //if there is clear line of shot to target, monster shoots
+                    if(monster.calculateShootPath(examineFovResult[0].x, examineFovResult[0].y) === true && distance < 1.5 * monster.weapon.range){
+
+                      monster.shoot(examineFovResult[0].x, examineFovResult[0].y);
+                      return;
+                    }
+                    break;
+
+                    default:
+                    console.log('error undefined type of action in creature ai');
+                    break;
+                  }
+               }
            }
 
            //if monster doesn't have any goal in current turn, we set one
@@ -157,7 +181,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                    monster.waitCounter = 0;
                    setGoal(monster);
                }else{
-                   console.log(monster.waitCounter);
+                   
                    monster.waitCounter++;
                }
 
@@ -217,6 +241,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                        type: 'hostile',
                        target: examinedCell.entity,
                        index: null,
+                       action: null,  //variable determining whether certain action should be taken by monster from distance (for example use ranged weapons or wands)
                        slatedForRemoval: false,
                        distance: screen.getDistance(examinedCell.x, examinedCell.y, monster.position.x, monster.position.y),
                        priority: undefined
@@ -228,7 +253,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                if(examinedCell.inventory.length > 0 && monster.status.berserk.value === 0){
 
                    /*
-                   if examined cell inventory isn't empty and there are no entities other than examining monster, we iterate through mentioned inventory, and push all the items found. Later we will filter them by removing not interesing items
+                   if examined cell inventory isn't empty and there are no entities other than examining monster, we iterate through mentioned inventory, and push all items found. Later we will filter them by removing not interesing items
                     */
                    for(var j=0; j<examinedCell.inventory.length; j++) {
 
@@ -237,8 +262,9 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                            y: monster.currentFov[i].y,
                            type: 'item',
                            target: examinedCell.inventory[j],
-                           index: j,
-                           slatedForRemoval: false,
+                           index: j,  //index of item in examined cell inventory array
+                           action: null,
+                           slatedForRemoval: false, //boolean determining whether item should be removed from cellsOfInterest array in filterFovItems method
                            distance: screen.getDistance(examinedCell.x, examinedCell.y, monster.position.x, monster.position.y),
                            priority: undefined
                        });
@@ -261,10 +287,29 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
            if(monster.inventory.length > 12){
 
-               cellsOfInterest = [];
+               filterFovCells('item');
            }
 
            return cellsOfInterest;
+
+           /*
+           function filtering cellsOfInterest by removing objects of certain type 
+           */
+           function filterFovCells(type){
+
+              for(var i=0; i<cellsOFInterest.length; i++){
+
+                if(cellsOFInterest[i].type === type){
+
+                  cellsOFInterest.splice(i, 1);
+
+                  if(i !== cellsOFInterest.length - 1){
+
+                    i--;
+                  }
+                }
+              }
+           }
 
            /*
            target is element (usually last) of cellsOfInterest array. Function which set up priorities for certain objects (hostile monsters, items) for selected monster.
@@ -273,10 +318,29 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                //basic value
                target.priority = 6;
-               if(target.type === 'hostile' && target.distance >= 4){
 
-                   //distant hostiles gets lowest priority
-                   target.priority = 5;
+               if(target.type === 'hostile'){
+
+                  if(monster.favouredWeaponType === 'ranged' && monster.weapon.sort === 'ranged' && screen.removeFirst(monster.equipment['left hand'].description) === monster.weapon.ammoType){
+
+                    if(target.distance >= 3){
+
+                      target.priority = 1;
+                      target.action = 'shoot';
+                    }else{
+
+                      target.priority = 5;
+                    }
+                  }else{
+
+                    if(target.distance >= 4){
+
+                      target.priority = 5;
+                    }else{
+
+                      target.priority = 2;
+                    }
+                  }
                }else if(target.type === 'item' && (target.target.type === 'potions' || target.target.type === 'scrolls') && (target.target.group === 'boost' || target.target.group === 'healing')){
 
                    //if there is no close hostiles, and there are boosting or healing items in field of view
@@ -284,14 +348,10 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                }else if(target.type === 'item' && (target.target.type === 'armours' || target.target.type === 'helmets' || target.target.type === 'legs' || target.target.type === 'boots')){
 
                    target.priority = 3;
-               }else if(target.type === 'item' && target.target.type === 'weapons' && target.target.sort === 'melee' && monster.equipment['right hand'].description === 'empty'){
+               }else if(target.type === 'item' && target.target.type === 'weapons' && ((target.target.sort === 'melee' && monster.equipment['right hand'].description === 'empty') || (target.target.sort === 'ranged' && monster.favouredWeaponType === 'ranged' && monster.position.x === target.x && monster.position.y === target.y))){
 
                    //if there are no close hostiles, and monster is bare handed and there is a weapon in his field of view
                    target.priority = 1;
-               }else if(target.type === 'hostile' && target.distance < 4){
-
-                   //if there is hostile in nearest vicinity
-                   target.priority = 2;
                }else if((target.target.type === 'potions' || target.target.type === 'scrolls') && (target.target.group === 'healing' || target.target.group === 'escape') && monster.hp < monster.maxHp * 0.25){
 
                    //if monster is in critical condition and there is a healing or escape item in field of view, it gets highest priority
@@ -534,7 +594,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                    if (examinedItem.type === 'weapons') {
 
-                       if (enemyDistance >= 4) {
+                       if (enemyDistance >= 3) {
 
                            if (examinedItem.sort === 'ranged' && monster.favouredWeaponType === 'ranged' && searchForItemName(monster, examinedItem.ammoType) === true) {
 
@@ -582,7 +642,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
                                    items.push({action: 'equip', index: i, slot: 'left hand', priority: 1});
                                }
                            }
-                       }else if(enemyDistance < 4){
+                       }else if(enemyDistance < 3){
 
                            if(examinedItem.sort === 'melee' && monster.weapon.natural === true){
 
@@ -600,10 +660,10 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                            if (examinedItem.group === 'boost') {
 
-                               items.push({action: 'use', index: i, priority: 2, item: examinedItem});
+                               items.push({action: 'use', index: i, priority: 1, item: examinedItem});
                            } else if (examinedItem.group === 'escape' && monster.hp < 0.25 * monster.maxHp) {
 
-                               items.push({action: 'use', index: i, priority: 2, item: examinedItem});
+                               items.push({action: 'use', index: i, priority: 1, item: examinedItem});
                            }
                        }
                    }

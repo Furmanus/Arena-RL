@@ -44,18 +44,22 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         map.setTerrain(0,8,4,'wall');
         map.setTerrain(0,8,6,'tree');
 
-        //new items.Weapon('warhammer', map.cells[0][22][10]);
+        new items.Weapon('warhammer', map.cells[0][22][10]);
 
-        //new items.Armour('chain mail', map.cells[0][16][13]);
+        new items.Armour('chain mail', map.cells[0][16][13]);
         new items.Weapon('dagger', map.cells[0][15][13]);
-        //new items.Weapon('dwarven war axe', map.cells[0][5][5]);
-        //new items.Scroll('armour', map.cells[0][16][15]);
-        //new items.Potion('rage', map.cells[0][44][15]);
+        new items.Weapon('dwarven war axe', map.cells[0][5][5]);
+        new items.Ammo('arrow', map.cells[0][5][35], 20);
+        new items.Ammo('arrow', map.cells[0][15][5], 20);
+        new items.Ammo('arrow', map.cells[0][35][15], 20);
+        new items.Weapon('longbow', map.cells[0][12][15]);
+        new items.Weapon('longbow', map.cells[0][15][35]);
+        new items.Weapon('longbow', map.cells[0][35][15]);
         //new monster.Monster(0, 'minotaur');
         //new monster.Monster(0, 'goblin');
-        //new monster.Monster(0, 'goblin');
-        new monster.Monster(0, 'kobold');
-        //new monster.Monster(0, 'drow');
+        new monster.Monster(0, 'goblin');
+        //new monster.Monster(0, 'kobold');
+        new monster.Monster(0, 'drow');
         //new monster.Monster(0, 'hobgoblin');
 
         exports.player = new player.Player();

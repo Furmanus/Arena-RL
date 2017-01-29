@@ -94,9 +94,9 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 			this.status = {
 
-				'prone': {value: 0, activatedEveryTurn: status.entityStatus.prone.activatedEveryTurn, activateEffect: status.entityStatus.prone.activateEffect, removeEffect: 				status.entityStatus.prone.removeEffect, initEffect: status.entityStatus.prone.initEffect, modifiers: {}},
+				'prone': {value: 0, activatedEveryTurn: status.entityStatus.prone.activatedEveryTurn, activateEffect: status.entityStatus.prone.activateEffect, removeEffect: status.entityStatus.prone.removeEffect, initEffect: status.entityStatus.prone.initEffect, modifiers: {}},
 
-				'bleeding': {value: 0, activatedEveryTurn: status.entityStatus.bleeding.activatedEveryTurn, activateEffect: status.entityStatus.bleeding.activateEffect, 				removeEffect: status.entityStatus.bleeding.removeEffect, initEffect: status.entityStatus.bleeding.initEffect, modifiers: {}},
+				'bleeding': {value: 0, activatedEveryTurn: status.entityStatus.bleeding.activatedEveryTurn, activateEffect: status.entityStatus.bleeding.activateEffect, removeEffect: status.entityStatus.bleeding.removeEffect, initEffect: status.entityStatus.bleeding.initEffect, modifiers: {}},
 
 				'stunned': {value: 0, activatedEveryTurn: status.entityStatus.stunned.activatedEveryTurn, activateEffect: status.entityStatus.stunned.activateEffect, removeEffect: status.entityStatus.stunned.removeEffect, initEffect: status.entityStatus.stunned.initEffect, modifiers: {}, counter: 0},
 
@@ -659,6 +659,25 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 			entity.swap.entity = null;
             this.swap.ready = false;
             this.swap.entity = null;
+		}
+
+		shoot(x, y){
+
+			var path = pathfinding.bresenham(this.position.x, this.position.y, x, y, this, ['wall', 'closedDoors', 'tree', 'deadTree']);
+			combat.doRangedAttack(this, path);
+		}
+
+		calculateShootPath(x, y){
+
+			var path = pathfinding.bresenham(this.position.x, this.position.y, x, y, this, ['wall', 'closedDoors', 'tree', 'deadTree']);
+
+			if(path[path.length - 1].x === x && path[path.length - 1].y === y){
+
+				return true;
+			}else{
+
+				return false;
+			}
 		}
 	}
 
