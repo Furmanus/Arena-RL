@@ -300,10 +300,10 @@ define(['screen', 'map', 'use'], function(screen, map, use){
             this.name = boots[type].name;
             this.description = boots[type].description;
             this.type = boots[type].type;
-			this.armourBonus = boots[type].armourBonus;
-			this.skillPenalty = boots[type].skillPenalty;
-			this.modifiers = boots[type].modifiers;
-			this.slot = boots[type].slot;
+			      this.armourBonus = boots[type].armourBonus;
+			      this.skillPenalty = boots[type].skillPenalty;
+			      this.modifiers = boots[type].modifiers;
+			      this.slot = boots[type].slot;
 
             object.inventory.push(this);
         }
@@ -364,7 +364,8 @@ define(['screen', 'map', 'use'], function(screen, map, use){
           legs: [1,1,1,2,2,3],
           boots: [1,1,1,2],
           scrolls: [3,3,4,3,],
-          potions: [5,5,5,5,4,4,3]
+          potions: [5,5,5,5,4,4,3],
+          ammunition: [0,0,1,2,3]
       };
 
       var randomCell,
@@ -389,7 +390,13 @@ define(['screen', 'map', 'use'], function(screen, map, use){
 
               if(randomCell.type.type === 'floor'){
 
-                  new itemList[n].construct(itemList[n].items.random(), randomCell);
+                  if(n === 'ammunition'){
+
+                    new itemList[n].construct(itemList[n].items.random(), randomCell, ROT.RNG.getUniformInt(10,20));
+                  }else{
+
+                    new itemList[n].construct(itemList[n].items.random(), randomCell);
+                  }
                   break;
               }
               attemptCount++;
@@ -415,15 +422,16 @@ define(['screen', 'map', 'use'], function(screen, map, use){
         'legs': {'construct': Legs, 'items': Object.keys(legs)},
         'boots': {'construct': Boots, 'items': Object.keys(boots)},
         'scrolls': {'construct': Scroll, 'items': Object.keys(scrolls)},
-        'potions': {'construct': Potion, 'items': Object.keys(potions)}
+        'potions': {'construct': Potion, 'items': Object.keys(potions)},
+        'ammunition': {'construct': Ammo, 'items': Object.keys(ammunition)}
   };
   
   return {
     
     Weapon: Weapon,
-	Armour: Armour,
-	Scroll: Scroll,
-	Potion: Potion,
+	  Armour: Armour,
+	  Scroll: Scroll,
+	  Potion: Potion,
     Helmet: Helmet,
     Legs: Legs,
     Boots: Boots,
