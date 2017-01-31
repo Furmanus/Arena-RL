@@ -43,6 +43,7 @@ define(['main'], function(main){
 	//for map building inside map and generator modules
 	var options = {
 		width: 50,
+		layout: null,
 		height: 40,
 		fontSize: 15,
 		forceSquareRatio: true
@@ -391,6 +392,15 @@ define(['main'], function(main){
 
 		return isVowel;
     }
+
+    /*
+	function reponsible for reseting current message and currentMessageCount. Used inside evHandlers module, inside chasmEnterEventHandler
+    */
+    function resetMessageCount(){
+
+    	currentMessage = null;
+    	currentMessageCount = 0;
+    }
 	
 	return{
 		display: display,
@@ -417,6 +427,7 @@ define(['main'], function(main){
 		cameraPosition: cameraPosition,
 		displayMode: displayMode,
 		drawCenteredText: drawCenteredText,
-		isVowel: isVowel
+		isVowel: isVowel,
+		resetMessageCount: resetMessageCount
 	}
 });

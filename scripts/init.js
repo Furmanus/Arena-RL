@@ -34,8 +34,8 @@ requirejs(['main', 'player', 'screen'], function(main, player, screen){
                 createGameScreen();
 
                 document.body.style.display = 'flex';
-                main.start();
-                //main.startTest();
+                //main.start();
+                main.startTest();
             }else if(!(player.playerOptions.name) || validateName() !== true){
 
                 document.getElementById('nameWarning').innerHTML = 'Please enter your name (name has to be shorter than 9 signs)!';
@@ -54,7 +54,7 @@ requirejs(['main', 'player', 'screen'], function(main, player, screen){
 
         function changeDisplay(){
 
-            selectedDisplay = document.getElementById('domDisplay').value;
+            screen.options.layout = document.getElementById('domDisplay').value;
         }
 
         function validateName(){

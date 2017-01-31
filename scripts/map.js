@@ -77,54 +77,82 @@ define(['screen'], function(screen){
 
 		chasmEffect: function(entity, x, y){
 
-            screen.display.clear();
-            cells[entity.position.level][entity.position.x][entity.position.y].entity = null;
+			if(entity.abilities.canFly === false){
 
-            if(entity.type.type === 'player') {
+				var tmpX,
+					tmpY,
+					currentLevel = entity.position.level;
 
-                cells[entity.position.level].time.engine.lock();
-            }
-            cells[entity.position.level].time.scheduler.remove(entity);
+            	screen.display.clear();
+            	cells[entity.position.level][entity.position.x][entity.position.y].entity = null;
 
-            if(entity.position.level == cells.maxDungeonLevel){
+            	if(entity.type.type === 'player') {
 
-                var monster = require('monster');
-                var generator = require('generator');
-                var items = require('items');
-                //generujemy nowy poziom, jeżeli gracz znajduje się na najniższym obecnie wygenerowanym poziomie
-                generator.generateRandomLevel();
-                monster.fillLevelWithMonsters(cells.maxDungeonLevel);
-                items.fillLevelWithItems(cells.maxDungeonLevel);
-            }
+            	    cells[entity.position.level].time.engine.lock();
+            	}
+            	cells[entity.position.level].time.scheduler.remove(entity);
 
-            //aktualizujemy współrzędne gracza na nowy poziom i współrzędne schodów w górę
-            entity.position.level++;
-            entity.position.x = cells[entity.position.level].stairsUp.x;
-            entity.position.y = cells[entity.position.level].stairsUp.y;
+            	if(entity.position.level == cells.maxDungeonLevel){
 
-            cells[entity.position.level][entity.position.x][entity.position.y].entity = player;
+                	var monster = require('monster');
+                	var generator = require('generator');
+                	var items = require('items');
+                	//generujemy nowy poziom, jeżeli gracz znajduje się na najniższym obecnie wygenerowanym poziomie
+                	generator.generateRandomLevel();
+                	monster.fillLevelWithMonsters(cells.maxDungeonLevel);
+            	    items.fillLevelWithItems(cells.maxDungeonLevel);
+            	}
 
-            entity.doFov(entity);
+            	//aktualizujemy współrzędne gracza na nowy poziom i współrzędne schodów w górę
+            	entity.position.level++;
 
-            if(entity.type.type === 'player') {
+            	do{
 
-                screen.drawVisibleCells(cells[entity.position.level]);
-            }
+            		tmpX = ROT.RNG.getUniformInt(1, screen.options.width - 1);
+            		tmpY = ROT.RNG.getUniformInt(1, screen.options.height - 1);
+            	}while(cells[entity.position.level][tmpX][tmpY].type.type !== 'floor')
 
-            //dodajemy gracza do silnika czasu na nowym poziomie i uruchamiamy silnik
-            cells[entity.position.level].time.scheduler.add(entity, true);
+            	entity.position.x = tmpX;
+            	entity.position.y = tmpY;
 
-            if(entity.type.type === 'player') {
+            	cells[entity.position.level][entity.position.x][entity.position.y].entity = entity;
 
-                cells[entity.position.level].time.engine.start();
-            }
+            	entity.doFov(entity);
 
-            screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' fall' : ' falls') + ' down into chasm!');
+            	if(entity.type.type === 'player') {
 
-            if(entity.type.type === 'player') {
+                	screen.drawVisibleCells(cells[entity.position.level]);
+            	}else{
 
-                document.getElementById('domDungeonLevel').innerHTML = player.position.level;
-            }
+            		screen.drawVisibleCells(cells[currentLevel]);
+            	}
+
+            	//dodajemy gracza do silnika czasu na nowym poziomie i uruchamiamy silnik
+            	cells[entity.position.level].time.scheduler.add(entity, true);
+
+            	if(entity.type.type === 'player') {
+
+                	cells[entity.position.level].time.engine.start();
+            	}else{
+
+            		entity.currentGoal = null;
+            		entity.currentFov = [];
+            	}
+
+            	if(entity.type.type === 'player') {
+
+                	document.getElementById('domDungeonLevel').innerHTML = entity.position.level;
+                	screen.placeMessage('You fall down into chasm!');
+            	}else{
+
+            		screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' fall' : ' falls') + ' down into chasm!', cells[currentLevel][x][y]);
+        		}
+
+        		var main = require('main');
+
+        		main.exports.player.doFov(main.exports.player);
+        		screen.drawVisibleCells(cells[main.exports.player.position.level]);
+        	}
 		}
 	};
 	
@@ -141,9 +169,9 @@ define(['screen'], function(screen){
 		
 		'stairsDown': {display: ['>'], fgColor: 'silver', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'stairs down', key: 'stairsDown', name: 'a stairs leading downwards', walkMessage: 'Stairs leading downwards are here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'bush': {display: ['"'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: true, blockMovement: false, flammable: true, type: 'dead bush', key: 'deadBush', name: 'a bush', walkMessage: 'A thick bush is growing here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
+		'bush': {display: ['"'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: true, blockMovement: false, flammable: true, type: 'bush', key: 'deadBush', name: 'a bush', walkMessage: 'A thick bush is growing here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
-		'deadBush': {display: ['"'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'bush', key: 'bush', name: 'a dead bush', walkMessage: 'A withered bush is here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
+		'deadBush': {display: ['"'], fgColor: 'rgb(90,90,90)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: false, flammable: false, type: 'dead bush', key: 'bush', name: 'a dead bush', walkMessage: 'A withered bush is here.', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
 		'tree': {display: ['T'], fgColor: 'rgb(0,255,0)', bgColor: 'rgb(1,1,1)', lightColor: null, blockFov: false, blockMovement: true, flammable: true, type: 'tree', key: 'tree', name: 'a tree', walkMessage: '', walkAttempt: walkAttemptFunctions.defaultWalkAttempt, walkEffect: walkEffectFunctions.defaultWalkEffect, modifiers: null},
 		
@@ -250,7 +278,8 @@ define(['screen'], function(screen){
 		initCells: initCells,
 		terrain: terrain,
 		setTerrain: setTerrain,
-		clearVisibility: clearVisibility
+		clearVisibility: clearVisibility,
+		walkEffectFunctions: walkEffectFunctions
 	}
 });
 

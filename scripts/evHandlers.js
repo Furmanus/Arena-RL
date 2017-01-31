@@ -705,7 +705,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                     newY = y,
                     pathfinding = require('pathfinding'),
                     returnedAimText = returnLookText(x, y),
-                    blockingCells = ['wall', 'bush', 'tree', 'deadTree', 'closedDoors'],
+                    blockingCells = ['wall', 'bush', 'tree', 'dead tree', 'closed doors'],
                     bresenhamLine = pathfinding.bresenham(player.position.x, player.position.y, x, y, player, blockingCells),
                     convertedCoordinateX, //map coordinates converted to current screen coordinates
                     convertedCoordinateY,
@@ -1787,6 +1787,34 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
             }
 		}
 	}
+	/*
+	event handler used when player tries to enter chasm cell.
+	*/
+	function chasmConfirmEventHandler(ev){
+
+		if(ev.which === 89){
+
+			document.getElementById('messageBox').removeChild(document.getElementById('messageBox').getElementsByTagName('li')[document.getElementById('messageBox').getElementsByTagName('li').length - 1]);
+
+			map.clearVisibility(map.cells[this.position.level]);
+			screen.display.clear();
+			this.currentFov = [];
+				
+			map.cells[this.position.level][this.position.x][this.position.y].entity = null;
+			this.position.lastVisitedCell = map.cells[this.position.level][this.position.x][this.position.y];
+					
+			map.walkEffectFunctions.chasmEffect(this);
+
+			this.doFov(this);
+			screen.drawVisibleCells(map.cells[this.position.level]);
+			this.handleEvent = defaultEventHandler;
+		}else if(ev.which === 78 || ev.which === 32 || ev.which === 27){
+
+			document.getElementById('messageBox').removeChild(document.getElementById('messageBox').getElementsByTagName('li')[document.getElementById('messageBox').getElementsByTagName('li').length - 1]);
+			screen.resetMessageCount();
+			this.handleEvent = defaultEventHandler;
+		}
+	}
 	
 	return {
 		
@@ -1794,6 +1822,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 		defaultEventHandler: defaultEventHandler,
 		doEquipmentModifiers: doEquipmentModifiers,
 		stunHandleEvent: stunHandleEvent,
-		generateDeathScreen: generateDeathScreen
+		generateDeathScreen: generateDeathScreen,
+		chasmConfirmEventHandler: chasmConfirmEventHandler
 	}
 });

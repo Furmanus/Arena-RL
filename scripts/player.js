@@ -196,7 +196,8 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 			var tmpX,
 				tmpY,
 				randomX = [-1, 0, 1].random(),
-				randomY = [-1, 0, 1].random();
+				randomY = [-1, 0, 1].random(),
+				evHandlers = require('evHandlers');
 
 			if(random === true){
 
@@ -239,44 +240,49 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 						screen.placeMessage(screen.capitalizeString(map.cells[this.position.level][tmpX][tmpY].type.name) + ' is blocking your movement.');
 					}else{
 					
-						map.clearVisibility(map.cells[this.position.level]);
-						screen.display.clear();
-						this.currentFov = [];
+						if(map.cells[this.position.level][this.position.x + x][this.position.y + y].type.type === 'chasm'){
+
+							screen.placeMessage('Are you sure you want to jump into chasm?[y/n]');
+							this.handleEvent = evHandlers.chasmConfirmEventHandler;
+						}else{
+							map.clearVisibility(map.cells[this.position.level]);
+							screen.display.clear();
+							this.currentFov = [];
 				
-						map.cells[this.position.level][this.position.x][this.position.y].entity = null;
-						this.position.lastVisitedCell = map.cells[this.position.level][this.position.x][this.position.y];
+							map.cells[this.position.level][this.position.x][this.position.y].entity = null;
+							this.position.lastVisitedCell = map.cells[this.position.level][this.position.x][this.position.y];
 				
-						this.position.x += x;
-						this.position.y += y;
+							this.position.x += x;
+							this.position.y += y;
 					
-						map.cells[this.position.level][this.position.x][this.position.y].entity = this;
-						map.cells[this.position.level][this.position.x][this.position.y].type.walkEffect(this, this.position.x, this.position.y);
+							map.cells[this.position.level][this.position.x][this.position.y].entity = this;
+							map.cells[this.position.level][this.position.x][this.position.y].type.walkEffect(this, this.position.x, this.position.y);
 					
-						screen.placeMessage(map.cells[this.position.level][this.position.x][this.position.y].type.walkMessage);
+							screen.placeMessage(map.cells[this.position.level][this.position.x][this.position.y].type.walkMessage);
 						
-						if(map.cells[this.position.level][this.position.x][this.position.y].isOnFire === true){
-							//KOD ODPOWIEDZIALNY ZA OBRAŻENIA OD OGNIA, po zaimplementowaniu hp
-							screen.placeMessage('There are roaring flames here! You are on fire!');
-						}else if(map.cells[this.position.level][this.position.x][this.position.y].inventory.length === 1){
+							if(map.cells[this.position.level][this.position.x][this.position.y].isOnFire === true){
+								//KOD ODPOWIEDZIALNY ZA OBRAŻENIA OD OGNIA, po zaimplementowaniu hp
+								screen.placeMessage('There are roaring flames here! You are on fire!');
+							}else if(map.cells[this.position.level][this.position.x][this.position.y].inventory.length === 1){
 
-							var examinedItem = map.cells[this.position.level][this.position.x][this.position.y].inventory[0];
+								var examinedItem = map.cells[this.position.level][this.position.x][this.position.y].inventory[0];
 							
-							screen.placeMessage('There is ' + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('bundle of ' + examinedItem.quantity + ' ' ) : '') : '') + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? screen.removeFirst(examinedItem.description) : examinedItem.description) : examinedItem.description) + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('s' + ' ' ) : '') : '') + ' lying here.');
-						}else if(map.cells[this.position.level][this.position.x][this.position.y].inventory.length > 1){
+								screen.placeMessage('There is ' + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('bundle of ' + examinedItem.quantity + ' ' ) : '') : '') + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? screen.removeFirst(examinedItem.description) : examinedItem.description) : examinedItem.description) + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('s' + ' ' ) : '') : '') + ' lying here.');
+							}else if(map.cells[this.position.level][this.position.x][this.position.y].inventory.length > 1){
 							
-							screen.placeMessage('Several items are lying here.');
-						}
+								screen.placeMessage('Several items are lying here.');
+							}
 
-						if(this.status.prone.value === 1){
+							if(this.status.prone.value === 1){
 
-							screen.placeMessage('You crawl.');
+								screen.placeMessage('You crawl.');
+							}
+				
+							this.doFov(this);
+							screen.drawVisibleCells(map.cells[this.position.level]);
+				
+							map.cells[this.position.level].time.engine.unlock();
 						}
-				
-						this.doFov(this);
-						screen.drawVisibleCells(map.cells[this.position.level]);
-						//screen.drawCells(map.cells[this.position.level]);
-				
-						map.cells[this.position.level].time.engine.unlock();
 					}
 				}else if(walkAttempt == 'stop'){
 				

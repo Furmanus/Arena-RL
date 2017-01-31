@@ -124,7 +124,13 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
 		if(defender.hp < 1){
 
-            screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'dead', 0, type), defenderPosition);
+            if(map.cells[defender.position.level][defender.position.x][defender.position.y].type.type === 'chasm'){
+
+                screen.placeVisibleMessage(screen.capitalizeString(defender.type.messageDisplay) + ' dead body falls down into chasm.', defenderPosition);
+            }else{
+
+                screen.placeVisibleMessage(combatMessages.calculateCombatMessage(attacker, defender, 'dead', 0, type), defenderPosition);
+            }
             map.cells[defender.position.level].time.scheduler.remove(defender);
             defender.dropCorpse();
             attacker.experience += defender.xp;
@@ -257,28 +263,40 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
                     var target = (type === 'miss' ? map.cells[level][x][y] : map.cells[level][x][y].entity),
                         index = checkIfInventoryHasItem(attacker.equipment['left hand'], target);
 
-                    if (index === null) {
+                    if(target.type.type === 'chasm'){
 
                         if (attacker.equipment['left hand'].quantity === 1) {
 
-                            target.inventory.push(attacker.equipment['left hand']);
-                            attacker.equipment['left hand'].owner = target;
-                            attacker.equipment['left hand'] = {description: 'empty'};
-                        } else if (attacker.equipment['left hand'].quantity > 1) {
+                            attacker.equipment['left hand'] = {description: 'empty'}; 
+                        }else if(attacker.equipment['left hand'].quantity > 1){
 
-                            new items.Ammo(attacker.equipment['left hand'].name, target, 1);
                             attacker.equipment['left hand'].quantity--;
                         }
-                    } else {
+                    }else{
 
-                        if (attacker.equipment['left hand'].quantity === 1) {
+                        if (index === null) {
 
-                            target.inventory[index].quantity++;
-                            attacker.equipment['left hand'] = {description: 'empty'};
-                        } else if (attacker.equipment['left hand'].quantity > 1) {
+                            if (attacker.equipment['left hand'].quantity === 1) {
 
-                            target.inventory[index].quantity++;
-                            attacker.equipment['left hand'].quantity--;
+                                target.inventory.push(attacker.equipment['left hand']);
+                                attacker.equipment['left hand'].owner = target;
+                                attacker.equipment['left hand'] = {description: 'empty'};
+                            } else if (attacker.equipment['left hand'].quantity > 1) {
+
+                                new items.Ammo(attacker.equipment['left hand'].name, target, 1);
+                                attacker.equipment['left hand'].quantity--;
+                            }
+                        } else {
+
+                            if (attacker.equipment['left hand'].quantity === 1) {
+
+                                target.inventory[index].quantity++;
+                                attacker.equipment['left hand'] = {description: 'empty'};
+                            } else if (attacker.equipment['left hand'].quantity > 1) {
+
+                                target.inventory[index].quantity++;
+                                attacker.equipment['left hand'].quantity--;
+                            }
                         }
                     }
                 }

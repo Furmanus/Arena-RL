@@ -363,7 +363,7 @@ define(['screen', 'map', 'use'], function(screen, map, use){
           helmet: [1, 1, 1, 1, 2, 2, 3],
           legs: [1,1,1,2,2,3],
           boots: [1,1,1,2],
-          scrolls: [3,3,4,3,],
+          scrolls: [3,3,4,3],
           potions: [5,5,5,5,4,4,3],
           ammunition: [0,0,1,2,3]
       };
