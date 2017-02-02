@@ -167,6 +167,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                nextStep = pathfinding.findPath(monster.currentGoal.x, monster.currentGoal.y, monster.position.x, monster.position.y, monster, 'pass')[0]
            }
+           console.log(map.cells[monster.position.level][monster.currentGoal.x][monster.currentGoal.y].type.type + ' ' + monster.currentGoal.x + ' ' + monster.currentGoal.y);
            //check if next step cell is empty or is occupied by hostile
            if(map.cells[monster.position.level][nextStep.x][nextStep.y].entity === null || (map.cells[monster.position.level][nextStep.x][nextStep.y].entity !== null && monster.checkIfHostile(map.cells[monster.position.level][nextStep.x][nextStep.y].entity) === true)) {
 
@@ -175,8 +176,8 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
            }else if(map.cells[monster.position.level][nextStep.x][nextStep.y].entity !== null && monster.checkIfHostile(map.cells[monster.position.level][nextStep.x][nextStep.y].entity) !== true){
 
                var encounteredEntity = map.cells[monster.position.level][nextStep.x][nextStep.y].entity;
-               //else if next step cell is occupied by friendly entity, monster waits 1 turns and if nothing changes, sets new goal
-               if(monster.waitCounter > 1){
+               //else if next step cell is occupied by friendly entity, monster waits 2 turns and if nothing changes, sets new goal
+               if(monster.waitCounter > 2){
 
                    monster.waitCounter = 0;
                    setGoal(monster);
@@ -207,16 +208,40 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
        }
 
        function setGoal(monster){
-
+          console.log('test');
            //we choose random floor tile
            var newGoal = getCoordinates(Object.keys(map.cells[monster.position.level].floorTiles).random());
+
            //if there is no path to choosen floor tile, we call function again
            if(pathfinding.findPath(newGoal.x, newGoal.y, monster.position.x, monster.position.y, monster, 'pass').length === 0){
 
                setGoal(monster);
+           }else if(validateCell(newGoal) === false){
+
+              setGoal(monster);
            }else{
 
                monster.currentGoal = newGoal;
+           }
+
+           function validateCell(cell){
+
+              if(map.cells[monster.position.level][newGoal.x][newGoal.y].type.blockMovement === true){
+
+                return false;
+              }else if(map.cells[monster.position.level][newGoal.x][newGoal.y].type.type === 'chasm' && monster.abilities.canFly === false){
+
+                return false;
+              }else if(map.cells[monster.position.level][newGoal.x][newGoal.y].type.type === 'closed doors' && monster.abilities.canOpenDoors === false){
+
+                return false;
+              }else if(map.cells[monster.position.level][newGoal.x][newGoal.y].type.type === 'deep water' && monster.abilities.breatheUnderWater === false){
+
+                return false;
+              }else{
+
+                return true;
+              }
            }
        }
 

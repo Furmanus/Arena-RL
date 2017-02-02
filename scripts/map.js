@@ -141,7 +141,7 @@ define(['screen'], function(screen){
 
             	if(entity.type.type === 'player') {
 
-                	document.getElementById('domDungeonLevel').innerHTML = entity.position.level;
+                	document.getElementById('domDungeonLevel').innerHTML = entity.position.level + 1;
                 	screen.placeMessage('You fall down into chasm!');
             	}else{
 

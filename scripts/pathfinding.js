@@ -21,19 +21,13 @@ define(['screen', 'map'], function(screen, map){
 			if(x < 0 || y < 0 || x > screen.options.width - 1 || y > screen.options.height - 1){
 				
 				return false;
-			}
-			
-			if(x === entity.position.x && y === entity.position.y){
+			}else if(x === entity.position.x && y === entity.position.y){
 				
 				return true;
-			}
-			
-			if(map.cells[entity.position.level][x][y].type.blockMovement === true){
+			}else if(map.cells[entity.position.level][x][y].type.blockMovement === true){
 				
 				return false;
-			}
-			
-			if(map.cells[entity.position.level][x][y].entity !== null){
+			}else if(map.cells[entity.position.level][x][y].entity !== null){
 				
 				switch(type){
 					
@@ -48,41 +42,30 @@ define(['screen', 'map'], function(screen, map){
 					default:
 					console.log('error, algorithm type is not specified');
 				}
-			}
-			
-			if(calculateCellForEntity(entity, x, y) === 'pass'){
-				
-				return true;
-			}else if(calculateCellForEntity(entity, x, y) === 'block'){
-				
-				return false;
-			}
-			
-			//for given monster we calculate whether it can pass certain map cells
-			function calculateCellForEntity(entity, x, y){
-				
+			}else{
+
 				var result;
 				
 				switch(map.cells[entity.position.level][x][y].type.type){
 					
 					case 'chasm':
 					
-					result = (entity.abilities.canFly === true) ? 'pass' : 'block';
+					result = (entity.abilities.canFly === true) ? true : false;
 					break;
 					
 					case 'deep water':
 					
-					result = (entity.abilities.breatheUnderWater === true) ? 'pass' : 'block';
+					result = (entity.abilities.breatheUnderWater === true) ? true : false;
 					break;
 					
 					case 'closed doors':
 
-					result = (entity.abilities.canOpenDoors === true) ? 'pass' : 'block';
+					result = (entity.abilities.canOpenDoors === true) ? true : false;
 					break;
 					
 					default:
 					
-					result = 'pass';
+					result = true;
 					break;
 				}
 				
