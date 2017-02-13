@@ -342,6 +342,19 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 					var identifier = list[ev.which - 65].identifier;
 					
 					drawnText = '%c{' + this.inventory[identifier].fgColor + '}' + this.inventory[identifier].display + ' %c{}' + this.inventory[identifier].name;
+
+					if(this.inventory[identifier].type === 'weapons'){
+
+						drawnText += ' [' + this.inventory[identifier].damage + ']';
+
+						if(this.inventory[identifier].sort === 'ranged'){
+
+							drawnText += '[' + this.inventory[identifier].range + ']';
+						}
+					}else if(this.inventory[identifier].type === 'armours' || this.inventory[identifier].type === 'helmets' || this.inventory[identifier].type === 'legs' || this.inventory[identifier].type === 'boots'){
+
+						drawnText += ' [' + this.inventory[identifier].armourBonus + ']';
+					}
 					
 					screen.display.clear();
 					screen.display.drawText(Math.floor((screen.displayOptions.width - this.inventory[identifier].display.length - this.inventory[identifier].name.length) / 2), 1, drawnText);
@@ -519,7 +532,7 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
                 screen.display.drawText(20, 5, 'xp: ' + entity.xp);
 			}
 			
-			drawnText = '%c{darkgoldenrod}weapon: %c{}' + entity.weapon.name + ' ' + entity.weapon.damage;
+			drawnText = '%c{darkgoldenrod}weapon: %c{}' + entity.weapon.name + ' [' + entity.weapon.damage + ']';
 			screen.display.drawText(1, 11, drawnText);
 			
 			for(var n in entity.equipment){
@@ -637,8 +650,22 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
                     var examinedItem = map.cells[level][x][y].inventory[0];
 
-					displayText = 'You see ' + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('bundle of ' + examinedItem.quantity + ' ' ) : '') : '') + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? screen.removeFirst(examinedItem.description) : examinedItem.description) : examinedItem.description) + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('s' + ' ' ) : '') : '') + ' lying here.';
+					displayText = 'You see ' + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('bundle of ' + examinedItem.quantity + ' ' ) : '') : '') + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? screen.removeFirst(examinedItem.description) : examinedItem.description) : examinedItem.description) + (examinedItem.stackable === true ? (examinedItem.quantity > 1 ? ('s' + ' ' ) : '') : '');
 
+					if(examinedItem.type === 'weapons'){
+
+						displayText += ' [' + examinedItem.damage + ']';
+
+						if(examinedItem.sort === 'ranged'){
+
+							displayText += '[' + examinedItem.range + ']';
+						}
+					}else if(examinedItem.type === 'armours' || examinedItem.type === 'helmets' || examinedItem.type === 'legs' || examinedItem.type === 'boots'){
+
+						displayText += ' [' + examinedItem.armourBonus + ']';
+					}
+
+					displayText += ' lying here.';
 					if(map.cells[level][x][y].isOnFire === true){
 
 						displayText += ' Wild flames of fire are roaring here.';
@@ -1020,6 +1047,20 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
         for(var n in player.equipment){
 
             drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(96 + (currentRow / 2)) + ']' + n + '%c{}: ' + ((player.equipment[n].stackable && player.equipment[n].quantity > 1) ? ('bundle of ' + player.equipment[n].quantity + ' ' + screen.removeFirst(player.equipment[n].description) + 's') : screen.removeFirst(player.equipment[n].description));
+
+            if(player.equipment[n].type === 'weapons'){
+
+            	drawnText += '[' + player.equipment[n].damage + ']';
+
+            	if(player.equipment[n].sort === 'ranged'){
+
+            		drawnText += '[' + player.equipment[n].range + ']';
+            	}
+            }else if(player.equipment[n].type === 'armours' || player.equipment[n].type === 'helmets' || player.equipment[n].type === 'legs' || player.equipment[n].type === 'boots'){
+            	
+            	drawnText += '[' + player.equipment[n].armourBonus + ']';
+            }
+
             screen.display.drawText(0, currentRow, drawnText);
 
             currentRow += 2;
@@ -1249,6 +1290,21 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			stackable = !!(list[i].item.stackable);
 
             drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(97+i) + ']%c{}' + ((stackable && list[i].item.quantity > 1) ? (' ' + list[i].item.quantity) : '') + ' ' +  screen.removeFirst(list[i].item.description) + (stackable ? (list[i].item.quantity > 1 ? 's' : '') : '');
+            //we check if drawn item type is weapon or armour. If yes, we draw its damage/defense bonus
+
+            if(list[i].item.type === 'weapons'){
+
+            	drawnText += ' [' + list[i].item.damage + ']';
+
+            	if(list[i].item.sort === 'ranged'){
+
+            		drawnText += '[' + list[i].item.range + ']';
+            	}
+            }else if(list[i].item.type === 'armours' || list[i].item.type === 'helmets' || list[i].item.type === 'legs' || list[i].item.type === 'boots'){
+
+            	drawnText += ' [' + list[i].item.armourBonus + ']';
+            }
+
             screen.display.drawText(1, currentRow, drawnText);
 			
 			currentRow++;
@@ -1283,6 +1339,20 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
             	stackable = !!(list[i].item.stackable);
 
                 drawnText = '%c{darkgoldenrod}[' + String.fromCharCode(97+i) + ']%c{}' + ((stackable && list[i].item.quantity > 1) ? (' ' + list[i].item.quantity) : '') + ' ' +  screen.removeFirst(list[i].item.description) + (stackable ? (list[i].item.quantity > 1 ? 's' : '') : '');
+
+                if(list[i].item.type === 'weapons'){
+
+            		drawnText += ' [' + list[i].item.damage + ']';
+
+            		if(list[i].item.sort === 'ranged'){
+
+            			drawnText += '[' + list[i].item.range + ']';
+            		}
+            	}else if(list[i].item.type === 'armours' || list[i].item.type === 'helmets' || list[i].item.type === 'legs' || list[i].item.type === 'boots'){
+
+            		drawnText += ' [' + list[i].item.armourBonus + ']';
+            	}
+
                 screen.display.drawText(1, currentRow, drawnText);
 
                 currentRow++;

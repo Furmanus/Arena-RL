@@ -167,7 +167,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
 
                nextStep = pathfinding.findPath(monster.currentGoal.x, monster.currentGoal.y, monster.position.x, monster.position.y, monster, 'pass')[0]
            }
-           console.log(map.cells[monster.position.level][monster.currentGoal.x][monster.currentGoal.y].type.type + ' ' + monster.currentGoal.x + ' ' + monster.currentGoal.y);
+           
            //check if next step cell is empty or is occupied by hostile
            if(map.cells[monster.position.level][nextStep.x][nextStep.y].entity === null || (map.cells[monster.position.level][nextStep.x][nextStep.y].entity !== null && monster.checkIfHostile(map.cells[monster.position.level][nextStep.x][nextStep.y].entity) === true)) {
 
@@ -208,7 +208,7 @@ define(['map', 'screen', 'pathfinding', 'combat'], function(map, screen, pathfin
        }
 
        function setGoal(monster){
-          console.log('test');
+          
            //we choose random floor tile
            var newGoal = getCoordinates(Object.keys(map.cells[monster.position.level].floorTiles).random());
 

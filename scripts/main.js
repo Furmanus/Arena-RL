@@ -68,6 +68,7 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         new items.Weapon('longbow', exports.player);
         new items.Ammo('arrow', exports.player, 24);
         new items.Armour('chain mail', exports.player);
+        new items.Helmet('chain choif', exports.player);
         new items.Weapon('warhammer', exports.player);
         map.cells[0].time.engine.start();
         screen.setWindows();
