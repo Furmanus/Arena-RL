@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>ArenaRL</title>
+		<script data-main="scripts/init" src="scripts/require.js"></script>
+		<script src="scripts/rot.js"></script>
+		<link rel="stylesheet" href="styles.css">
+	</head>
+	<body>
+		<p style="color: darkgoldenrod; font-size: 2em; text-align: center; margin: 3px">ArenaRL</p>
+		<p style="color: silver; font-size: 1em; text-align: center; margin: 3px">Welcome to ArenaRL! Deep dungeon, dangerous creatures and great treaures awaits you!</p>
+		<span style="white-space: nowrap"><p>Name: <input type="text" placeholder="enter your name..." autocomplete="off" id="domName"><span id="nameWarning"></span></p></span>
+		<label for="domClass">Class: <select id="domClass">
+			<option value="fighter">Fighter</option>
+		</select>
+		</label>
+		<br>
+		<label for="domDisplay">Display: <select id="domDisplay">
+			<option>ASCII</option>
+			<option>Angband Tiles</option>
+		</select></label>
+		<br>
+		<input type="button" value="Journey Onward!" id="domStart">
+	</body>
+</html>

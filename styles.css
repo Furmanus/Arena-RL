@@ -1,0 +1,69 @@
+body {
+	background: black;
+	/*display: flex;*/
+	color: silver;
+}
+#screen {
+	margin: auto;
+}
+#messages {
+	margin-left: 0px;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding-left: 0px;
+	padding-right: 30px;
+	padding-top: 0px;
+	font-family: Monospace;
+	font-size: 1.2em;
+	height: 95vh;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+#info {
+	position: absolute;
+	bottom: 2vh;
+	font-family: Monospace;
+	color: silver !important;
+	font-size: 1em !important;
+}
+#player {
+	margin-right: 0px;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding-left: 2em;
+	font-family: Monospace;
+	height: 95vh;
+}
+#player p {
+	color: darkgoldenrod;
+	font-size: 1.2em;
+}
+#player span {
+	color: silver;
+}
+li {
+	list-style-type: none;	
+	padding-left: 0px;
+}
+ul {
+	margin-top: 0px;
+	padding-left: 0px;
+}
+.status span {
+	color: darkred !important;
+}
+
+#title{
+	color: darkgoldenrod;
+	margin: auto;
+	font-size: 2em;
+}
+select, label, option{
+	margin: 5px;
+}
+input {
+	margin-top: 5px;
+}
+#nameWarning{
+	color: red;
+}
