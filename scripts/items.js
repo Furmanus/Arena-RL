@@ -3,35 +3,35 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   //hash objects with defined properties, used in class constructor
   var weapons = {
   
-    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1, damage: '1d4', critical: [18,19,20], dmgType: 'piercing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
+    'dagger': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'dagger', description: 'a dagger', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1, damage: '1d4', critical: [18,19,20], dmgType: 'piercing', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']},
 	
-    'long sword': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'long sword', description: 'a long sword', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d8', critical: [19,20], dmgType: 'slashing', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']},
+    'long sword': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'long sword', description: 'a long sword', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d8', critical: [19,20], dmgType: 'slashing', criticalMultiplier: 1.5, modifiers: null, criticalHit: ['bleeding']},
 	
-    'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d6', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 2, modifiers: null, criticalHit: ['prone']},
+    'staff': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'staff', description: 'a staff', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d6', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 1.5, modifiers: null, criticalHit: ['prone']},
 	
-	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 3, modifiers: null, criticalHit: ['stunned']},
+	'warhammer': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'warhammer', description: 'a warhammer', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 2, modifiers: null, criticalHit: ['stunned']},
 
-    'morning star': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'morning star', description: 'a morning star', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 2, modifiers: null, criticalHit: ['stunned', 'bleeding']},
+    'morning star': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'morning star', description: 'a morning star', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d8', critical: [20], dmgType: 'bludgeoning', criticalMultiplier: 1.5, modifiers: null, criticalHit: ['stunned', 'bleeding']},
 
-    'short spear': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'short spear', description: 'a short spear', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d6', critical: [19,20], dmgType: 'piercing', criticalMultiplier: 2, modifiers: null, criticalHit: [null]},
+    'short spear': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'short spear', description: 'a short spear', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d6', critical: [19,20], dmgType: 'piercing', criticalMultiplier: 1.5, modifiers: null, criticalHit: [null]},
 
-    'hand axe': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'hand axe', description: 'a hand axe', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d6', critical: [20], dmgType: 'slashing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
+    'hand axe': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'hand axe', description: 'a hand axe', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d6', critical: [20], dmgType: 'slashing', criticalMultiplier: 1.8, modifiers: null, criticalHit: ['bleeding']},
 
-    'short sword':  {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'short sword', description: 'a short sword', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d6', critical: [19,20], dmgType: 'slashing', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']},
+    'short sword':  {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'short sword', description: 'a short sword', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d6', critical: [19,20], dmgType: 'slashing', criticalMultiplier: 1.5, modifiers: null, criticalHit: ['bleeding']},
 
-    'battle axe':  {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'battle axe', description: 'a battle axe', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d8', critical: [20], dmgType: 'slashing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
+    'battle axe':  {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'battle axe', description: 'a battle axe', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d8', critical: [20], dmgType: 'slashing', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']},
 
-    'scimitar': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'scimitar', description: 'a scimitar', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d6', critical: [18,19,20], dmgType: 'slashing', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']},
+    'scimitar': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'scimitar', description: 'a scimitar', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d7', critical: [18,19,20], dmgType: 'slashing', criticalMultiplier: 1.5, modifiers: null, criticalHit: ['bleeding']},
 
-    'rapier': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'rapier', description: 'a rapier', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d5', critical: [18,19,20], dmgType: 'piercing', criticalMultiplier: 2, modifiers: null, criticalHit: [null]},
+    'rapier': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'rapier', description: 'a rapier', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d5', critical: [18,19,20], dmgType: 'piercing', criticalMultiplier: 1.5, modifiers: null, criticalHit: [null]},
 
-    'trident': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'trident', description: 'a trident', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d8', critical: [20], dmgType: 'piercing', criticalMultiplier: 2, modifiers: null, criticalHit: [null]},
+    'trident': {display: ')', fgColor: 'silver', bgColor: 'transparent', name: 'trident', description: 'a trident', type: 'weapons', sort: 'melee', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d8', critical: [20], dmgType: 'piercing', criticalMultiplier: 1.5, modifiers: null, criticalHit: [null]},
 
-    'dwarven war axe': {display: ')', fgColor: 'gold', bgColor: 'transparent', name: 'dwarven war axe', description: 'a dwarven war axe', sort: 'melee', type: 'weapons', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d10', critical: [20], dmgType: 'slashing', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
+    'dwarven war axe': {display: ')', fgColor: 'gold', bgColor: 'transparent', name: 'dwarven war axe', description: 'a dwarven war axe', sort: 'melee', type: 'weapons', ammoType: null, slot: 'right hand', natural: false, range: 1,  damage: '1d10', critical: [20], dmgType: 'slashing', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']},
 
-    'shortbow': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'shortbow', description: 'a shortbow', type: 'weapons', sort: 'ranged', ammoType: 'arrow', slot: 'right hand', natural: false,  damage: '1d6', range: 6, critical: [20], dmgType: 'ranged bow', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']},
+    'shortbow': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'shortbow', description: 'a shortbow', type: 'weapons', sort: 'ranged', ammoType: 'arrow', slot: 'right hand', natural: false,  damage: '1d6', range: 6, critical: [20], dmgType: 'ranged bow', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']},
 
-    'longbow': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'longbow', description: 'a longbow', type: 'weapons', sort: 'ranged', ammoType: 'arrow', slot: 'right hand', natural: false,  damage: '1d8', range: 10, critical: [20], dmgType: 'ranged bow', criticalMultiplier: 3, modifiers: null, criticalHit: ['bleeding']}
+    'longbow': {display: ')', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'longbow', description: 'a longbow', type: 'weapons', sort: 'ranged', ammoType: 'arrow', slot: 'right hand', natural: false,  damage: '1d8', range: 10, critical: [20], dmgType: 'ranged bow', criticalMultiplier: 2, modifiers: null, criticalHit: ['bleeding']}
   };
 
   var ammunition = {
@@ -41,31 +41,31 @@ define(['screen', 'map', 'use'], function(screen, map, use){
   
   var armours = {
 	  
-	'leather armour': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather armour', description: 'a leather armour', type: 'armours', slot: 'torso', armourBonus: 2, maxDexBonus: 6, skillPenalty: 0, modifiers: {speed: 0, defense: 2}},
+	'leather armour': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather armour', description: 'a leather armour', type: 'armours', slot: 'torso', armourBonus: 1, maxDexBonus: 6, skillPenalty: 0, modifiers: {speed: 0, defense: 1}},
 	
-	'chain mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain mail', description: 'a chain mail', type: 'armours', slot: 'torso', armourBonus: 5, maxDexBonus: 2, skillPenalty: -5, modifiers: {speed: -8, defense: 5}},
+	'chain mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain mail', description: 'a chain mail', type: 'armours', slot: 'torso', armourBonus: 3, maxDexBonus: 2, skillPenalty: -5, modifiers: {speed: -8, defense: 3}},
 	
-	'ring mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'ring mail', description: 'a ring mail', type: 'armours', slot: 'torso', armourBonus: 3, maxDexBonus: 4, skillPenalty: -3, modifiers: {speed: -5, defense: 3}},
+	'ring mail': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'ring mail', description: 'a ring mail', type: 'armours', slot: 'torso', armourBonus: 2, maxDexBonus: 4, skillPenalty: -3, modifiers: {speed: -5, defense: 2}},
 	
-	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armours', slot: 'torso', armourBonus: 8, maxDexBonus: 0, skillPenalty: -7, modifiers: {speed: -12, defense: 8}}
+	'field plate': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'field plate', description: 'a field plate', type: 'armours', slot: 'torso', armourBonus: 5, maxDexBonus: 0, skillPenalty: -7, modifiers: {speed: -12, defense: 5}}
   };
 
   var headwear = {
 
       'leather helm': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather helm', description: 'a leather helm', type: 'helmets', slot: 'head', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0, defense: 1}},
 
-      'chain choif': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain choif', description: 'a chain choif', type: 'helmets', slot: 'head', armourBonus: 2, skillPenalty: 0, modifiers: {speed: 0, defense: 2}},
+      'chain choif': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain choif', description: 'a chain choif', type: 'helmets', slot: 'head', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0, defense: 1}},
 
-      'plate helmet': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate helmet', description: 'a plate helmet', type: 'helmets', slot: 'head', armourBonus: 3, skillPenalty: 0, modifiers: {speed: -1, defense: 3}}
+      'plate helmet': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate helmet', description: 'a plate helmet', type: 'helmets', slot: 'head', armourBonus: 2, skillPenalty: 0, modifiers: {speed: -1, defense: 2}}
   };
 
   var legs = {
 
       'leather leggings': {display: ']', fgColor: 'darkgoldenrod', bgColor: 'transparent', name: 'leather leggings', description: 'a leather leggings', type: 'legs', slot: 'legs', armourBonus: 1, skillPenalty: 0, modifiers: {speed: 0, defense: 1}},
 
-      'chain leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain leggings', description: 'a chain leggings', type: 'legs', slot: 'legs', armourBonus: 2, skillPenalty: -1, modifiers: {speed: -2, defense: 2}},
+      'chain leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'chain leggings', description: 'a chain leggings', type: 'legs', slot: 'legs', armourBonus: 1, skillPenalty: -1, modifiers: {speed: -2, defense: 1}},
 
-      'plate leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate leggings', description: 'a plate leggings', type: 'legs', slot: 'legs', armourBonus: 4, skillPenalty: -3, modifiers: {speed: -5, defense: 4}}
+      'plate leggings': {display: ']', fgColor: 'silver', bgColor: 'transparent', name: 'plate leggings', description: 'a plate leggings', type: 'legs', slot: 'legs', armourBonus: 2, skillPenalty: -3, modifiers: {speed: -5, defense: 2}}
   };
 
   var boots = {

@@ -1,0 +1,10 @@
+version [0.2]:
+
+FEATURES:
+
+FIXES:
+
+- changed down critical hit damage multiplier for weapons
+- armours defense was lowered
+- fixed [issue #19], monsters no longer should take action after dying due to blood loss or poison
+- monster panic status is temporarily removed, as it causes some unexpected and mysterious crashes

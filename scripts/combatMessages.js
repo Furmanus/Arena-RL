@@ -58,6 +58,11 @@ define(['screen', 'map'], function(screen, map){
         'monster': [' dies.', ' drops dead.', '\'s dead body falls on ground.']
     };
 
+    var interferedRanged = {
+
+        'player': [' blocks your attempt to shoot!', ' disrups your attempt to shoot!']
+    };
+
     /*
     calculate combat message, third parameter can be 'hit', 'miss', 'critical hit' or 'critical miss'. Fourth parameter is number of damage done (if any - currently parameter is not used)
      */
@@ -131,6 +136,7 @@ define(['screen', 'map'], function(screen, map){
 
    return{
 
-        calculateCombatMessage: calculateCombatMessage
+        calculateCombatMessage: calculateCombatMessage,
+        interferedRanged: interferedRanged
    }
 });

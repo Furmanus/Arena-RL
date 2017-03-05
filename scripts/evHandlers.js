@@ -707,6 +707,35 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 
 	function aim(x, y, player){
 
+		var interferingHostile = player.checkForSurroundingHostile();
+
+		function verifyHostileStatus(hostile){
+
+			var forbiddenStatuses = ['afraid', 'prone', 'paralyzed', 'stunned'];
+
+			for(var i=0; i<forbiddenStatuses.length; i++){
+
+				if(hostile.status[forbiddenStatuses[i]].value === 1){
+
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		if(interferingHostile !== false && player.makeStatCheck('dexterity', 4) === false && verifyHostileStatus(map.cells[player.position.level][interferingHostile.x][interferingHostile.y].entity)){
+
+			var hostile = map.cells[player.position.level][interferingHostile.x][interferingHostile.y].entity,
+				combatMessages = require('combatMessages');
+
+			screen.placeMessage(screen.capitalizeString(hostile.type.messageDisplay) + combatMessages.interferedRanged.player.random(), 'red');
+
+			map.cells[player.position.level].time.engine.unlock();
+
+			return;
+		}
+
 		if(player.weapon.sort === 'ranged') {
 
 			if(player.equipment['left hand'].name !== player.weapon.ammoType){

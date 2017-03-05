@@ -12,8 +12,15 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
 
         exports.player = new player.Player();
 
-        var startingWeapon = new items.Weapon('dagger', exports.player);
-        var startingArmour = new items.Armour('leather armour', exports.player);
+        if(player.playerOptions.class === 'fighter'){
+
+            var startingWeapon = new items.Weapon('scimitar', exports.player);
+            var startingArmour = new items.Armour('ring mail', exports.player);
+        }else if(player.playerOptions.class === 'archer'){
+
+            var startingWeapon = new items.Weapon('dagger', exports.player);
+            var startingArmour = new items.Armour('leather armour', exports.player);
+        }
 
         exports.player.equipment['right hand'] = startingWeapon;
         evHandlers.doEquipmentModifiers(exports.player, startingWeapon, 'apply');
@@ -24,7 +31,16 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         exports.player.inventory.splice(0,1);
         exports.player.inventory.splice(0,1);
 
-        new items.Potion('healing', exports.player);
+        if(player.playerOptions.class === 'fighter'){
+        
+            new items.Potion('healing', exports.player);
+            new items.Potion('might', exports.player);
+        }else if(player.playerOptions.class === 'archer'){
+
+            new items.Potion('healing', exports.player);
+            new items.Weapon('shortbow', exports.player);
+            new items.Ammo('arrow', exports.player, 20);
+        }
 
         map.cells[0].time.engine.start();
         screen.setWindows();

@@ -175,7 +175,8 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
 		    var action = ROT.RNG.getUniformInt(1, 5);
 		    //monster panics
-		    if(action === 1 || action === 2) {
+            //TEMPORARILY DISABLED BECAUSE IT IS NOT WORKING AS EXPECTED
+		    if(false) {
 
                 defender.retreatEntity = attacker;
 

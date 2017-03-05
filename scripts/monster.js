@@ -442,21 +442,24 @@ define(['map', 'screen', 'noise', 'pathfinding', 'light', 'animalai', 'combat', 
 
 			this.applyStatus();
 
-			if(examinedStatus === 'status ok') {
+			//if monster is still alive after receiving damage from poison, bleeding, etc.
+			if(this.hp > 0){
 
-				this.ai.nextStep(this);
-			}else if(examinedStatus === 'rise'){
+				if(examinedStatus === 'status ok') {
 
-				this.rise();
-			}else if(examinedStatus === 'stunned'){
+					this.ai.nextStep(this);
+				}else if(examinedStatus === 'rise'){
 
-				this.randomMove();
+					this.rise();
+				}else if(examinedStatus === 'stunned'){
+
+					this.randomMove();
+				}
+
+				this.terrainModifiers(); //after next step we need to calculate terrain modifiers for other entities turns
+				this.doModifiers();
+				this.gainLevel();
 			}
-
-
-			this.terrainModifiers(); //after next step we need to calculate terrain modifiers for other entities turns
-			this.doModifiers();
-			this.gainLevel();
 		}
 
 		updateScreenStats(){

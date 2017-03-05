@@ -126,7 +126,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 		placeStairsUp([], level);
 		
 		//specialRooms['forest'](level, lev);
-		specialRooms['chasm'](level, lev);
+		//specialRooms['chasm'](level, lev);
 		//specialRooms['lake'](level, lev);
 		//specialRooms['lake and forest'](level, lev);
 	}

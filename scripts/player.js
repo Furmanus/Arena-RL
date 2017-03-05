@@ -6,6 +6,12 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 		class: undefined
 	};
 
+	var classStatsBonuses = {
+
+		'fighter': {'strength': 4, 'dexterity': 1, 'constitution': 3, 'intelligence': -2, 'wisdom': -3, 'charisma': 0},
+		'archer': {'strength': 1, 'dexterity': 4, 'constitution': 2, 'intelligence': 0, 'wisdom': 0, 'charisma': 0}
+	};
+
 	class Player{
 		
 		constructor(){
@@ -17,6 +23,9 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 			this.size = 'medium';
 			this.position = {};
 			this.currentFov = [];
+
+			this.class = playerOptions.class;
+			this.name = playerOptions.name;
 			
 			this.abilities = {
 				
@@ -42,12 +51,12 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 			
 			this.stats = {
 				
-				strength: 15,
-				dexterity: 15,
-				constitution: 15,
-				intelligence: 15, 
-				wisdom: 15, 
-				charisma: 15,
+				strength: 13 + classStatsBonuses[this.class].strength,
+				dexterity: 13 + classStatsBonuses[this.class].dexterity,
+				constitution: 13 + classStatsBonuses[this.class].constitution,
+				intelligence: 13 + classStatsBonuses[this.class].intelligence, 
+				wisdom: 13 + classStatsBonuses[this.class].wisdom, 
+				charisma: 13 + classStatsBonuses[this.class].charisma,
 				
 				speed: 30,
 				perception: 50,
@@ -61,8 +70,6 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 			this.xp = 0;
 			this.experience = 0;
 			this.experienceLevel = 1;
-			this.class = playerOptions.class;
-			this.name = playerOptions.name;
             this.maxHp = this.hp;
 			this.lookDescription = screen.capitalizeString(playerOptions.name) + ', the brave adventurer.';
 			this.type = {messageDisplay: 'you', type: 'player', species: 'human', family: 'player', name: 'you'};
@@ -548,6 +555,39 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 				this.maxHp += combat.calc(this.HD);
 				this.hp = this.maxHp;
 			}
+		}
+
+		checkForSurroundingHostile(){
+
+			var examinedEntity;
+
+			for(var i=-1; i<=1; i++){
+
+				for(var j=-1; j<=1; j++){
+
+					examinedEntity = map.cells[this.position.level][this.position.x + i][this.position.y + j].entity;
+
+					if(map.cells[this.position.level][this.position.x + i][this.position.y + j].entity !== null && (i !== 0 || j !== 0)){
+
+						for(var k=0; k<examinedEntity.hostileList.species.length; k++){
+
+							if(examinedEntity.hostileList.species[k] === 'human'){
+
+								return {'x': this.position.x + i, 'y': this.position.y + j};
+							}
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+
+		makeStatCheck(stat, difficulty){
+
+			var result = Math.floor((this.stats[stat] / 2) - 5) + combat.roll(1, 20);
+
+			return (result >= difficulty * 5);
 		}
 	}
 	
