@@ -53,7 +53,7 @@ define(['map', 'generator', 'screen', 'noise', 'light', 'player', 'monster', 'it
         map.cells.maxDungeonLevel = 0;
         //generator.generateRandomLevel();
         generator.createArenaLevel(0);
-        //generator.generateLake(0, map.cells[0])
+        generator.createChasmRoom(0, map.cells[0])
         //monster.fillLevelWithMonsters(0);
         //items.fillLevelWithItems(0);
 

@@ -393,7 +393,7 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
             result -= 4;
         }
-
+        
         return result;
     }
 
@@ -401,11 +401,14 @@ define(['screen', 'map', 'combatMessages', 'status'], function(screen, map, comb
 
         var result = defender.stats.defense;
 
-        if(defender.status.prone.value === 1){
-
+        if(defender.status.prone.value === 1 && (type === 'melee' || (type === 'ranged' && distance < 1.5))){
+            
             result -= 4;
+        }else if(defender.status.prone.value === 1 && type === 'ranged' && distance >= 1.5){
+            
+            result += 4;
         }
-
+        
         return result;
     }
 	

@@ -885,14 +885,8 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 				}
 			
 				if(y >= 1 && y <= screen.options.width - 2){
-				//DEBUG
-				if(!map.cells[level][x][y]){
-
-					console.log('x: ' + x + ' y: ' + y);
-					console.log('xStart: ' + xStart + ' yStart: ' + yStart);
-					console.log('xRadius: ' + xRadius +' yRadius: ' + yRadius);
-				}
-				if(map.cells[level][x][y].type.type == cellTypeToReplace){
+				
+				if(map.cells[level][x][y] && map.cells[level][x][y].type.type == cellTypeToReplace){
 					
 					map.setTerrain(level, x, y, cellType);
 				}
@@ -1170,6 +1164,7 @@ define(['screen', 'map', 'pathfinding'], function(screen, map, pathfinding){
 		surroundWithCircle: surroundWithCircle,
 		generateRandomLevel: generateRandomLevel,
 		createForestRoom: createForestRoom,
+		createChasmRoom: createChasmRoom,
 		generateLake: generateLake
 	}
 });
