@@ -26,12 +26,6 @@ define(['main'], function(main){
 		20: {required: 190000}
 	};
 
-	//list of stats gained on every fourth level by different classes
-	var statGain = {
-
-		'fighter': ['strength', 'strength', 'dexterity', 'constitution']
-	};
-
 	//current position of upper left corner of camera
 
 	var cameraPosition = {
@@ -419,7 +413,6 @@ define(['main'], function(main){
 		currentMessage: currentMessage,
 		placeTemporaryMessage: placeTemporaryMessage,
 		experienceTable: experienceTable,
-		statGain: statGain,
 		displayOptions: displayOptions,
 		screenOptions: screenOptions,
 		deathScreenOptions: deathScreenOptions,

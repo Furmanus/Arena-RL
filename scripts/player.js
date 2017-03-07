@@ -1,4 +1,4 @@
-define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'messages'], function(screen, map, noise, light, evHandlers, combat, status, messages){
+define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'messages', 'classes'], function(screen, map, noise, light, evHandlers, combat, status, messages, classes){
 
 	var playerOptions = {
 
@@ -545,14 +545,29 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 
 			if(this.experience >= screen.experienceTable[this.experienceLevel + 1].required){
 
-				var gainedStat = screen.statGain[this.class].random();
+				var gainedStat = classes.statGain[this.class].random(),
+				hpGain = combat.calc(this.HD),
+				tmpGain;
 
 				this.experienceLevel++;
 				screen.placeMessage('You have gained a level!', 'blue');
 				this.stats[gainedStat]++; //increase one random stat from class stats
 				screen.placeMessage(messages.statGainMessages[gainedStat], 'blue');
+				
 				this.stats.baseAttackBonus++;
-				this.maxHp += combat.calc(this.HD);
+
+				for(var i=0; i<classes.numberOfHDRoll[this.class]; i++){
+
+					tmpGain = combat.calc(this.HD);
+
+					if(tmpGain > hpGain){
+
+						hpGain = tmpGain;
+					}
+				}
+
+				this.maxHp += hpGain;
+
 				this.hp = this.maxHp;
 			}
 		}
