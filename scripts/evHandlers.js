@@ -1902,11 +1902,14 @@ define(['screen', 'map', 'generator'], function(screen, map, generator){
 			map.cells[this.position.level][this.position.x][this.position.y].entity = null;
 			this.position.lastVisitedCell = map.cells[this.position.level][this.position.x][this.position.y];
 					
-			map.walkEffectFunctions.chasmEffect(this);
+			var playerDied = map.walkEffectFunctions.chasmEffect(this);
 
-			this.doFov(this);
-			screen.drawVisibleCells(map.cells[this.position.level]);
-			this.handleEvent = defaultEventHandler;
+			if(playerDied === false){
+				
+				this.doFov(this);
+				screen.drawVisibleCells(map.cells[this.position.level]);
+				this.handleEvent = defaultEventHandler;
+			}
 		}else if(ev.which === 78 || ev.which === 32 || ev.which === 27){
 
 			document.getElementById('messageBox').removeChild(document.getElementById('messageBox').getElementsByTagName('li')[document.getElementById('messageBox').getElementsByTagName('li').length - 1]);

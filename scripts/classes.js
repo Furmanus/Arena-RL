@@ -19,7 +19,6 @@ define([], function(){
 	return {
 
 		statGain: statGain,
-		numberOfHDRoll: numberOfHDRoll,
-		baseAttackGain: baseAttackGain
+		numberOfHDRoll: numberOfHDRoll
 	}
 });

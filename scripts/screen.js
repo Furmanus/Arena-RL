@@ -65,7 +65,7 @@ define(['main'], function(main){
         width: 40,
         height: 40,
         fontSize: 15,
-        forceSquareRatio: true
+        forceSquareRatio: false
 	}
 	
 	/*

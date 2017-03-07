@@ -77,6 +77,8 @@ define(['screen'], function(screen){
 
 		chasmEffect: function(entity, x, y){
 
+			var combat = require('combat');
+
 			if(entity.abilities.canFly === false){
 
 				var tmpX,
@@ -143,6 +145,12 @@ define(['screen'], function(screen){
 
                 	document.getElementById('domDungeonLevel').innerHTML = entity.position.level + 1;
                 	screen.placeMessage('You fall down into chasm!');
+                	entity.receiveDamage(combat.calc('3d3'), {type: 'fell into deep chasm'});
+
+                	if(entity.hp < 1){
+
+                		return true;
+                	}
             	}else{
 
             		screen.placeVisibleMessage(screen.capitalizeString(entity.type.messageDisplay) + (entity.type.type === 'player' ? ' fall' : ' falls') + ' down into chasm!', cells[currentLevel][x][y]);
@@ -152,6 +160,8 @@ define(['screen'], function(screen){
 
         		main.exports.player.doFov(main.exports.player);
         		screen.drawVisibleCells(cells[main.exports.player.position.level]);
+
+        		return false;
         	}
 		}
 	};

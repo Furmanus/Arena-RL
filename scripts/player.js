@@ -59,7 +59,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 				charisma: 13 + classStatsBonuses[this.class].charisma,
 				
 				speed: 30,
-				perception: 50,
+				perception: 6,
 				
 				baseAttackBonus: 1,
 				defense: 10
@@ -553,7 +553,7 @@ define(['screen', 'map', 'noise', 'light', 'evHandlers', 'combat', 'status', 'me
 				screen.placeMessage('You have gained a level!', 'blue');
 				this.stats[gainedStat]++; //increase one random stat from class stats
 				screen.placeMessage(messages.statGainMessages[gainedStat], 'blue');
-				
+
 				this.stats.baseAttackBonus++;
 
 				for(var i=0; i<classes.numberOfHDRoll[this.class]; i++){
