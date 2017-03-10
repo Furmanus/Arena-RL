@@ -1,8 +1,17 @@
 # Arena-RL
 
+You can play current version online here: https://furmanus.github.io/Arena-RL/
+
 Simple roguelike currently being under construction in early development phase. Written in HTML5 and Javascript with require.js and rot.js.
 
-You can play current version online here: https://furmanus.github.io/Arena-RL/
+Game is very far away from what I want to achieve. You can't win yet (though you can easily die). Some of currently implemented features:
+
+- randomly generated levels with different possible themes (ordinary dungeons, caverns, forests, lakes, chasms)
+- over dozen of different monsters
+- scrolls and potions
+- over dozen of different weapon with different stats and different special effects for critical hits (bleeding, stunning, etc.)
+- ranged combat
+- non trivial AI: if any weapon, armour, scroll or potion can be picked up and used by player, it can be also used by humanoid enemy (and they will use it!)
 
 Latest changes (version 0.2):
 
